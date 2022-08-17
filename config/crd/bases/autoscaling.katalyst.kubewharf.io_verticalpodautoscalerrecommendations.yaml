@@ -1,0 +1,302 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp: null
+  name: verticalpodautoscalerrecommendations.autoscaling.katalyst.kubewharf.io
+spec:
+  group: autoscaling.katalyst.kubewharf.io
+  names:
+    kind: VerticalPodAutoscalerRecommendation
+    listKind: VerticalPodAutoscalerRecommendationList
+    plural: verticalpodautoscalerrecommendations
+    shortNames:
+    - vparec
+    singular: verticalpodautoscalerrecommendation
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: VerticalPodAutoscalerRecommendation captures information about
+          a VPA Recommendation
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the behavior of a VerticalPodAutoscalerRecommendation.
+            properties:
+              containerRecommendations:
+                description: default container resources recommended by the autoscaler
+                  for the controlled containers. It will be overwritten by PodRecommendations
+                items:
+                  description: RecommendedContainerResources is the recommendation
+                    of resources computed by autoscaler for a specific container.
+                    Respects the container resource policy if present in the spec.
+                    In particular the recommendation is not produced for containers
+                    with `ContainerScalingMode` set to 'Off'.
+                  properties:
+                    containerName:
+                      description: Name of the container.
+                      type: string
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this container
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this container
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                  required:
+                  - containerName
+                  type: object
+                type: array
+              podRecommendations:
+                description: The most recently computed amount of resources recommended
+                  by the autoscaler for the controlled pods.
+                items:
+                  properties:
+                    containerRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        container.
+                      items:
+                        description: RecommendedContainerResources is the recommendation
+                          of resources computed by autoscaler for a specific container.
+                          Respects the container resource policy if present in the
+                          spec. In particular the recommendation is not produced for
+                          containers with `ContainerScalingMode` set to 'Off'.
+                        properties:
+                          containerName:
+                            description: Name of the container.
+                            type: string
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this container
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this container
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                        required:
+                        - containerName
+                        type: object
+                      type: array
+                    podName:
+                      description: Name of the pod.
+                      type: string
+                  required:
+                  - podName
+                  type: object
+                type: array
+            type: object
+          status:
+            description: Status represents the current information about a VerticalPodAutoscalerRecommendation.
+            properties:
+              conditions:
+                description: Conditions is the set of conditions required for this
+                  vparec to scale its target, and indicates whether those conditions
+                  are met.
+                items:
+                  description: VerticalPodAutoscalerRecommendationCondition describes
+                    the state of a VerticalPodAutoscalerRecommendation at a certain
+                    point.
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition
+                        transitioned from one status to another
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: status is the status of the condition (True, False,
+                        Unknown)
+                      type: string
+                    type:
+                      description: type describes the current condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              containerRecommendations:
+                description: ContainerRecommendations is the most recently defaultRecommendation
+                  handled by the controller
+                items:
+                  description: RecommendedContainerResources is the recommendation
+                    of resources computed by autoscaler for a specific container.
+                    Respects the container resource policy if present in the spec.
+                    In particular the recommendation is not produced for containers
+                    with `ContainerScalingMode` set to 'Off'.
+                  properties:
+                    containerName:
+                      description: Name of the container.
+                      type: string
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this container
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this container
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                  required:
+                  - containerName
+                  type: object
+                type: array
+              podRecommendations:
+                description: PodRecommendations is the most recently recommendation
+                  handled by the controller.
+                items:
+                  properties:
+                    containerRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        container.
+                      items:
+                        description: RecommendedContainerResources is the recommendation
+                          of resources computed by autoscaler for a specific container.
+                          Respects the container resource policy if present in the
+                          spec. In particular the recommendation is not produced for
+                          containers with `ContainerScalingMode` set to 'Off'.
+                        properties:
+                          containerName:
+                            description: Name of the container.
+                            type: string
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this container
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this container
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                        required:
+                        - containerName
+                        type: object
+                      type: array
+                    podName:
+                      description: Name of the pod.
+                      type: string
+                  required:
+                  - podName
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

@@ -1,0 +1,548 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp: null
+  name: katalystverticalpodautoscalers.autoscaling.katalyst.kubewharf.io
+spec:
+  group: autoscaling.katalyst.kubewharf.io
+  names:
+    kind: KatalystVerticalPodAutoscaler
+    listKind: KatalystVerticalPodAutoscalerList
+    plural: katalystverticalpodautoscalers
+    shortNames:
+    - kvpa
+    singular: katalystverticalpodautoscaler
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KatalystVerticalPodAutoscaler captures information about a VPA
+          object
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the behavior of a KatalystVerticalPodAutoscaler.
+            properties:
+              resourcePolicy:
+                description: Controls how the autoscaler computes recommended resources.
+                  The resource policy may be used to set constraints on the recommendations
+                  for individual containers. If not specified, the autoscaler computes
+                  recommended resources for all containers in the pod, without additional
+                  constraints.
+                properties:
+                  algorithmPolicy:
+                    description: policy of algorithm, if no algorithm is provided,
+                      using default in-tree recommendation logic instead.
+                    properties:
+                      extensions:
+                        description: Extensions config by key-value format.
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      granularity:
+                        default: Default
+                        description: Granularity of the Algorithm server recommendation
+                          result The default is 'Default'.
+                        enum:
+                        - Default
+                        - Pod
+                        type: string
+                      recommender:
+                        description: Recommenders of the Algorithm used to this Pod;
+                          if end-user wants to define their own recommendation algorithms,
+                          they should manage this field to match their recommend implementations.
+                        type: string
+                    required:
+                    - granularity
+                    type: object
+                  containerPolicies:
+                    description: Per-container resource policies.
+                    items:
+                      description: ContainerResourcePolicy controls how autoscaler
+                        computes the recommended resources for a specific container.
+                      properties:
+                        containerName:
+                          description: Name of the container or DefaultContainerResourcePolicy,
+                            in which case the policy is used by the containers that
+                            don't have their own policy specified.
+                          type: string
+                        controlledResources:
+                          default:
+                          - cpu
+                          description: Specifies the type of recommendations that
+                            will be computed (and possibly applied) by VPA. If not
+                            specified, the default of [ResourceCPU] will be used.
+                          items:
+                            description: ResourceName is the name identifying various
+                              resources in a ResourceList.
+                            type: string
+                          type: array
+                        controlledValues:
+                          default: RequestsAndLimits
+                          description: Specifies which resource values should be controlled.
+                            The default is "RequestsAndLimits".
+                          enum:
+                          - RequestsAndLimits
+                          - RequestsOnly
+                          - LimitsOnly
+                          type: string
+                        maxAllowed:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Specifies the maximum amount of resources that
+                            will be recommended for the container. The default is
+                            no maximum.
+                          type: object
+                        minAllowed:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Specifies the minimal amount of resources that
+                            will be recommended for the container. The default is
+                            no minimum.
+                          type: object
+                        resourceResizePolicy:
+                          default: None
+                          description: ResourceResizePolicy specifies how Kubernetes
+                            should handle resource resize. The default is "None"
+                          type: string
+                      required:
+                      - containerName
+                      - controlledValues
+                      - resourceResizePolicy
+                      type: object
+                    type: array
+                type: object
+              targetRef:
+                description: TargetRef points to the controller managing the set of
+                  pods for the autoscaler to control - e.g. Deployment, StatefulSet.
+                properties:
+                  apiVersion:
+                    description: API version of the referent
+                    type: string
+                  kind:
+                    description: Kind of the referent
+                    type: string
+                  name:
+                    description: Name of the referent
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              updatePolicy:
+                description: Describes the rules on how changes are applied to the
+                  pods. If not specified, all fields in the `PodUpdatePolicy` are
+                  set to their default values.
+                properties:
+                  podApplyStrategy:
+                    default: Group
+                    description: PodApplyStrategy controls the applying scope autoscaler
+                      should obey to. The default is 'Group'.
+                    enum:
+                    - Pod
+                    - Group
+                    type: string
+                  podMatchingStrategy:
+                    default: All
+                    description: PodMatchingStrategy controls the timing autoscaler
+                      applies changes to the pod resources. The default is 'All'.
+                    enum:
+                    - PodMatchingStrategyForHistoricalPod
+                    - PodMatchingStrategyForFreshPod
+                    - All
+                    type: string
+                  podUpdatingStrategy:
+                    default: "Off"
+                    description: PodUpdatingStrategy controls the method autoscaler
+                      applies changes to the pod resources. The default is 'Off'.
+                    enum:
+                    - "Off"
+                    - Recreate
+                    - Inplace
+                    - BestEffortInplace
+                    type: string
+                type: object
+            required:
+            - targetRef
+            type: object
+          status:
+            description: Status represents the current information about a KatalystVerticalPodAutoscaler.
+            properties:
+              conditions:
+                description: Conditions is the set of conditions required for this
+                  autoscaler to scale its target, and indicates whether those conditions
+                  are met.
+                items:
+                  description: VerticalPodAutoscalerCondition describes the state
+                    of a KatalystVerticalPodAutoscaler at a certain point.
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition
+                        transitioned from one status to another
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: status is the status of the condition (True, False,
+                        Unknown)
+                      type: string
+                    type:
+                      description: type describes the current condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              containerResources:
+                description: ContainerResources is the most recently computed amount
+                  of resources for the controlled containers it will be overwritten
+                  by PodResources
+                items:
+                  description: ContainerResources is the recommendation of resources
+                    computed by autoscaler for a specific container. Respects the
+                    container resource policy if present in the spec. In particular
+                    the recommendation is not produced for containers with `ContainerScalingMode`
+                    set to 'Off'.
+                  properties:
+                    containerName:
+                      description: Name of the container.
+                      type: string
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this container
+                      properties:
+                        current:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Current indicates the real resource configuration
+                            from the view of CRI interface.
+                          type: object
+                        lowerBound:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Minimum recommended amount of resources. Observes
+                            ContainerResourcePolicy. This amount is not guaranteed
+                            to be sufficient for the application to operate in a stable
+                            way, however running with less resources is likely to
+                            have significant impact on performance/availability.
+                          type: object
+                        target:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Recommended amount of resources. Observes ContainerResourcePolicy.
+                          type: object
+                        uncappedTarget:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: The most recent recommended resources target
+                            computed by the autoscaler for the controlled pods, based
+                            only on actual resource usage, not taking into account
+                            the ContainerResourcePolicy. May differ from the Recommendation
+                            if the actual resource usage causes the target to violate
+                            the ContainerResourcePolicy (lower than MinAllowed or
+                            higher that MaxAllowed). Used only as status indication,
+                            will not affect actual resource assignment.
+                          type: object
+                        upperBound:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Maximum recommended amount of resources. Observes
+                            ContainerResourcePolicy. Any resources allocated beyond
+                            this value are likely wasted. This value may be larger
+                            than the maximum amount of application is actually capable
+                            of consuming.
+                          type: object
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this container
+                      properties:
+                        current:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Current indicates the real resource configuration
+                            from the view of CRI interface.
+                          type: object
+                        lowerBound:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Minimum recommended amount of resources. Observes
+                            ContainerResourcePolicy. This amount is not guaranteed
+                            to be sufficient for the application to operate in a stable
+                            way, however running with less resources is likely to
+                            have significant impact on performance/availability.
+                          type: object
+                        target:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Recommended amount of resources. Observes ContainerResourcePolicy.
+                          type: object
+                        uncappedTarget:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: The most recent recommended resources target
+                            computed by the autoscaler for the controlled pods, based
+                            only on actual resource usage, not taking into account
+                            the ContainerResourcePolicy. May differ from the Recommendation
+                            if the actual resource usage causes the target to violate
+                            the ContainerResourcePolicy (lower than MinAllowed or
+                            higher that MaxAllowed). Used only as status indication,
+                            will not affect actual resource assignment.
+                          type: object
+                        upperBound:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Maximum recommended amount of resources. Observes
+                            ContainerResourcePolicy. Any resources allocated beyond
+                            this value are likely wasted. This value may be larger
+                            than the maximum amount of application is actually capable
+                            of consuming.
+                          type: object
+                      type: object
+                  type: object
+                type: array
+              podResources:
+                description: The most recently computed amount of resources provided
+                  by the autoscaler for the controlled pods.
+                items:
+                  properties:
+                    containerRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        container.
+                      items:
+                        description: ContainerResources is the recommendation of resources
+                          computed by autoscaler for a specific container. Respects
+                          the container resource policy if present in the spec. In
+                          particular the recommendation is not produced for containers
+                          with `ContainerScalingMode` set to 'Off'.
+                        properties:
+                          containerName:
+                            description: Name of the container.
+                            type: string
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this container
+                            properties:
+                              current:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Current indicates the real resource configuration
+                                  from the view of CRI interface.
+                                type: object
+                              lowerBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Minimum recommended amount of resources.
+                                  Observes ContainerResourcePolicy. This amount is
+                                  not guaranteed to be sufficient for the application
+                                  to operate in a stable way, however running with
+                                  less resources is likely to have significant impact
+                                  on performance/availability.
+                                type: object
+                              target:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Recommended amount of resources. Observes
+                                  ContainerResourcePolicy.
+                                type: object
+                              uncappedTarget:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: The most recent recommended resources
+                                  target computed by the autoscaler for the controlled
+                                  pods, based only on actual resource usage, not taking
+                                  into account the ContainerResourcePolicy. May differ
+                                  from the Recommendation if the actual resource usage
+                                  causes the target to violate the ContainerResourcePolicy
+                                  (lower than MinAllowed or higher that MaxAllowed).
+                                  Used only as status indication, will not affect
+                                  actual resource assignment.
+                                type: object
+                              upperBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Maximum recommended amount of resources.
+                                  Observes ContainerResourcePolicy. Any resources
+                                  allocated beyond this value are likely wasted. This
+                                  value may be larger than the maximum amount of application
+                                  is actually capable of consuming.
+                                type: object
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this container
+                            properties:
+                              current:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Current indicates the real resource configuration
+                                  from the view of CRI interface.
+                                type: object
+                              lowerBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Minimum recommended amount of resources.
+                                  Observes ContainerResourcePolicy. This amount is
+                                  not guaranteed to be sufficient for the application
+                                  to operate in a stable way, however running with
+                                  less resources is likely to have significant impact
+                                  on performance/availability.
+                                type: object
+                              target:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Recommended amount of resources. Observes
+                                  ContainerResourcePolicy.
+                                type: object
+                              uncappedTarget:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: The most recent recommended resources
+                                  target computed by the autoscaler for the controlled
+                                  pods, based only on actual resource usage, not taking
+                                  into account the ContainerResourcePolicy. May differ
+                                  from the Recommendation if the actual resource usage
+                                  causes the target to violate the ContainerResourcePolicy
+                                  (lower than MinAllowed or higher that MaxAllowed).
+                                  Used only as status indication, will not affect
+                                  actual resource assignment.
+                                type: object
+                              upperBound:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Maximum recommended amount of resources.
+                                  Observes ContainerResourcePolicy. Any resources
+                                  allocated beyond this value are likely wasted. This
+                                  value may be larger than the maximum amount of application
+                                  is actually capable of consuming.
+                                type: object
+                            type: object
+                        type: object
+                      type: array
+                    podName:
+                      description: Name of the pod.
+                      type: string
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

@@ -1,0 +1,132 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp: null
+  name: customnodeconfigs.config.katalyst.kubewharf.io
+spec:
+  group: config.katalyst.kubewharf.io
+  names:
+    kind: CustomNodeConfig
+    listKind: CustomNodeConfigList
+    plural: customnodeconfigs
+    shortNames:
+    - cnc
+    singular: customnodeconfig
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: CustomNodeConfig is the Schema for the customnodeconfigs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            type: object
+          status:
+            description: CustomNodeConfigStatus defines the desired state of KatalystCustomConfig
+            properties:
+              katalystCustomConfigList:
+                description: KatalystCustomConfigList contains a list of target custom
+                  config
+                items:
+                  description: TargetConfig current hash for specific gvk config object
+                  properties:
+                    configName:
+                      description: ConfigName name of target config
+                      type: string
+                    configNamespace:
+                      description: ConfigNamespace namespace of target config
+                      type: string
+                    configType:
+                      description: ConfigType gvr of target config
+                      properties:
+                        group:
+                          type: string
+                        resource:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - group
+                      - resource
+                      - version
+                      type: object
+                    hash:
+                      description: Hash is current hash value of target config. The
+                        agent will first check whether the local config hash and the
+                        target config hash are equal, only if not, it will try to
+                        update the local config from the remote.
+                      type: string
+                  required:
+                  - configName
+                  - configNamespace
+                  - configType
+                  - hash
+                  type: object
+                type: array
+              serviceProfileConfigList:
+                description: ServiceProfileConfigList contains a list of target service
+                  Profile config
+                items:
+                  description: TargetConfig current hash for specific gvk config object
+                  properties:
+                    configName:
+                      description: ConfigName name of target config
+                      type: string
+                    configNamespace:
+                      description: ConfigNamespace namespace of target config
+                      type: string
+                    configType:
+                      description: ConfigType gvr of target config
+                      properties:
+                        group:
+                          type: string
+                        resource:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - group
+                      - resource
+                      - version
+                      type: object
+                    hash:
+                      description: Hash is current hash value of target config. The
+                        agent will first check whether the local config hash and the
+                        target config hash are equal, only if not, it will try to
+                        update the local config from the remote.
+                      type: string
+                  required:
+                  - configName
+                  - configNamespace
+                  - configType
+                  - hash
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
