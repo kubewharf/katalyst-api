@@ -18,3 +18,7 @@ limitations under the License.
 // those metrics are stored (and also can be referred) by custom metrics
 // api-server provided by katalyst.
 package pod
+
+const (
+	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min" // real-time cpu load
+)
