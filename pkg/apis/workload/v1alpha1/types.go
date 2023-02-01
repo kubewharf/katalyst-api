@@ -17,21 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metrics "k8s.io/metrics/pkg/apis/metrics/v1beta1"
 
 	"github.com/kubewharf/katalyst-api/pkg/apis/autoscaling/v1alpha1"
-)
-
-// +kubebuilder:validation:Enum=avg;max
-type Aggregator string
-
-const (
-	Avg    Aggregator      = "avg"
-	Max    Aggregator      = "max"
-	Load1m v1.ResourceName = "load1m"
-	Load1h v1.ResourceName = "load1h"
 )
 
 // +genclient
@@ -58,17 +47,129 @@ type ServiceProfileDescriptor struct {
 type ServiceProfileDescriptorSpec struct {
 	// TargetRef points to the controller managing the set of pods for the
 	// spd-controller to control - e.g. Deployment, StatefulSet.
+	// SPD should have one-to-one mapping relationships with workload.
 	TargetRef v1alpha1.CrossVersionObjectReference `json:"targetRef"`
+
+	// if multiple BusinessIndicator are defined, it means that we should
+	// try to satisfy all of those indicator targets
+	// +optional
+	BusinessIndicator []ServiceBusinessIndicatorSpec `json:"businessIndicator,omitempty"`
+
+	// if multiple SystemIndicator are defined, it means that we should
+	// try to satisfy all of those indicator targets
+	// +optional
+	SystemIndicator []ServiceSystemIndicatorSpec `json:"systemIndicator,omitempty"`
 }
 
+// IndicatorLevelName defines several levels for each indicator, and we will
+// always try to keep the actual indicator in acceptable intervals instead of
+// as an accurate value. Those intervals are marked by IndicatorLevelName.
+type IndicatorLevelName string
+
+const (
+	// IndicatorLevelLowerBound is usually used to define the lower bound to define
+	// service working states. For instance, if rpc-latency is defined as a
+	// business indicator, if actual observed value is below IndicatorLevelLowerBound,
+	//	it means the workload works perfectly; if observed value is above
+	// 	IndicatorLevelLowerBound but below IndicatorLevelUpperBound, it means the workload
+	//	works can still work, but may suffer with performance downgrade.
+	IndicatorLevelLowerBound = "LowerBound"
+
+	// IndicatorLevelUpperBound is usually used to define the upper bound that
+	// the workload be bear with. For instance, if rpc-latency is defined as a
+	// business indicator, if actual observed value is above IndicatorLevelUpperBound,
+	// it means the workload is broken and can't serve the online traffic anymore.
+	IndicatorLevelUpperBound = "UpperBound"
+)
+
+type Indicator struct {
+	IndicatorLevel IndicatorLevelName `json:"indicatorLevel"`
+	Value          float32            `json:"value"`
+}
+
+type ServiceBusinessIndicatorName string
+
+const (
+	ServiceBusinessIndicatorNameRPCLatency ServiceBusinessIndicatorName = "RPCLatency"
+)
+
+// ServiceBusinessIndicatorSpec defines workload profiling in business level, such as rpc-latency,
+// success-rate, service-health-score and so on, and general control-flow works as below
+//
+// - according to workload states, user defines several key indicates
+// - user-system calculate and update observed values in status
+// - sysadvisor (in-tree katalyst) decides system-indicator offset according to business-indicator
+// - sysadvisor (along with reporter and qrm) to perform resources and controlKnob actions
+type ServiceBusinessIndicatorSpec struct {
+	// Name is used to define the business-related profiling indicator for the workload,
+	// e.g. rpc-latency, success-rate, service-health-score and so on.
+	// Users can use it as an expended way, and customize sysadvisor to adapter with it.
+	Name ServiceBusinessIndicatorName `json:"name"`
+
+	// +optional
+	Indicators []Indicator `json:"indicators,omitempty"`
+}
+
+type TargetIndicatorName string
+
+const (
+	TargetIndicatorNameSchedWait TargetIndicatorName = "SchedWait"
+)
+
+// ServiceSystemIndicatorSpec defines workload profiling in system level, such as
+// SchedWait、CPI、MBW ... and so on, and sysadvisor (along with reporter and qrm)
+// will try to perform resources and controlKnob actions
+//
+// System-target indicator (along with its values in each level) could be difficult
+// to pre-define, and it may have strong correlations with both workload characters
+// and node environments, so we suggest users to run offline analysis pipelines to
+// get those stats.
+type ServiceSystemIndicatorSpec struct {
+	// Name is used to define the system-related profiling indicator for the workload,
+	// e.g. SchedWait、CPI、MBW ... and so on.
+	// Users can use it as an expended way, and customize sysadvisor to adapter with it.
+	Name TargetIndicatorName `json:"name"`
+
+	// +optional
+	Indicators []Indicator `json:"indicators,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=avg;max
+
+type Aggregator string
+
+const (
+	Avg Aggregator = "avg"
+	Max Aggregator = "max"
+)
+
+// ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec with Name
+// to indicate the observed info for this workload (as for this indicator).
+type ServiceBusinessIndicatorStatus struct {
+	Name string `json:"name"`
+
+	// Current indicates the current observed value for this business indicator
+	// +optional
+	Current *float32 `json:"current,omitempty"`
+}
+
+// AggPodMetrics records the aggregated metrics based.
 type AggPodMetrics struct {
-	Aggregator Aggregator           `json:"aggregator"`
-	Items      []metrics.PodMetrics `json:"items"`
+	// Aggregator indicates how the metrics data in Items are calculated, i.e.
+	// defines the aggregation functions.
+	Aggregator Aggregator `json:"aggregator"`
+
+	// +optional
+	Items []metrics.PodMetrics `json:"items,omitempty"`
 }
 
-// ServiceProfileDescriptorStatus describes the aggregated metrics of the spd.
+// ServiceProfileDescriptorStatus describes the observed info of the spd.
 type ServiceProfileDescriptorStatus struct {
-	AggMetrics []AggPodMetrics `json:"aggMetrics"`
+	// +optional
+	AggMetrics []AggPodMetrics `json:"aggMetrics,omitempty"`
+
+	// +optional
+	BusinessStatus []ServiceBusinessIndicatorStatus `json:"businessStatus,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

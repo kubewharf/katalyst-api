@@ -38,9 +38,90 @@ spec:
           spec:
             description: Spec defines the behavior of a ServiceProfileDescriptor.
             properties:
+              businessIndicator:
+                description: if multiple BusinessIndicator are defined, it means that
+                  we should try to satisfy all of those indicator targets
+                items:
+                  description: "ServiceBusinessIndicatorSpec defines workload profiling
+                    in business level, such as rpc-latency, success-rate, service-health-score
+                    and so on, and general control-flow works as below \n - according
+                    to workload states, user defines several key indicates - user-system
+                    calculate and update observed values in status - sysadvisor (in-tree
+                    katalyst) decides system-indicator offset according to business-indicator
+                    - sysadvisor (along with reporter and qrm) to perform resources
+                    and controlKnob actions"
+                  properties:
+                    indicators:
+                      items:
+                        properties:
+                          indicatorLevel:
+                            description: IndicatorLevelName defines several levels
+                              for each indicator, and we will always try to keep the
+                              actual indicator in acceptable intervals instead of
+                              as an accurate value. Those intervals are marked by
+                              IndicatorLevelName.
+                            type: string
+                          value:
+                            type: number
+                        required:
+                        - indicatorLevel
+                        - value
+                        type: object
+                      type: array
+                    name:
+                      description: Name is used to define the business-related profiling
+                        indicator for the workload, e.g. rpc-latency, success-rate,
+                        service-health-score and so on. Users can use it as an expended
+                        way, and customize sysadvisor to adapter with it.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+              systemIndicator:
+                description: if multiple SystemIndicator are defined, it means that
+                  we should try to satisfy all of those indicator targets
+                items:
+                  description: "ServiceSystemIndicatorSpec defines workload profiling
+                    in system level, such as SchedWait、CPI、MBW ... and so on, and
+                    sysadvisor (along with reporter and qrm) will try to perform resources
+                    and controlKnob actions \n System-target indicator (along with
+                    its values in each level) could be difficult to pre-define, and
+                    it may have strong correlations with both workload characters
+                    and node environments, so we suggest users to run offline analysis
+                    pipelines to get those stats."
+                  properties:
+                    indicators:
+                      items:
+                        properties:
+                          indicatorLevel:
+                            description: IndicatorLevelName defines several levels
+                              for each indicator, and we will always try to keep the
+                              actual indicator in acceptable intervals instead of
+                              as an accurate value. Those intervals are marked by
+                              IndicatorLevelName.
+                            type: string
+                          value:
+                            type: number
+                        required:
+                        - indicatorLevel
+                        - value
+                        type: object
+                      type: array
+                    name:
+                      description: Name is used to define the system-related profiling
+                        indicator for the workload, e.g. SchedWait、CPI、MBW ... and
+                        so on. Users can use it as an expended way, and customize
+                        sysadvisor to adapter with it.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               targetRef:
                 description: TargetRef points to the controller managing the set of
                   pods for the spd-controller to control - e.g. Deployment, StatefulSet.
+                  SPD should have one-to-one mapping relationships with workload.
                 properties:
                   apiVersion:
                     description: API version of the referent
@@ -64,8 +145,11 @@ spec:
             properties:
               aggMetrics:
                 items:
+                  description: AggPodMetrics records the aggregated metrics based.
                   properties:
                     aggregator:
+                      description: Aggregator indicates how the metrics data in Items
+                        are calculated, i.e. defines the aggregation functions.
                       enum:
                       - avg
                       - max
@@ -132,11 +216,24 @@ spec:
                       type: array
                   required:
                   - aggregator
-                  - items
                   type: object
                 type: array
-            required:
-            - aggMetrics
+              businessStatus:
+                items:
+                  description: ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec
+                    with Name to indicate the observed info for this workload (as
+                    for this indicator).
+                  properties:
+                    current:
+                      description: Current indicates the current observed value for
+                        this business indicator
+                      type: number
+                    name:
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
             type: object
         type: object
     served: true
