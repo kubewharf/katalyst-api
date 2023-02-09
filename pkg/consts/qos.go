@@ -39,4 +39,6 @@ const (
 	PodAnnotationCPUEnhancementKey = "katalyst.kubewharf.io/cpu_enhancement"
 
 	PodAnnotationCPUEnhancementCPUSet = "cpuset_pool"
+
+	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
 )

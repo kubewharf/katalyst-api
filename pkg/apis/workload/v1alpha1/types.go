@@ -146,7 +146,7 @@ const (
 // ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec with Name
 // to indicate the observed info for this workload (as for this indicator).
 type ServiceBusinessIndicatorStatus struct {
-	Name string `json:"name"`
+	Name ServiceBusinessIndicatorName `json:"name"`
 
 	// Current indicates the current observed value for this business indicator
 	// +optional
