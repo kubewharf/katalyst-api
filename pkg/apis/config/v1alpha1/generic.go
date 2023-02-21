@@ -30,8 +30,8 @@ type GenericConfigSpec struct {
 	RevisionHistoryLimit int64 `json:"revisionHistoryLimit,omitempty"`
 
 	// NodeLabelSelector select nodes to apply these configurations
-	// if spec.labelKey no set, NodeLabelSelector must be empty
-	// the label selector must only include KatalystAgentConfig.spec
+	// if spec.labelKey no set, NodeLabelSelector must be empty, the
+	// label selector must only include KatalystCustomConfig.spec
 	// .nodeLabelSelectorKey, otherwise it will not be synced
 	// This field will be immutable after it is initially set.
 	// +optional

@@ -32,9 +32,9 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 
 // ResourceName const is used to construct standard gvr
 const (
-	ResourceNameKatalystCustomConfigs = "katalystcustomconfigs"
-	ResourceNameCustomNodeConfigs     = "customnodeconfigs"
-	ResourceNameKatalystAgentConfigs  = "katalystagentconfigs"
+	ResourceNameKatalystCustomConfigs  = "katalystcustomconfigs"
+	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
+	ResourceNameEvictionConfigurations = "evictionconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -58,8 +58,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&CustomNodeConfigList{},
 
 		// agent custom config crd
-		&KatalystAgentConfig{},
-		&KatalystAgentConfigList{},
+		&EvictionConfiguration{},
+		&EvictionConfigurationList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)

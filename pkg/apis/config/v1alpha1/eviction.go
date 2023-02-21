@@ -23,7 +23,7 @@ import (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=katalystagentconfigs,shortName=kac
+// +kubebuilder:resource:path=evictionconfigurations,shortName=ec
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AGE",type=date,JSONPath=.metadata.creationTimestamp
 // +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeLabelSelector"
@@ -33,44 +33,49 @@ import (
 // +kubebuilder:printcolumn:name="REASON",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].reason"
 // +kubebuilder:printcolumn:name="MESSAGE",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].message"
 
-// KatalystAgentConfig is the Schema for the configuration API used by katalyst agent
-type KatalystAgentConfig struct {
+// EvictionConfiguration is the Schema for the configuration API used by eviction
+type EvictionConfiguration struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   KatalystAgentConfigSpec `json:"spec,omitempty"`
-	Status GenericConfigStatus     `json:"status,omitempty"`
+	Spec   EvictionConfigurationSpec `json:"spec,omitempty"`
+	Status GenericConfigStatus       `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 
-// KatalystAgentConfigList contains a list of KatalystAgentConfig
-type KatalystAgentConfigList struct {
+// EvictionConfigurationList contains a list of EvictionConfiguration
+type EvictionConfigurationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []KatalystAgentConfig `json:"items"`
+	Items           []EvictionConfiguration `json:"items"`
 }
 
-// KatalystAgentConfigSpec defines the desired state of KatalystAgentConfig
-type KatalystAgentConfigSpec struct {
+// EvictionConfigurationSpec defines the desired state of EvictionConfiguration
+type EvictionConfigurationSpec struct {
 	GenericConfigSpec `json:",inline"`
 
-	// Config is custom field for agent configuration
+	// Config is custom field for eviction configuration
 	// all configuration crd should contain a field named with `config`
-	Config AgentConfig `json:"config,omitempty"`
+	Config EvictionConfig `json:"config,omitempty"`
 }
 
-type AgentConfig struct {
-	// reclaimed resources eviction plugin options
-	ReclaimedResourcesEvictionPluginConfig ReclaimedResourcesEvictionPluginConfig `json:"reclaimedResourcesEvictionPluginConfig,omitempty"`
+type EvictionConfig struct {
+	// EvictionPluginsConfig is the config for all eviction plugins
+	EvictionPluginsConfig EvictionPluginsConfig `json:"evictionPluginsConfig,omitempty"`
+}
+
+type EvictionPluginsConfig struct {
+	// ReclaimedResourcesEvictionPluginConfig is the config for reclaimed resources eviction plugin
+	ReclaimedResourcesEvictionPluginConfig ReclaimedResourcesEvictionPluginConfig `json:"reclaimedResourcesEvictionPluginConfig,omitempty" json:"reclaimedResourcesEvictionPluginConfig"`
 
 	// MemoryEvictionPluginConfig is the config for memory eviction plugin
-	MemoryEvictionPluginConfig MemoryEvictionPluginConfig `json:"memoryEvictionPluginConfig,omitempty"`
+	MemoryEvictionPluginConfig MemoryEvictionPluginConfig `json:"memoryEvictionPluginConfig,omitempty" json:"memoryEvictionPluginConfig"`
 }
 
 type ReclaimedResourcesEvictionPluginConfig struct {
-	// eviction threshold rate for reclaimed resources
+	// EvictionThreshold eviction threshold rate for reclaimed resources
 	EvictionThreshold map[v1.ResourceName]float64 `json:"evictionThreshold,omitempty"`
 }
 
