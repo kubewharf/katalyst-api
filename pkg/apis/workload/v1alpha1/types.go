@@ -113,11 +113,12 @@ type ServiceBusinessIndicatorSpec struct {
 type TargetIndicatorName string
 
 const (
-	TargetIndicatorNameSchedWait TargetIndicatorName = "SchedWait"
+	TargetIndicatorNameCPUSchedWait TargetIndicatorName = "cpu_sched_wait"
+	TargetIndicatorNameCPI          TargetIndicatorName = "cpi"
 )
 
 // ServiceSystemIndicatorSpec defines workload profiling in system level, such as
-// SchedWait、CPI、MBW ... and so on, and sysadvisor (along with reporter and qrm)
+// cpu_sched_wait、cpi、mbw ... and so on, and sysadvisor (along with reporter and qrm)
 // will try to perform resources and controlKnob actions
 //
 // System-target indicator (along with its values in each level) could be difficult
@@ -126,7 +127,7 @@ const (
 // get those stats.
 type ServiceSystemIndicatorSpec struct {
 	// Name is used to define the system-related profiling indicator for the workload,
-	// e.g. SchedWait、CPI、MBW ... and so on.
+	// e.g. cpu_sched_wait、cpi、mbw ... and so on.
 	// Users can use it as an expended way, and customize sysadvisor to adapter with it.
 	Name TargetIndicatorName `json:"name"`
 

@@ -83,11 +83,11 @@ spec:
                   we should try to satisfy all of those indicator targets
                 items:
                   description: "ServiceSystemIndicatorSpec defines workload profiling
-                    in system level, such as SchedWait、CPI、MBW ... and so on, and
-                    sysadvisor (along with reporter and qrm) will try to perform resources
-                    and controlKnob actions \n System-target indicator (along with
-                    its values in each level) could be difficult to pre-define, and
-                    it may have strong correlations with both workload characters
+                    in system level, such as cpu_sched_wait、cpi、mbw ... and so on,
+                    and sysadvisor (along with reporter and qrm) will try to perform
+                    resources and controlKnob actions \n System-target indicator (along
+                    with its values in each level) could be difficult to pre-define,
+                    and it may have strong correlations with both workload characters
                     and node environments, so we suggest users to run offline analysis
                     pipelines to get those stats."
                   properties:
@@ -110,8 +110,8 @@ spec:
                       type: array
                     name:
                       description: Name is used to define the system-related profiling
-                        indicator for the workload, e.g. SchedWait、CPI、MBW ... and
-                        so on. Users can use it as an expended way, and customize
+                        indicator for the workload, e.g. cpu_sched_wait、cpi、mbw ...
+                        and so on. Users can use it as an expended way, and customize
                         sysadvisor to adapter with it.
                       type: string
                   required:
