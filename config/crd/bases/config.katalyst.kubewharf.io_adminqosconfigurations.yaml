@@ -1,0 +1,190 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
+  name: adminqosconfigurations.config.katalyst.kubewharf.io
+spec:
+  group: config.katalyst.kubewharf.io
+  names:
+    kind: AdminQoSConfiguration
+    listKind: AdminQoSConfigurationList
+    plural: adminqosconfigurations
+    shortNames:
+    - aqc
+    singular: adminqosconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    - jsonPath: .spec.nodeLabelSelector
+      name: SELECTOR
+      type: string
+    - jsonPath: .spec.ephemeralSelector.nodeNames
+      name: NODES
+      type: string
+    - jsonPath: .spec.ephemeralSelector.lastDuration
+      name: DURATION
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].status
+      name: VALID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].reason
+      name: REASON
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].message
+      name: MESSAGE
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AdminQoSConfiguration is the Schema for the configuration API
+          used by admin QoS policy
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AdminQoSConfigurationSpec defines the desired state of AdminQoSConfiguration
+            properties:
+              config:
+                description: Config is custom field for admin qos configuration
+                properties:
+                  reclaimedResourceConfig:
+                    description: ReclaimedResourceConfig is a configuration for reclaim
+                      resource
+                    properties:
+                      enableReclaim:
+                        description: EnableReclaim is a flag to enable reclaim resource,
+                          if true, reclaim resource will be enabled, which means reclaim
+                          resource will be reported to custom node resource and support
+                          colocation between reclaimed_cores pod and other pods, otherwise,
+                          reclaim resource will be disabled.
+                        type: boolean
+                      minReclaimedResourceForReport:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: MinReclaimedResourceForReport is a minimum reclaimed
+                          resource for report to custom node resource, which means
+                          if reclaimed resource is less than MinReclaimedResourceForReport,
+                          then reclaimed resource will be reported as MinReclaimedResourceForReport.
+                        type: object
+                      reservedResourceForAllocate:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: ReservedResourceForAllocate is a resource reserved
+                          for non-reclaimed_cores pods that are not allocated to reclaimed_cores
+                          pods. It is used to set aside some buffer resources to avoid
+                          sudden increase in resource requirements.
+                        type: object
+                      reservedResourceForReport:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: ReservedResourceForReport is a reserved resource
+                          for report to custom node resource, which is used to prevent
+                          reclaim resource from being requested by reclaimed_cores
+                          pods.
+                        type: object
+                    type: object
+                type: object
+              ephemeralSelector:
+                description: EphemeralSelector is used to indicate the
+                properties:
+                  lastDuration:
+                    description: define the duration this configuration will last
+                      from creationTimestamp. must and only set when NodeNames already
+                      set
+                    type: string
+                  nodeNames:
+                    description: Specific nodes' name the configurations will be effected.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              nodeLabelSelector:
+                description: NodeLabelSelector select nodes to apply these configurations
+                  if spec.labelKey no set, NodeLabelSelector must be empty, the label
+                  selector must only include KatalystCustomConfig.spec .nodeLabelSelectorKey,
+                  otherwise it will not be synced This field will be immutable after
+                  it is initially set.
+                type: string
+              revisionHistoryLimit:
+                default: 3
+                description: RevisionHistoryLimit is the maximum number of revisions
+                  that will be maintained in the resource's revision history. The
+                  revision history consists of all revisions not represented by a
+                  currently applied Spec version. The default value is 3.
+                format: int64
+                type: integer
+            type: object
+          status:
+            properties:
+              collisionCount:
+                description: Count of hash collisions for this cr. The kcc controller
+                  uses this field as a collision avoidance mechanism when it needs
+                  to create the name for the newest ControllerRevision.
+                format: int32
+                type: integer
+              conditions:
+                description: Represents the latest available observations of a config's
+                  current state.
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transit from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of config condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: The most recent generation observed by the kcc controller.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

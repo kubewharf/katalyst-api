@@ -35,6 +35,7 @@ const (
 	ResourceNameKatalystCustomConfigs  = "katalystcustomconfigs"
 	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
 	ResourceNameEvictionConfigurations = "evictionconfigurations"
+	ResourceNameAdminQoSConfigurations = "adminqosconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -60,6 +61,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		// agent custom config crd
 		&EvictionConfiguration{},
 		&EvictionConfigurationList{},
+		&AdminQoSConfiguration{},
+		&AdminQoSConfigurationList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
