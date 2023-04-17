@@ -32,6 +32,9 @@ const (
 
 	PodAnnotationMemoryEnhancementNumaBinding       = "numa_binding"
 	PodAnnotationMemoryEnhancementNumaBindingEnable = "true"
+
+	PodAnnotationMemoryEnhancementNumaExclusive       = "numa_exclusive"
+	PodAnnotationMemoryEnhancementNumaExclusiveEnable = "true"
 )
 
 // const variables for pod annotations about qos level enhancement in cpu
