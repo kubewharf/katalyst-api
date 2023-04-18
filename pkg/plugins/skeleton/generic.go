@@ -218,9 +218,15 @@ func (p *PluginRegistrationWrapper) initialize() {
 	p.servers = make([]*grpc.Server, 0, len(p.sockets))
 }
 
-func (p *PluginRegistrationWrapper) start() error {
+func (p *PluginRegistrationWrapper) start() (startError error) {
 	p.Lock()
-	defer p.Unlock()
+	defer func() {
+		p.Unlock()
+		if startError != nil {
+			klog.Errorf("start %s failed with error: %v", p.Name(), startError)
+			_ = p.stop()
+		}
+	}()
 
 	if len(p.sockets) == 0 {
 		return fmt.Errorf("%s plugin get empty sockets", p.Name())
@@ -239,8 +245,6 @@ func (p *PluginRegistrationWrapper) start() error {
 	klog.Infof("starting to serve %s on %+v", p.Name(), p.sockets)
 
 	if err := p.serve(); err != nil {
-		klog.Errorf("start %s failed with error: %v", p.Name(), err)
-		_ = p.plugin.Stop()
 		return err
 	}
 
@@ -312,16 +316,12 @@ func (p *PluginRegistrationWrapper) serve() error {
 			return fmt.Errorf("listen for %s at socket: %s faield with err: %v", p.Name(), socket, err)
 		}
 
-		klog.Infof("start %s successfully", p.Name())
-
 		server := grpc.NewServer()
 		// register reporter plugin server by real reporter Plugin which
 		// only need to implement simple reporter plugin Start/Stop/Get/ListAndWatch
 		// function without concerning plugin registration related logic
 		p.serverRegister(server)
 		watcherapi.RegisterRegistrationServer(server, p)
-
-		p.servers = append(p.servers, server)
 
 		go func() {
 			lastCrashTime := time.Now()
@@ -351,20 +351,34 @@ func (p *PluginRegistrationWrapper) serve() error {
 			}
 		}()
 
-		ctx, cancel := context.WithTimeout(context.Background(), grpcTimeout)
-		defer cancel()
+		err = func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), grpcTimeout)
+			defer cancel()
 
-		conn, err := grpc.DialContext(ctx, curSocket,
-			grpc.WithTransportCredentials(insecure.NewCredentials()),
-			grpc.WithBlock(),
-			grpc.WithContextDialer(func(ctx context.Context, addr string) (net.Conn, error) {
-				return (&net.Dialer{}).DialContext(ctx, "unix", addr)
-			}),
-		)
+			conn, err := grpc.DialContext(ctx, curSocket,
+				grpc.WithTransportCredentials(insecure.NewCredentials()),
+				grpc.WithBlock(),
+				grpc.WithContextDialer(func(ctx context.Context, addr string) (net.Conn, error) {
+					return (&net.Dialer{}).DialContext(ctx, "unix", addr)
+				}),
+			)
+
+			if err != nil {
+				return err
+			}
+
+			_ = conn.Close()
+
+			return nil
+		}()
+
 		if err != nil {
+			server.Stop()
 			return fmt.Errorf("dial check for %s at socket: %s failed with err: %v", p.Name(), curSocket, err)
 		}
-		_ = conn.Close()
+
+		p.servers = append(p.servers, server)
+		klog.Infof("serve %s successfully on %s", p.Name(), curSocket)
 	}
 
 	return nil
