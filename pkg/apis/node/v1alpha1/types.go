@@ -91,19 +91,28 @@ type Property struct {
 }
 
 type CustomNodeResourceStatus struct {
-	// +optional
-	ResourceAllocatable *v1.ResourceList `json:"resourceAllocatable,omitempty"`
+	// Resources defines the numeric quantities in this node; for instance reclaimed resources for this node
+	Resources Resources `json:"resources"`
 
 	// +optional
-	ResourceCapacity *v1.ResourceList `json:"resourceCapacity,omitempty"`
+	TopologyZone []*TopologyZone `json:"topologyZone,omitempty"`
 
-	// +optional
-	TopologyStatus *TopologyStatus `json:"topologyStatus,omitempty"`
+	// TopologyPolicy indicates placement policy for scheduler or other centralized components to follow.
+	// this policy (including topology scope) is defined in topology-manager, katalyst is
+	// responsible to parse the policy, and transform to TopologyPolicy here.
+	// +kubebuilder:default:=none
+	TopologyPolicy TopologyPolicy `json:"topologyPolicy"`
 
 	// Conditions is an array of current observed cnr conditions.
 	// +optional
 	Conditions []CNRCondition `json:"conditions,omitempty"`
 }
+
+type TopologyPolicy string
+
+const (
+	TopologyPolicyNone TopologyPolicy = "none"
+)
 
 // CNRCondition contains condition information for a cnr.
 type CNRCondition struct {
@@ -129,25 +138,77 @@ const (
 	CNRAgentNotFound CNRConditionType = "AgentNotFound"
 )
 
-type TopologyStatus struct {
+type TopologyZone struct {
+	// Type represents which kind of resource this TopologyZone is for;
+	// for instance, Socket, Numa, GPU, NIC, Disk and so on.
+	Type TopologyType `json:"type"`
+
+	// Name represents the name for the given type for resource; for instance,
+	// - disk-for-log, disk-for-storage may have different usage or attributes, so we
+	//   need separate structure to distinguish them.
 	// +optional
-	Sockets []*SocketStatus `json:"sockets,omitempty"`
+	Name string `json:"name,omitempty"`
+
+	// Resources defines the numeric quantities in this TopologyZone; for instance,
+	// - a TopologyZone with type TopologyTypeGPU may have both gpu and gpu-memory
+	// - a TopologyZone with type TopologyTypeNIC may have both ingress and egress bandwidth
+	Resources Resources `json:"resources"`
+
+	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	Attributes []Attribute `json:"attributes,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
+
+	// +optional
+	// +patchMergeKey=consumer
+	// +patchStrategy=merge
+	Allocations []*Allocation `json:"allocations,omitempty" patchStrategy:"merge" patchMergeKey:"consumer"`
+
+	// Children represents the ownerships between multiple TopologyZone; for instance,
+	// - a TopologyZone with type TopologyTypeSocket may have multiple childed TopologyZone
+	//   with type TopologyTypeNuma to reflect the physical connections for a node
+	// - a TopologyZone with type `nic` may have multiple childed TopologyZone with type `vf`
+	//   to reflect the `physical and virtual` relations between devices
+	// todo: in order to bypass the lacked functionality of recursive structure definition,
+	//  we need to skip validation of this field for now; will re-add this validation logic
+	//  if the community supports $ref, for more information, please
+	//  refer to https://github.com/kubernetes/kubernetes/issues/62872
+	// +optional
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	Children []*TopologyZone `json:"children,omitempty"`
+
+	// todo, add sibling here if the topology needs to record the physical-link for multiple TopologyZone
 }
 
-type SocketStatus struct {
-	SocketID int `json:"socketID"`
-	// +optional
-	Numas []*NumaStatus `json:"numas,omitempty"`
-}
+type TopologyType string
 
-type NumaStatus struct {
-	NumaID int `json:"numaID"`
+const (
+	// TopologyTypeSocket indicates socket-level topology
+	TopologyTypeSocket TopologyType = "Socket"
+
+	// TopologyTypeNuma indicates numa-level topology
+	TopologyTypeNuma TopologyType = "Numa"
+
+	// TopologyTypeGPU indicates a zone for gpu device
+	TopologyTypeGPU TopologyType = "GPU"
+
+	// TopologyTypeNIC indicates a zone for network device
+	TopologyTypeNIC TopologyType = "NIC"
+)
+
+type Resources struct {
 	// +optional
 	Allocatable *v1.ResourceList `json:"allocatable,omitempty"`
+
 	// +optional
 	Capacity *v1.ResourceList `json:"capacity,omitempty"`
-	// +optional
-	Allocations []*Allocation `json:"allocations,omitempty"`
+}
+
+// Attribute records the resource-specified info with name-value pairs
+type Attribute struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 type Allocation struct {
