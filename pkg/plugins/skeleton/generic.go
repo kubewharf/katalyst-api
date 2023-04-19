@@ -224,6 +224,7 @@ func (p *PluginRegistrationWrapper) start() (startError error) {
 		p.Unlock()
 		if startError != nil {
 			klog.Errorf("start %s failed with error: %v", p.Name(), startError)
+			// call stop to revert executed start steps for all servers
 			_ = p.stop()
 		}
 	}()
@@ -323,6 +324,10 @@ func (p *PluginRegistrationWrapper) serve() error {
 		p.serverRegister(server)
 		watcherapi.RegisterRegistrationServer(server, p)
 
+		// server.Serve works in a separate goroutine; we will retry several times if
+		// it crashes, and trigger restart if it exceeds retry thresholds.
+		// if the server stops, server.Serve will return will nil error, so the for loop
+		// can be break successfully without causing goroutine leaks.
 		go func() {
 			lastCrashTime := time.Now()
 			restartCount := 0
@@ -351,6 +356,7 @@ func (p *PluginRegistrationWrapper) serve() error {
 			}
 		}()
 
+		// try to connect with the server to ensure the serving works as expected
 		err = func() error {
 			ctx, cancel := context.WithTimeout(context.Background(), grpcTimeout)
 			defer cancel()
@@ -362,7 +368,6 @@ func (p *PluginRegistrationWrapper) serve() error {
 					return (&net.Dialer{}).DialContext(ctx, "unix", addr)
 				}),
 			)
-
 			if err != nil {
 				return err
 			}
@@ -371,7 +376,6 @@ func (p *PluginRegistrationWrapper) serve() error {
 
 			return nil
 		}()
-
 		if err != nil {
 			server.Stop()
 			return fmt.Errorf("dial check for %s at socket: %s failed with err: %v", p.Name(), curSocket, err)
