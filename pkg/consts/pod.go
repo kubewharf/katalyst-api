@@ -23,3 +23,8 @@ const (
 	PodAnnotationInplaceUpdateResizePolicyKey     = "pod.kubernetes.io/resizePolicy"
 	PodAnnotationInplaceUpdateResizePolicyRestart = "Restart"
 )
+
+// PodAnnotationNetClassKey is a const variable for pod annotation about net class.
+const (
+	PodAnnotationNetClassKey = "qrm.katalyst.kubewharf.io/net_class_id"
+)
