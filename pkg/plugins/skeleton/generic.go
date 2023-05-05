@@ -151,6 +151,20 @@ func (p *PluginRegistrationWrapper) Start() error {
 	go func() {
 		for {
 			_ = wait.PollImmediateInfinite(restartRetryInterval, func() (bool, error) {
+
+				select {
+				case <-p.stopCh:
+					return false, fmt.Errorf("stop channel closed during polling start")
+				case _, ok := <-p.restartCh:
+					if !ok {
+						return false, fmt.Errorf("restart channel closed during polling start")
+					}
+
+					klog.Infof("receive restart signal during polling start, continue to poll")
+					return false, nil
+				default:
+				}
+
 				err := p.start()
 				if err != nil {
 					p.metricCallback("plugin_start_failed", 1)
@@ -335,6 +349,10 @@ func (p *PluginRegistrationWrapper) serve() error {
 				klog.Infof("starting GRPC Server for %s at socket: %s", p.Name(), curSocket)
 				err := server.Serve(sock)
 				if err == nil {
+					klog.Infof("GRPC Server for %s at socket: %s stops serving", p.Name(), curSocket)
+					break
+				} else if err == grpc.ErrServerStopped {
+					klog.Infof("GRPC Server for %s at socket: %s already stopped, break from serving goroutine", p.Name(), curSocket)
 					break
 				}
 
@@ -344,6 +362,7 @@ func (p *PluginRegistrationWrapper) serve() error {
 				if restartCount > 5 {
 					klog.Errorf("GRPC server for %s at socket: %s has repeatedly crashed recently. Quitting", p.Name(), curSocket)
 					_ = p.Restart()
+					break
 				}
 
 				timeSinceLastCrash := time.Since(lastCrashTime).Seconds()
