@@ -47,3 +47,17 @@ const (
 
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
 )
+
+// const variables for pod annotations about qos level enhancement in network
+const (
+	PodAnnotationNetworkEnhancementKey = "katalyst.kubewharf.io/network_enhancement"
+
+	PodAnnotationNetworkEnhancementNamespaceType              = "namespace_type"
+	PodAnnotationNetworkEnhancementNamespaceTypeHost          = "host"
+	PodAnnotationNetworkEnhancementNamespaceTypeHostPrefer    = "host-prefer"
+	PodAnnotationNetworkEnhancementNamespaceTypeNotHost       = "not-host"
+	PodAnnotationNetworkEnhancementNamespaceTypeNotHostPrefer = "not-host-prefer"
+
+	PodAnnotationNetworkEnhancementAffinityRestricted     = "affinity_restricted"
+	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
+)
