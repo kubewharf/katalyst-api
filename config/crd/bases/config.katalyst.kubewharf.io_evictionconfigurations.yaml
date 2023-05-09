@@ -76,6 +76,10 @@ spec:
                             description: EnableNumaLevelDetection is whether to enable
                               numa-level detection
                             type: boolean
+                          enableRssOveruseDetection:
+                            description: EnableRSSOveruseDetection is whether to enable
+                              pod-level rss overuse detection
+                            type: boolean
                           enableSystemLevelDetection:
                             description: EnableSystemLevelDetection is whether to
                               enable system-level detection
@@ -96,6 +100,10 @@ spec:
                               threshold for the number of times NUMA's free memory
                               falls below the watermark
                             type: integer
+                          rssOveruseRateThreshold:
+                            description: RssOveruseRateThreshold is the threshold
+                              for the rate of rss
+                            type: number
                           systemEvictionRankingMetrics:
                             description: SystemEvictionRankingMetrics is the metrics
                               used to rank pods for eviction at the system level

@@ -30,6 +30,8 @@ const (
 const (
 	PodAnnotationMemoryEnhancementKey = "katalyst.kubewharf.io/memory_enhancement"
 
+	PodAnnotationMemoryEnhancementRssOverUseThreshold = "rss_overuse_threshold"
+
 	PodAnnotationMemoryEnhancementNumaBinding       = "numa_binding"
 	PodAnnotationMemoryEnhancementNumaBindingEnable = "true"
 

@@ -103,4 +103,10 @@ type MemoryEvictionPluginConfig struct {
 
 	// GracePeriod is the grace period of memory eviction
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// EnableRSSOveruseDetection is whether to enable pod-level rss overuse detection
+	EnableRssOveruseDetection *bool `json:"enableRssOveruseDetection,omitempty"`
+
+	// RssOveruseRateThreshold is the threshold for the rate of rss
+	RssOveruseRateThreshold *float64 `json:"rssOveruseRateThreshold,omitempty"`
 }
