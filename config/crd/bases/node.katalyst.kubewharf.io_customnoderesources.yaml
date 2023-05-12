@@ -110,84 +110,133 @@ spec:
                   - type
                   type: object
                 type: array
-              resourceAllocatable:
-                additionalProperties:
-                  anyOf:
-                  - type: integer
-                  - type: string
-                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                  x-kubernetes-int-or-string: true
-                description: ResourceList is a set of (resource name, quantity) pairs.
-                type: object
-              resourceCapacity:
-                additionalProperties:
-                  anyOf:
-                  - type: integer
-                  - type: string
-                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                  x-kubernetes-int-or-string: true
-                description: ResourceList is a set of (resource name, quantity) pairs.
-                type: object
-              topologyStatus:
+              resources:
+                description: Resources defines the numeric quantities in this node;
+                  for instance reclaimed resources for this node
                 properties:
-                  sockets:
-                    items:
-                      properties:
-                        numas:
-                          items:
-                            properties:
-                              allocatable:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                description: ResourceList is a set of (resource name,
-                                  quantity) pairs.
-                                type: object
-                              allocations:
-                                items:
-                                  properties:
-                                    consumer:
-                                      type: string
-                                    requests:
-                                      additionalProperties:
-                                        anyOf:
-                                        - type: integer
-                                        - type: string
-                                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                        x-kubernetes-int-or-string: true
-                                      description: ResourceList is a set of (resource
-                                        name, quantity) pairs.
-                                      type: object
-                                  required:
-                                  - consumer
-                                  type: object
-                                type: array
-                              capacity:
-                                additionalProperties:
-                                  anyOf:
-                                  - type: integer
-                                  - type: string
-                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                  x-kubernetes-int-or-string: true
-                                description: ResourceList is a set of (resource name,
-                                  quantity) pairs.
-                                type: object
-                              numaID:
-                                type: integer
-                            required:
-                            - numaID
-                            type: object
-                          type: array
-                        socketID:
-                          type: integer
-                      required:
-                      - socketID
-                      type: object
-                    type: array
+                  allocatable:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: ResourceList is a set of (resource name, quantity)
+                      pairs.
+                    type: object
+                  capacity:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: ResourceList is a set of (resource name, quantity)
+                      pairs.
+                    type: object
                 type: object
+              topologyPolicy:
+                default: none
+                description: TopologyPolicy indicates placement policy for scheduler
+                  or other centralized components to follow. this policy (including
+                  topology scope) is defined in topology-manager, katalyst is responsible
+                  to parse the policy, and transform to TopologyPolicy here.
+                type: string
+              topologyZone:
+                items:
+                  properties:
+                    allocations:
+                      items:
+                        properties:
+                          consumer:
+                            type: string
+                          requests:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: ResourceList is a set of (resource name,
+                              quantity) pairs.
+                            type: object
+                        required:
+                        - consumer
+                        type: object
+                      type: array
+                    attributes:
+                      items:
+                        description: Attribute records the resource-specified info
+                          with name-value pairs
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - name
+                        - value
+                        type: object
+                      type: array
+                    children:
+                      description: 'Children represents the ownerships between multiple
+                        TopologyZone; for instance, - a TopologyZone with type TopologyTypeSocket
+                        may have multiple childed TopologyZone with type TopologyTypeNuma
+                        to reflect the physical connections for a node - a TopologyZone
+                        with type `nic` may have multiple childed TopologyZone with
+                        type `vf` to reflect the `physical and virtual` relations
+                        between devices todo: in order to bypass the lacked functionality
+                        of recursive structure definition, we need to skip validation
+                        of this field for now; will re-add this validation logic if
+                        the community supports $ref, for more information, please
+                        refer to https://github.com/kubernetes/kubernetes/issues/62872'
+                      x-kubernetes-preserve-unknown-fields: true
+                    name:
+                      description: Name represents the name for the given type for
+                        resource; for instance, - disk-for-log, disk-for-storage may
+                        have different usage or attributes, so we need separate structure
+                        to distinguish them.
+                      type: string
+                    resources:
+                      description: Resources defines the numeric quantities in this
+                        TopologyZone; for instance, - a TopologyZone with type TopologyTypeGPU
+                        may have both gpu and gpu-memory - a TopologyZone with type
+                        TopologyTypeNIC may have both ingress and egress bandwidth
+                      properties:
+                        allocatable:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: ResourceList is a set of (resource name, quantity)
+                            pairs.
+                          type: object
+                        capacity:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: ResourceList is a set of (resource name, quantity)
+                            pairs.
+                          type: object
+                      type: object
+                    type:
+                      description: Type represents which kind of resource this TopologyZone
+                        is for; for instance, Socket, Numa, GPU, NIC, Disk and so
+                        on.
+                      type: string
+                  required:
+                  - resources
+                  - type
+                  type: object
+                type: array
+            required:
+            - resources
+            - topologyPolicy
             type: object
         type: object
     served: true
