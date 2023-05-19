@@ -18,6 +18,6 @@ import v1 "k8s.io/api/core/v1"
 
 // const variables for resource names of reclaimed resource
 const (
-	ReclaimedResourceMilliCPU v1.ResourceName = "katalyst.kubewharf.io/reclaimed_millicpu"
-	ReclaimedResourceMemory   v1.ResourceName = "katalyst.kubewharf.io/reclaimed_memory"
+	ReclaimedResourceMilliCPU v1.ResourceName = "resource.katalyst.kubewharf.io/reclaimed_millicpu"
+	ReclaimedResourceMemory   v1.ResourceName = "resource.katalyst.kubewharf.io/reclaimed_memory"
 )
