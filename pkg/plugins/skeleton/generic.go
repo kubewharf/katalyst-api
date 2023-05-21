@@ -23,6 +23,7 @@ import (
 	"os"
 	"path"
 	"sync"
+	"syscall"
 	"time"
 
 	"google.golang.org/grpc"
@@ -31,6 +32,7 @@ import (
 	"k8s.io/klog/v2"
 	watcherapi "k8s.io/kubelet/pkg/apis/pluginregistration/v1"
 	qrmpluginapi "k8s.io/kubelet/pkg/apis/resourceplugin/v1alpha1"
+	utilfs "k8s.io/kubernetes/pkg/util/filesystem"
 
 	"github.com/kubewharf/katalyst-api/pkg/plugins/registration"
 	evictionv1apha1 "github.com/kubewharf/katalyst-api/pkg/protocol/evictionplugin/v1alpha1"
@@ -227,9 +229,58 @@ func (p *PluginRegistrationWrapper) Restart() (restartErr error) {
 	return nil
 }
 
+func (p *PluginRegistrationWrapper) initializeSocketDirs() error {
+
+	filteredSockets := make([]string, 0, len(p.sockets))
+	inodeSet := make(map[uint64]string)
+	fs := utilfs.DefaultFs{}
+
+	for _, socket := range p.sockets {
+		socketDir := path.Dir(socket)
+
+		if _, err := fs.Stat(socketDir); err != nil {
+			// MkdirAll returns nil if directory already exists.
+			if err := fs.MkdirAll(socketDir, 0755); err != nil {
+				return fmt.Errorf("create socket dir: %s failed with error: %v", socketDir, err)
+			}
+		}
+
+		var socketDirStat syscall.Stat_t
+		if err := syscall.Stat(socketDir, &socketDirStat); err != nil {
+			return fmt.Errorf("stat socket dir: %s failed with error: %v", socketDir, err)
+		}
+
+		klog.Infof("detect socketDir: %s with inode: %d", socketDir, socketDirStat.Ino)
+
+		if prevDir, found := inodeSet[socketDirStat.Ino]; found {
+			klog.Warningf("found socket dir: %s duplicated with %s, same inode: %d",
+				socketDir, prevDir, socketDirStat.Ino)
+			continue
+		}
+
+		inodeSet[socketDirStat.Ino] = socketDir
+		filteredSockets = append(filteredSockets, socket)
+	}
+
+	if len(filteredSockets) == 0 {
+		return fmt.Errorf("filteredSockets is empty")
+	}
+
+	p.sockets = filteredSockets
+	return nil
+}
+
 // initialize plugin servers
-func (p *PluginRegistrationWrapper) initialize() {
+func (p *PluginRegistrationWrapper) initialize() error {
+	err := p.initializeSocketDirs()
+
+	if err != nil {
+		return fmt.Errorf("initializeSocketDirs failed with error: %v", err)
+	}
+
 	p.servers = make([]*grpc.Server, 0, len(p.sockets))
+
+	return nil
 }
 
 func (p *PluginRegistrationWrapper) start() (startError error) {
