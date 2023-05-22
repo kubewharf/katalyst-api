@@ -595,6 +595,16 @@ func (in *MemoryEvictionPluginConfig) DeepCopyInto(out *MemoryEvictionPluginConf
 		*out = new(int64)
 		**out = **in
 	}
+	if in.EnableRssOveruseDetection != nil {
+		in, out := &in.EnableRssOveruseDetection, &out.EnableRssOveruseDetection
+		*out = new(bool)
+		**out = **in
+	}
+	if in.RssOveruseRateThreshold != nil {
+		in, out := &in.RssOveruseRateThreshold, &out.RssOveruseRateThreshold
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
