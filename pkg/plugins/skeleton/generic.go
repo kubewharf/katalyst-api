@@ -1,3 +1,6 @@
+//go:build !windows
+// +build !windows
+
 /*
 Copyright 2022 The Katalyst Authors.
 
@@ -230,7 +233,6 @@ func (p *PluginRegistrationWrapper) Restart() (restartErr error) {
 }
 
 func (p *PluginRegistrationWrapper) initializeSocketDirs() error {
-
 	filteredSockets := make([]string, 0, len(p.sockets))
 	inodeSet := make(map[uint64]string)
 	fs := utilfs.DefaultFs{}
@@ -273,13 +275,11 @@ func (p *PluginRegistrationWrapper) initializeSocketDirs() error {
 // initialize plugin servers
 func (p *PluginRegistrationWrapper) initialize() error {
 	err := p.initializeSocketDirs()
-
 	if err != nil {
 		return fmt.Errorf("initializeSocketDirs failed with error: %v", err)
 	}
 
 	p.servers = make([]*grpc.Server, 0, len(p.sockets))
-
 	return nil
 }
 
@@ -372,7 +372,9 @@ func (p *PluginRegistrationWrapper) serve() error {
 		return err
 	}
 
-	p.initialize()
+	if err := p.initialize(); err != nil {
+		return fmt.Errorf("initialize failed %v", err)
+	}
 
 	for _, socket := range p.sockets {
 		curSocket := socket
