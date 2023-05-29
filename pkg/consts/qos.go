@@ -53,11 +53,11 @@ const (
 	PodAnnotationNetworkEnhancementKey = "katalyst.kubewharf.io/network_enhancement"
 
 	PodAnnotationNetworkEnhancementNamespaceType              = "namespace_type"
-	PodAnnotationNetworkEnhancementNamespaceTypeHost          = "host"
-	PodAnnotationNetworkEnhancementNamespaceTypeHostPrefer    = "host-prefer"
-	PodAnnotationNetworkEnhancementNamespaceTypeNotHost       = "not-host"
-	PodAnnotationNetworkEnhancementNamespaceTypeNotHostPrefer = "not-host-prefer"
+	PodAnnotationNetworkEnhancementNamespaceTypeHost          = "host_ns"
+	PodAnnotationNetworkEnhancementNamespaceTypeHostPrefer    = "host_ns_preferred"
+	PodAnnotationNetworkEnhancementNamespaceTypeNotHost       = "anti_host_ns"
+	PodAnnotationNetworkEnhancementNamespaceTypeNotHostPrefer = "anti_host_ns_preferred"
 
-	PodAnnotationNetworkEnhancementAffinityRestricted     = "affinity_restricted"
+	PodAnnotationNetworkEnhancementAffinityRestricted     = "topology_affinity_restricted"
 	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
 )
