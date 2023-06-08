@@ -40,7 +40,8 @@ type QoSAwareNodeResourcesBalancedAllocationArgs struct {
 	Resources []v1beta3.ResourceSpec `json:"resources,omitempty"`
 
 	// ReclaimedResources to be considered when scoring.
-	// The default resource set includes "katalyst.cloud/reclaimed_millicpu" and "katalyst.cloud/reclaimed_memory", only valid weight is 1.
+	// The default resource set includes "resource.katalyst.kubewharf.io/reclaimed_millicpu"
+	// and "resource.katalyst.kubewharf.io/reclaimed_memory", only valid weight is 1.
 	ReclaimedResources []v1beta3.ResourceSpec `json:"reclaimedResources,omitempty"`
 }
 
@@ -56,7 +57,8 @@ type ScoringStrategy struct {
 	Resources []v1beta3.ResourceSpec `json:"resources,omitempty"`
 
 	// ReclaimedResources to consider when scoring.
-	// The default resource set includes "katalyst.cloud/reclaimed_millicpu" and "katalyst.cloud/reclaimed_memory", only valid weight is 1.
+	// The default resource set includes "resource.katalyst.kubewharf.io/reclaimed_millicpu"
+	// and "resource.katalyst.kubewharf.io/reclaimed_memory", only valid weight is 1.
 	ReclaimedResources []v1beta3.ResourceSpec `json:"reclaimedResources,omitempty"`
 
 	// Arguments specific to RequestedToCapacityRatio strategy.

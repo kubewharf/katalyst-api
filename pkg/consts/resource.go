@@ -21,3 +21,8 @@ const (
 	ReclaimedResourceMilliCPU v1.ResourceName = "resource.katalyst.kubewharf.io/reclaimed_millicpu"
 	ReclaimedResourceMemory   v1.ResourceName = "resource.katalyst.kubewharf.io/reclaimed_memory"
 )
+
+// const variables for resource names of guaranteed resource
+const (
+	ResourceNetBandwidth v1.ResourceName = "resource.katalyst.kubewharf.io/net_bandwidth"
+)
