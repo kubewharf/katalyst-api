@@ -91,3 +91,7 @@ clean: ## Remove all generated files
 clean-bin: ## Remove all generated binaries
 	rm -rf bin
 	rm -rf hack/tools/bin
+
+.PHONY: fmt
+fmt: ## Run go fmt against code.
+	go fmt ./...
