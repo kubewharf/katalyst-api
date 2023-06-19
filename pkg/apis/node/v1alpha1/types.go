@@ -111,7 +111,26 @@ type CustomNodeResourceStatus struct {
 type TopologyPolicy string
 
 const (
-	TopologyPolicyNone TopologyPolicy = "none"
+	// TopologyPolicyNone policy is the default policy and does not perform any topology alignment.
+	TopologyPolicyNone TopologyPolicy = "None"
+
+	// TopologyPolicySingleNUMANodeContainerLevel represents single-numa-node policy and container level.
+	TopologyPolicySingleNUMANodeContainerLevel TopologyPolicy = "SingleNUMANodeContainerLevel"
+
+	// TopologyPolicySingleNUMANodePodLevel represents single-numa-node policy and pod level.
+	TopologyPolicySingleNUMANodePodLevel TopologyPolicy = "SingleNUMANodePodLevel"
+
+	// TopologyPolicyRestrictedContainerLevel represents restricted policy and container level.
+	TopologyPolicyRestrictedContainerLevel TopologyPolicy = "RestrictedContainerLevel"
+
+	// TopologyPolicyRestrictedPodLevel represents restricted policy and pod level.
+	TopologyPolicyRestrictedPodLevel TopologyPolicy = "RestrictedPodLevel"
+
+	// TopologyPolicyBestEffortContainerLevel represents best-effort policy and container level.
+	TopologyPolicyBestEffortContainerLevel TopologyPolicy = "BestEffortContainerLevel"
+
+	// TopologyPolicyBestEffortPodLevel represents best-effort policy and pod level.
+	TopologyPolicyBestEffortPodLevel TopologyPolicy = "BestEffortPodLevel"
 )
 
 // CNRCondition contains condition information for a cnr.
