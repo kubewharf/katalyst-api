@@ -63,10 +63,195 @@ spec:
               config:
                 description: Config is custom field for admin qos configuration
                 properties:
+                  evictionConfig:
+                    description: EvictionConfig is a configuration for eviction
+                    properties:
+                      cpuPressureEvictionConfig:
+                        description: CPUPressureEvictionConfig is the config for cpu
+                          pressure eviction
+                        properties:
+                          enableLoadEviction:
+                            description: EnableLoadEviction is whether to enable cpu
+                              load eviction
+                            type: boolean
+                          enableSuppressionEviction:
+                            description: EnableSuppressionEviction is whether to enable
+                              pod-level cpu suppression eviction
+                            type: boolean
+                          gracePeriod:
+                            description: GracePeriod is the grace period of cpu pressure
+                              eviction
+                            format: int64
+                            type: integer
+                          loadEvictionCoolDownTime:
+                            description: LoadEvictionCoolDownTime is the cool-down
+                              time of cpu load eviction, if the cpu load eviction
+                              is triggered, the cpu load eviction will be disabled
+                              for the cool-down time
+                            type: string
+                          loadMetricRingSize:
+                            description: LoadMetricRingSize is the size of the load
+                              metric ring, which is used to calculate the load of
+                              the target cpuset pool
+                            minimum: 1
+                            type: integer
+                          loadThresholdMetPercentage:
+                            description: LoadThresholdMetPercentage is the percentage
+                              of the number of times the load over the upper bound
+                              to the total number of times the load is measured, if
+                              the percentage is greater than the load threshold met
+                              percentage, the eviction or node tainted will be triggered
+                            type: number
+                          loadUpperBoundRatio:
+                            description: LoadUpperBoundRatio is the upper bound ratio
+                              of cpuset pool load, if the load of the target cpuset
+                              pool is greater than the load upper bound repeatedly,
+                              the eviction will be triggered
+                            type: number
+                          maxSuppressionToleranceRate:
+                            description: MaxSuppressionToleranceRate is the maximum
+                              cpu suppression tolerance rate that can be set by the
+                              pod, if the cpu suppression tolerance rate of the pod
+                              is greater than the maximum cpu suppression tolerance
+                              rate, the cpu suppression tolerance rate of the pod
+                              will be set to the maximum cpu suppression tolerance
+                              rate
+                            type: number
+                          minSuppressionToleranceDuration:
+                            description: MinSuppressionToleranceDuration is the minimum
+                              duration a pod can tolerate cpu suppression, only if
+                              the cpu suppression duration of the pod is greater than
+                              the minimum cpu suppression duration, the eviction will
+                              be triggered
+                            type: string
+                        type: object
+                      dryRun:
+                        description: DryRun is the list of eviction plugins to dryRun
+                          '*' means "all dry-run by default" 'foo' means "dry-run
+                          'foo'" first item for a particular name wins
+                        items:
+                          type: string
+                        type: array
+                      memoryPressureEvictionConfig:
+                        description: MemoryPressureEvictionConfig is the config for
+                          memory pressure eviction
+                        properties:
+                          enableNumaLevelEviction:
+                            description: EnableNumaLevelEviction is whether to enable
+                              numa-level eviction
+                            type: boolean
+                          enableRSSOveruseEviction:
+                            description: EnableRSSOveruseEviction is whether to enable
+                              pod-level rss overuse eviction
+                            type: boolean
+                          enableSystemLevelEviction:
+                            description: EnableSystemLevelEviction is whether to enable
+                              system-level eviction
+                            type: boolean
+                          gracePeriod:
+                            description: GracePeriod is the grace period of memory
+                              pressure eviction
+                            format: int64
+                            type: integer
+                          numaEvictionRankingMetrics:
+                            description: NumaEvictionRankingMetrics is the metrics
+                              used to rank pods for eviction at the NUMA level
+                            items:
+                              description: NumaEvictionRankingMetric is the metrics
+                                used to rank pods for eviction at the NUMA level
+                              enum:
+                              - qos.pod
+                              - priority.pod
+                              - mem.total.numa.container
+                              type: string
+                            type: array
+                          numaFreeBelowWatermarkTimesThreshold:
+                            description: NumaFreeBelowWatermarkTimesThreshold is the
+                              threshold for the number of times NUMA's free memory
+                              falls below the watermark
+                            type: integer
+                          rssOveruseRateThreshold:
+                            description: RSSOveruseRateThreshold is the threshold
+                              for the rate of rss
+                            type: number
+                          systemEvictionRankingMetrics:
+                            description: SystemEvictionRankingMetrics is the metrics
+                              used to rank pods for eviction at the system level
+                            items:
+                              description: SystemEvictionRankingMetric is the metrics
+                                used to rank pods for eviction at the system level
+                              enum:
+                              - qos.pod
+                              - priority.pod
+                              - mem.usage.container
+                              type: string
+                            type: array
+                          systemKswapdRateExceedTimesThreshold:
+                            description: SystemKswapdRateExceedTimesThreshold is the
+                              threshold for the number of times the kswapd reclaiming
+                              rate exceeds the threshold
+                            type: integer
+                          systemKswapdRateThreshold:
+                            description: NumaFreeBelowWatermarkTimesThreshold is the
+                              threshold for the rate of kswapd reclaiming rate
+                            type: integer
+                        type: object
+                      reclaimedResourcesEvictionConfig:
+                        description: ReclaimedResourcesEvictionConfig is the config
+                          for reclaimed resources' eviction
+                        properties:
+                          evictionThreshold:
+                            additionalProperties:
+                              type: number
+                            description: EvictionThreshold eviction threshold rate
+                              for reclaimed resources
+                            type: object
+                          gracePeriod:
+                            description: GracePeriod is the grace period of reclaimed
+                              resources' eviction
+                            format: int64
+                            type: integer
+                        type: object
+                    type: object
                   reclaimedResourceConfig:
                     description: ReclaimedResourceConfig is a configuration for reclaim
                       resource
                     properties:
+                      cpuHeadroomConfig:
+                        description: CPUHeadroomConfig is a configuration for cpu
+                          headroom
+                        properties:
+                          utilBasedConfig:
+                            description: UtilBasedConfig is a config for utilization
+                              based cpu headroom policy
+                            properties:
+                              enable:
+                                description: Enable is a flag to enable utilization
+                                  based cpu headroom policy
+                                type: boolean
+                              maxHeadroomCapacityRate:
+                                description: MaxHeadroomCapacityRate is the max headroom
+                                  capacity rate of cpu headroom to the total cpu capacity
+                                  of node
+                                type: number
+                              maxOversoldRate:
+                                description: MaxOversoldRate is the max oversold rate
+                                  of cpu headroom to the actual size of reclaimed_cores
+                                  pool
+                                type: number
+                              maxReclaimedCoreUtilization:
+                                description: MaxReclaimedCoreUtilization is the max
+                                  reclaimed core utilization of reclaimed_cores pool,
+                                  which is used to calculate the oversold cpu headroom,
+                                  if zero means no limit
+                                type: number
+                              targetReclaimedCoreUtilization:
+                                description: TargetReclaimedCoreUtilization is the
+                                  target reclaimed core utilization to be used for
+                                  calculating the oversold cpu headroom
+                                type: number
+                            type: object
+                        type: object
                       enableReclaim:
                         description: EnableReclaim is a flag to enable reclaim resource,
                           if true, reclaim resource will be enabled, which means reclaim
@@ -74,6 +259,33 @@ spec:
                           colocation between reclaimed_cores pod and other pods, otherwise,
                           reclaim resource will be disabled.
                         type: boolean
+                      memoryHeadroomConfig:
+                        description: MemoryHeadroomConfig is a configuration for memory
+                          headroom
+                        properties:
+                          utilBasedConfig:
+                            description: MemoryHeadroomUtilBasedConfig is a config
+                              for utilization based memory headroom policy
+                            properties:
+                              cacheBasedRatio:
+                                description: CacheBasedRatio is the rate of cache
+                                  oversold, 0 means disable cache oversold
+                                type: number
+                              enable:
+                                description: Enable is a flag to enable utilization
+                                  based memory headroom policy
+                                type: boolean
+                              freeBasedRatio:
+                                description: FreeBasedRatio is the estimation of free
+                                  memory utilization, which can be used as system
+                                  buffer to oversold memory.
+                                type: number
+                              staticBasedCapacity:
+                                description: StaticBasedCapacity is the static oversold
+                                  memory size by bytes
+                                type: number
+                            type: object
+                        type: object
                       minReclaimedResourceForReport:
                         additionalProperties:
                           anyOf:
@@ -141,6 +353,8 @@ spec:
                   currently applied Spec version. The default value is 3.
                 format: int64
                 type: integer
+            required:
+            - config
             type: object
           status:
             properties:

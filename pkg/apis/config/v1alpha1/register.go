@@ -34,7 +34,6 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 const (
 	ResourceNameKatalystCustomConfigs  = "katalystcustomconfigs"
 	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
-	ResourceNameEvictionConfigurations = "evictionconfigurations"
 	ResourceNameAdminQoSConfigurations = "adminqosconfigurations"
 )
 
@@ -59,8 +58,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&CustomNodeConfigList{},
 
 		// agent custom config crd
-		&EvictionConfiguration{},
-		&EvictionConfigurationList{},
 		&AdminQoSConfiguration{},
 		&AdminQoSConfigurationList{},
 	)
