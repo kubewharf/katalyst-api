@@ -165,8 +165,7 @@ type TopologyZone struct {
 	// Name represents the name for the given type for resource; for instance,
 	// - disk-for-log, disk-for-storage may have different usage or attributes, so we
 	//   need separate structure to distinguish them.
-	// +optional
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 
 	// Resources defines the numeric quantities in this TopologyZone; for instance,
 	// - a TopologyZone with type TopologyTypeGPU may have both gpu and gpu-memory
