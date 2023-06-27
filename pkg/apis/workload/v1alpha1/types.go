@@ -124,6 +124,7 @@ type TargetIndicatorName string
 const (
 	TargetIndicatorNameCPUSchedWait TargetIndicatorName = "cpu_sched_wait"
 	TargetIndicatorNameCPI          TargetIndicatorName = "cpi"
+	TargetIndicatorNameMBW          TargetIndicatorName = "mbw"
 )
 
 // ServiceSystemIndicatorSpec defines workload profiling in system level, such as
