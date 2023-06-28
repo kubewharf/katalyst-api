@@ -224,12 +224,51 @@ spec:
                             pairs.
                           type: object
                       type: object
+                    siblings:
+                      description: Siblings represents the relationship between TopologyZones
+                        at the same level; for instance, the distance between NUMA
+                        nodes.
+                      items:
+                        description: Sibling describes the relationship between two
+                          Zones.
+                        properties:
+                          attributes:
+                            description: Attributes are the attributes of the relationship
+                              between two Zones. For instance, the distance between
+                              tow NUMA nodes, the connection type between two GPUs,
+                              etc.
+                            items:
+                              description: Attribute records the resource-specified
+                                info with name-value pairs
+                              properties:
+                                name:
+                                  type: string
+                                value:
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            type: array
+                          name:
+                            description: Name represents the name of this Sibling.
+                            type: string
+                          type:
+                            description: Type represents the type of this Sibling.
+                              For instance, Socket, Numa, GPU, NIC, Disk and so on.
+                            type: string
+                        required:
+                        - name
+                        - type
+                        type: object
+                      type: array
                     type:
                       description: Type represents which kind of resource this TopologyZone
                         is for; for instance, Socket, Numa, GPU, NIC, Disk and so
                         on.
                       type: string
                   required:
+                  - name
                   - resources
                   - type
                   type: object

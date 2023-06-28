@@ -165,8 +165,7 @@ type TopologyZone struct {
 	// Name represents the name for the given type for resource; for instance,
 	// - disk-for-log, disk-for-storage may have different usage or attributes, so we
 	//   need separate structure to distinguish them.
-	// +optional
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 
 	// Resources defines the numeric quantities in this TopologyZone; for instance,
 	// - a TopologyZone with type TopologyTypeGPU may have both gpu and gpu-memory
@@ -197,7 +196,12 @@ type TopologyZone struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	Children []*TopologyZone `json:"children,omitempty"`
 
-	// todo, add sibling here if the topology needs to record the physical-link for multiple TopologyZone
+	// Siblings represents the relationship between TopologyZones at the same level; for instance,
+	// the distance between NUMA nodes.
+	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	Siblings []Sibling `json:"siblings,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 type TopologyType string
@@ -234,6 +238,22 @@ type Allocation struct {
 	Consumer string `json:"consumer"`
 	// +optional
 	Requests *v1.ResourceList `json:"requests,omitempty"`
+}
+
+// Sibling describes the relationship between two Zones.
+type Sibling struct {
+	// Type represents the type of this Sibling.
+	// For instance, Socket, Numa, GPU, NIC, Disk and so on.
+	Type TopologyType `json:"type"`
+
+	// Name represents the name of this Sibling.
+	Name string `json:"name"`
+
+	// Attributes are the attributes of the relationship between two Zones.
+	// For instance, the distance between tow NUMA nodes, the connection type between two GPUs, etc.
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	Attributes []Attribute `json:"attributes,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
