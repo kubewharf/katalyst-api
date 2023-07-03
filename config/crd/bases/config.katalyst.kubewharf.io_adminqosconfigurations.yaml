@@ -164,6 +164,7 @@ spec:
                               - priority.pod
                               - mem.total.numa.container
                               type: string
+                            minItems: 1
                             type: array
                           numaFreeBelowWatermarkTimesThreshold:
                             description: NumaFreeBelowWatermarkTimesThreshold is the
@@ -185,6 +186,7 @@ spec:
                               - priority.pod
                               - mem.usage.container
                               type: string
+                            minItems: 1
                             type: array
                           systemKswapdRateExceedTimesThreshold:
                             description: SystemKswapdRateExceedTimesThreshold is the

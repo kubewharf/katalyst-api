@@ -177,7 +177,7 @@ type EvictionConfig struct {
 	// 'foo' means "dry-run 'foo'"
 	// first item for a particular name wins
 	// +optional
-	DryRun []string `json:"dryRun,omitempty"`
+	DryRun []string `json:"dryRun"`
 
 	// CPUPressureEvictionConfig is the config for cpu pressure eviction
 	// +optional
@@ -195,7 +195,7 @@ type EvictionConfig struct {
 type ReclaimedResourcesEvictionConfig struct {
 	// EvictionThreshold eviction threshold rate for reclaimed resources
 	// +optional
-	EvictionThreshold map[v1.ResourceName]float64 `json:"evictionThreshold,omitempty"`
+	EvictionThreshold map[v1.ResourceName]float64 `json:"evictionThreshold"`
 
 	// GracePeriod is the grace period of reclaimed resources' eviction
 	// +kubectl:validation:Minimum=0
@@ -289,11 +289,13 @@ type MemoryPressureEvictionConfig struct {
 
 	// NumaEvictionRankingMetrics is the metrics used to rank pods for eviction
 	// at the NUMA level
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	NumaEvictionRankingMetrics []NumaEvictionRankingMetric `json:"numaEvictionRankingMetrics,omitempty"`
 
 	// SystemEvictionRankingMetrics is the metrics used to rank pods for eviction
 	// at the system level
+	// +kubebuilder:validation:MinItems=1
 	// +optional
 	SystemEvictionRankingMetrics []SystemEvictionRankingMetric `json:"systemEvictionRankingMetrics,omitempty"`
 
