@@ -27,8 +27,8 @@ const (
 	ResourceNetBandwidth v1.ResourceName = "resource.katalyst.kubewharf.io/net_bandwidth"
 )
 
-// const variables for the resource annotation key of TopologyAwareQuantity reported
-// by the qrm plugin, indicating that it belongs to a unique topology zone in cnr
-const (
-	ResourceAnnotationKeyResourceIdentifier = "katalyst.kubewharf.io/resource_identifier"
-)
+// ResourceAnnotationKeyResourceIdentifier nominated the key to override the default name
+// field in pod-resource-server (for qrm-related protocols); if the name field can't be
+// guaranteed to be unique in some cases, we can relay on this annotation to get unique keys
+// (to replace with the default name)
+const ResourceAnnotationKeyResourceIdentifier = "katalyst.kubewharf.io/resource_identifier"
