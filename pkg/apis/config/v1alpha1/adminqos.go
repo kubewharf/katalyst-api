@@ -281,11 +281,11 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	SystemKswapdRateThreshold *int `json:"systemKswapdRateThreshold,omitempty"`
 
-	// SystemKswapdRateExceedTimesThreshold is the threshold for the number of
-	// times the kswapd reclaiming rate exceeds the threshold
+	// SystemKswapdRateExceedDurationThreshold is the threshold for the duration the kswapd reclaiming rate
+	// exceeds the threshold
 	// +kubectl:validation:Minimum=0
 	// +optional
-	SystemKswapdRateExceedTimesThreshold *int `json:"systemKswapdRateExceedTimesThreshold,omitempty"`
+	SystemKswapdRateExceedDurationThreshold *int `json:"systemKswapdRateExceedDurationThreshold,omitempty"`
 
 	// NumaEvictionRankingMetrics is the metrics used to rank pods for eviction
 	// at the NUMA level

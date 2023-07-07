@@ -188,9 +188,9 @@ spec:
                               type: string
                             minItems: 1
                             type: array
-                          systemKswapdRateExceedTimesThreshold:
-                            description: SystemKswapdRateExceedTimesThreshold is the
-                              threshold for the number of times the kswapd reclaiming
+                          systemKswapdRateExceedDurationThreshold:
+                            description: SystemKswapdRateExceedDurationThreshold is
+                              the threshold for the duration the kswapd reclaiming
                               rate exceeds the threshold
                             type: integer
                           systemKswapdRateThreshold:

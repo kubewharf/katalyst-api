@@ -686,8 +686,8 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(int)
 		**out = **in
 	}
-	if in.SystemKswapdRateExceedTimesThreshold != nil {
-		in, out := &in.SystemKswapdRateExceedTimesThreshold, &out.SystemKswapdRateExceedTimesThreshold
+	if in.SystemKswapdRateExceedDurationThreshold != nil {
+		in, out := &in.SystemKswapdRateExceedDurationThreshold, &out.SystemKswapdRateExceedDurationThreshold
 		*out = new(int)
 		**out = **in
 	}
