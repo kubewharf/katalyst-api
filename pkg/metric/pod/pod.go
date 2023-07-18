@@ -20,5 +20,6 @@ limitations under the License.
 package pod
 
 const (
-	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min" // real-time cpu load
+	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min" // cpu load
+	CustomMetricPodCPUUsage    = "pod_cpu_usage"     // cpu usage
 )
