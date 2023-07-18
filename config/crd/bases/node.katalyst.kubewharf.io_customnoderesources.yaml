@@ -269,12 +269,10 @@ spec:
                       type: string
                   required:
                   - name
-                  - resources
                   - type
                   type: object
                 type: array
             required:
-            - resources
             - topologyPolicy
             type: object
         type: object

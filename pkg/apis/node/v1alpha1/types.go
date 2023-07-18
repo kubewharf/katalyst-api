@@ -92,6 +92,7 @@ type Property struct {
 
 type CustomNodeResourceStatus struct {
 	// Resources defines the numeric quantities in this node; for instance reclaimed resources for this node
+	// +optional
 	Resources Resources `json:"resources"`
 
 	// +optional
@@ -170,6 +171,7 @@ type TopologyZone struct {
 	// Resources defines the numeric quantities in this TopologyZone; for instance,
 	// - a TopologyZone with type TopologyTypeGPU may have both gpu and gpu-memory
 	// - a TopologyZone with type TopologyTypeNIC may have both ingress and egress bandwidth
+	// +optional
 	Resources Resources `json:"resources"`
 
 	// +optional
