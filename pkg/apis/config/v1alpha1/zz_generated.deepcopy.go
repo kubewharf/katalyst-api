@@ -770,6 +770,17 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			}
 		}
 	}
+	if in.ReservedResourceForReclaimedCores != nil {
+		in, out := &in.ReservedResourceForReclaimedCores, &out.ReservedResourceForReclaimedCores
+		*out = new(corev1.ResourceList)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[corev1.ResourceName]resource.Quantity, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val.DeepCopy()
+			}
+		}
+	}
 	if in.CPUHeadroomConfig != nil {
 		in, out := &in.CPUHeadroomConfig, &out.CPUHeadroomConfig
 		*out = new(CPUHeadroomConfig)
