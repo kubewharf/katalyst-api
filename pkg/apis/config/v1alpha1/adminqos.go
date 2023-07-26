@@ -94,9 +94,9 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	ReservedResourceForAllocate *v1.ResourceList `json:"reservedResourceForAllocate,omitempty"`
 
-	// ReservedResourceForReclaim is a resource reserved for reclaimed_cores pods.
+	// MinReclaimedResourceForAllocate is a resource reserved for reclaimed_cores pods.
 	// +optional
-	ReservedResourceForReclaimedCores *v1.ResourceList `json:"ReservedResourceForReclaimedCores,omitempty"`
+	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
 	// CPUHeadroomConfig is a configuration for cpu headroom
 	// +optional
