@@ -770,8 +770,8 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			}
 		}
 	}
-	if in.ReservedResourceForReclaimedCores != nil {
-		in, out := &in.ReservedResourceForReclaimedCores, &out.ReservedResourceForReclaimedCores
+	if in.MinReclaimedResourceForAllocate != nil {
+		in, out := &in.MinReclaimedResourceForAllocate, &out.MinReclaimedResourceForAllocate
 		*out = new(corev1.ResourceList)
 		if **in != nil {
 			in, out := *in, *out
