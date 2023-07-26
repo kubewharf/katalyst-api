@@ -19,7 +19,16 @@ limitations under the License.
 // api-server provided by katalyst.
 package pod
 
+// real-time cpu related metric
 const (
-	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min" // cpu load
-	CustomMetricPodCPUUsage    = "pod_cpu_usage"     // cpu usage
+	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min"
+	CustomMetricPodCPUUsage    = "pod_cpu_usage"
+)
+
+const (
+	CustomMetricPodMemoryRSS = "pod_memory_rss"
+)
+
+const (
+	CustomMetricPodGPUUsage = "pod_gpu_usage"
 )
