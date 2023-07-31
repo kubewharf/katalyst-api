@@ -20,11 +20,17 @@ limitations under the License.
 package node
 
 const (
-	CustomMetricNodeCPULoad1Min = "node_cpu_load_1min" // real-time cpu load
+	CustomMetricNodeCPULoad1Min = "node_cpu_load_system_1min"
 )
 
 // real-time memory related metric
 const (
 	CustomMetricNodeMemoryFree      = "node_system_memory_free"
 	CustomMetricNodeMemoryAvailable = "node_system_memory_available"
+)
+
+// real-time advisor-related metric
+const (
+	CustomMetricNodeAdvisorPoolLoad1Min = "node_advisor_pool_load_1min"
+	CustomMetricNodeAdvisorKnobStatus   = "node_advisor_knob_status"
 )
