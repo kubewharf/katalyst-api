@@ -29,15 +29,20 @@ type GenericConfigSpec struct {
 	// +kubebuilder:default:=3
 	RevisionHistoryLimit int64 `json:"revisionHistoryLimit,omitempty"`
 
-	// NodeLabelSelector select nodes to apply these configurations
-	// if spec.labelKey no set, NodeLabelSelector must be empty, the
-	// label selector must only include KatalystCustomConfig.spec
-	// .nodeLabelSelectorKey, otherwise it will not be synced
-	// This field will be immutable after it is initially set.
+	// NodeLabelSelector select nodes to apply these configurations,
+	// the priority and node label selector must be matched according
+	// to KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList,
+	// otherwise it will not be synced.
 	// +optional
 	NodeLabelSelector string `json:"nodeLabelSelector,omitempty"`
 
-	// EphemeralSelector is used to indicate the
+	// Priority is used by one node matched by NodeLabelSelector of more
+	// than one configuration, and the higher priority will be considered.
+	// The priority only be supported when NodeLabelSelector set
+	// +optional
+	Priority int32 `json:"priority,omitempty"`
+
+	// EphemeralSelector is a selector for temporary use only
 	// +optional
 	EphemeralSelector EphemeralSelector `json:"ephemeralSelector,omitempty"`
 }

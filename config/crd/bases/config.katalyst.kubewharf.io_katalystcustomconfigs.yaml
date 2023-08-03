@@ -27,9 +27,6 @@ spec:
     - jsonPath: .spec.targetType.version
       name: VERSION
       type: string
-    - jsonPath: .spec.nodeLabelSelectorKey
-      name: KEY
-      type: string
     - jsonPath: .metadata.generation
       name: GENERATION
       type: integer
@@ -74,10 +71,31 @@ spec:
                 description: whether disable revisionHistory for the KatalystCustomConfig
                   resource
                 type: boolean
-              nodeLabelSelectorKey:
-                description: key of node label to select which nodes will be effected
-                  by the KatalystCustomConfig resource
-                type: string
+              nodeLabelSelectorAllowedKeyList:
+                description: the keys list allowed in node selector to select which
+                  nodes will be effected by the KatalystCustomConfig resource, and
+                  the priority will be used when one node match two KatalystCustomConfig
+                  resource at the same time, the higher priority one will be considered.
+                  If not set, node label selector is not allowed to use.
+                items:
+                  description: PriorityNodeLabelSelectorAllowedKeyList defines the
+                    priority and its allowed key list
+                  properties:
+                    keyList:
+                      description: KeyList is allowed to use in node selector in the
+                        Priority
+                      items:
+                        type: string
+                      type: array
+                    priority:
+                      description: Priority is the priority of configurations
+                      format: int32
+                      type: integer
+                  required:
+                  - keyList
+                  - priority
+                  type: object
+                type: array
               targetType:
                 description: the GVR of target config type
                 properties:
