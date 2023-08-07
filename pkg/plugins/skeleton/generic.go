@@ -288,7 +288,6 @@ func (p *PluginRegistrationWrapper) start() (startError error) {
 	defer func() {
 		p.Unlock()
 		if startError != nil {
-			klog.Errorf("start %s failed with error: %v", p.Name(), startError)
 			// call stop to revert executed start steps for all servers
 			_ = p.stop()
 		}
@@ -349,7 +348,7 @@ func (p *PluginRegistrationWrapper) stop() (stopErr error) {
 		return fmt.Errorf("stop wrapped plugin of %s failed with err: %v", p.Name(), err)
 	}
 
-	klog.Infof("stop reporter plugin %s successfully", p.Name())
+	klog.Infof("stop plugin %s successfully", p.Name())
 
 	return nil
 }
