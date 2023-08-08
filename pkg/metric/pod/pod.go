@@ -26,7 +26,8 @@ const (
 )
 
 const (
-	CustomMetricPodMemoryRSS = "pod_memory_rss"
+	CustomMetricPodMemoryRSS   = "pod_memory_rss"
+	CustomMetricPodMemoryUsage = "pod_memory_usage"
 )
 
 const (
