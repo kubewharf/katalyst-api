@@ -24,6 +24,9 @@ spec:
     - jsonPath: .spec.nodeLabelSelector
       name: SELECTOR
       type: string
+    - jsonPath: .spec.priority
+      name: PRIORITY
+      type: string
     - jsonPath: .spec.ephemeralSelector.nodeNames
       name: NODES
       type: string
@@ -296,7 +299,8 @@ spec:
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
                         description: MinReclaimedResourceForAllocate is a resource
-                          reserved for reclaimed_cores pods.
+                          reserved for reclaimed_cores pods，these resources will not
+                          be used by shared_cores pods.
                         type: object
                       minReclaimedResourceForReport:
                         additionalProperties:
@@ -337,7 +341,7 @@ spec:
                     type: object
                 type: object
               ephemeralSelector:
-                description: EphemeralSelector is used to indicate the
+                description: EphemeralSelector is a selector for temporary use only
                 properties:
                   lastDuration:
                     description: define the duration this configuration will last
@@ -351,12 +355,18 @@ spec:
                     type: array
                 type: object
               nodeLabelSelector:
-                description: NodeLabelSelector select nodes to apply these configurations
-                  if spec.labelKey no set, NodeLabelSelector must be empty, the label
-                  selector must only include KatalystCustomConfig.spec .nodeLabelSelectorKey,
-                  otherwise it will not be synced This field will be immutable after
-                  it is initially set.
+                description: NodeLabelSelector select nodes to apply these configurations,
+                  the priority and node label selector must be matched according to
+                  KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList, otherwise
+                  it will not be synced.
                 type: string
+              priority:
+                description: Priority is used by one node matched by NodeLabelSelector
+                  of more than one configuration, and the higher priority will be
+                  considered. The priority only be supported when NodeLabelSelector
+                  set
+                format: int32
+                type: integer
               revisionHistoryLimit:
                 default: 3
                 description: RevisionHistoryLimit is the maximum number of revisions

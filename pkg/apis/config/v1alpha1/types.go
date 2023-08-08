@@ -28,7 +28,6 @@ import (
 // +kubebuilder:printcolumn:name="GROUP",type="string",JSONPath=".spec.targetType.group"
 // +kubebuilder:printcolumn:name="RESOURCE",type="string",JSONPath=".spec.targetType.resource"
 // +kubebuilder:printcolumn:name="VERSION",type="string",JSONPath=".spec.targetType.version"
-// +kubebuilder:printcolumn:name="KEY",type="string",JSONPath=".spec.nodeLabelSelectorKey"
 // +kubebuilder:printcolumn:name="GENERATION",type="integer",JSONPath=".metadata.generation"
 // +kubebuilder:printcolumn:name="OBSERVED",type="integer",JSONPath=".status.observedGeneration"
 // +kubebuilder:printcolumn:name="INVALID",type="string",JSONPath=".status.invalidTargetConfigList"
@@ -53,9 +52,21 @@ type KatalystCustomConfigSpec struct {
 	// +kubebuilder:default:=true
 	// +optional
 	DisableRevisionHistory bool `json:"disableRevisionHistory,omitempty"`
-	// key of node label to select which nodes will be effected by the KatalystCustomConfig resource
+	// the keys list allowed in node selector to select which nodes will be effected by the KatalystCustomConfig resource,
+	// and the priority will be used when one node match two KatalystCustomConfig resource at the same time, the higher
+	// priority one will be considered. If not set, node label selector is not allowed to use.
+	// +patchMergeKey=priority
+	// +patchStrategy=merge
 	// +optional
-	NodeLabelSelectorKey string `json:"nodeLabelSelectorKey,omitempty"`
+	NodeLabelSelectorAllowedKeyList []PriorityNodeLabelSelectorAllowedKeyList `json:"nodeLabelSelectorAllowedKeyList,omitempty"`
+}
+
+// PriorityNodeLabelSelectorAllowedKeyList defines the priority and its allowed key list
+type PriorityNodeLabelSelectorAllowedKeyList struct {
+	// Priority is the priority of configurations
+	Priority int32 `json:"priority"`
+	// KeyList is allowed to use in node selector in the Priority
+	KeyList []string `json:"keyList"`
 }
 
 // KatalystCustomConfigStatus defines the observed state of KatalystCustomConfig
