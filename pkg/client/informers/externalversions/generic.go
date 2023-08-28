@@ -24,6 +24,7 @@ import (
 	v1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/autoscaling/v1alpha1"
 	configv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/config/v1alpha1"
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/node/v1alpha1"
+	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/overcommit/v1alpha1"
 	workloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -70,6 +71,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=node.katalyst.kubewharf.io, Version=v1alpha1
 	case nodev1alpha1.SchemeGroupVersion.WithResource("customnoderesources"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Node().V1alpha1().CustomNodeResources().Informer()}, nil
+
+		// Group=overcommit.katalyst.kubewharf.io, Version=v1alpha1
+	case overcommitv1alpha1.SchemeGroupVersion.WithResource("nodeovercommitconfigs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Overcommit().V1alpha1().NodeOvercommitConfigs().Informer()}, nil
 
 		// Group=workload.katalyst.kubewharf.io, Version=v1alpha1
 	case workloadv1alpha1.SchemeGroupVersion.WithResource("serviceprofiledescriptors"):
