@@ -23,13 +23,10 @@ import (
 
 // NodeOvercommitConfigSpec is a description of a NodeOvercommitConfig
 type NodeOvercommitConfigSpec struct {
-	// Selector decides whether to update Nodes if the Node matches the selector when Type equals to LabelSelector
+	// NodeOvercommitSelectorVal is the value of node label selector with key consts.NodeOvercommitSelectorKey,
+	// it decides whether to update Nodes if the Node matches the selector 'consts.NodeOvercommitSelectorKey=NodeOvercommitSelectorVal'
 	// +optional
-	Selector *metav1.LabelSelector `json:"nodeSelector,omitempty"`
-
-	// NodeList decides whether to check and update nodes if node in NodeList when Type equals to NodeList
-	// +optional
-	NodeList []string `json:"nodeList,omitempty"`
+	NodeOvercommitSelectorVal string `json:"nodeOvercommitSelectorVal,omitempty"`
 
 	// ResourceOvercommitRatioConfig describes the resource overcommit ratio that needs to inject into Node.Annotations
 	// cpu,memory are supported.
@@ -49,6 +46,7 @@ type NodeOvercommitConfigStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,shortName=noc
 // +kubebuilder:printcolumn:name="OVERCOMMITRATIO",type=string,JSONPath=".spec.resourceOvercommitRatioConfig"
+// +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeOvercommitSelectorVal"
 
 // NodeOvercommitConfig is the Schema for the nodeovercommitconfigs API
 type NodeOvercommitConfig struct {
