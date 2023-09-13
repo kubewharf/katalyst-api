@@ -17,6 +17,7 @@ limitations under the License.
 package utils
 
 import (
+	"k8s.io/kubelet/config/v1beta1"
 	"k8s.io/kubernetes/pkg/kubelet/apis/config"
 
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/node/v1alpha1"
@@ -44,6 +45,8 @@ func generateTopologyPolicyPodScope(policy string) nodev1alpha1.TopologyPolicy {
 		return nodev1alpha1.TopologyPolicyBestEffortPodLevel
 	case config.NoneTopologyManagerPolicy:
 		return nodev1alpha1.TopologyPolicyNone
+	case v1beta1.NumericTopologyManagerPolicy:
+		return nodev1alpha1.TopologyPolicyNumericPodLevel
 	default:
 		return nodev1alpha1.TopologyPolicyNone
 	}
@@ -59,6 +62,8 @@ func generateTopologyPolicyContainerScope(policy string) nodev1alpha1.TopologyPo
 		return nodev1alpha1.TopologyPolicyBestEffortContainerLevel
 	case config.NoneTopologyManagerPolicy:
 		return nodev1alpha1.TopologyPolicyNone
+	case v1beta1.NumericTopologyManagerPolicy:
+		return nodev1alpha1.TopologyPolicyNumericContainerLevel
 	default:
 		return nodev1alpha1.TopologyPolicyNone
 	}
