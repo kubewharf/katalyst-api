@@ -95,11 +95,16 @@ message GetEvictPodsResponse {
     Condition condition = 2;
 }
 
+message GetTokenResponse {
+    string token = 1;
+}
+
 message DeletionOptions {
     int64 grace_period_seconds = 1;
 }
 
 service EvictionPlugin {
+    rpc GetToken(Empty) returns (GetTokenResponse) {}
     rpc ThresholdMet(Empty) returns (ThresholdMetResponse) {}
     rpc GetTopEvictionPods(GetTopEvictionPodsRequest) returns (GetTopEvictionPodsResponse) {}
     rpc GetEvictPods(GetEvictPodsRequest) returns (GetEvictPodsResponse) {}
