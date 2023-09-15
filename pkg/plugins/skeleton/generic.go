@@ -75,10 +75,10 @@ type PluginRegistrationWrapper struct {
 	stopCh    chan struct{}
 	restartCh chan struct{}
 
-	plugin         GenericPlugin
 	metricCallback MetricCallback
 	serverRegister pluginServerRegister
 
+	GenericPlugin
 	watcherapi.RegistrationServer
 }
 
@@ -129,9 +129,9 @@ func NewRegistrationPluginWrapper(plugin GenericPlugin, pluginsRegistrationDirs 
 	p := &PluginRegistrationWrapper{
 		stopCh:             make(chan struct{}),
 		restartCh:          make(chan struct{}),
-		plugin:             plugin,
 		metricCallback:     metricCallback,
 		serverRegister:     serverRegister,
+		GenericPlugin:      plugin,
 		RegistrationServer: registrationServer,
 	}
 
@@ -143,11 +143,6 @@ func NewRegistrationPluginWrapper(plugin GenericPlugin, pluginsRegistrationDirs 
 	}
 
 	return p, nil
-}
-
-// Name of this wrapped plugin
-func (p *PluginRegistrationWrapper) Name() string {
-	return p.plugin.Name()
 }
 
 // Start the plugin with auto restart logic, besides
@@ -301,8 +296,8 @@ func (p *PluginRegistrationWrapper) start() (startError error) {
 	// to ensure everything has been cleaned up before starting;
 	// and this potentially requires all plugins should implement
 	// stopping logic in a reentrant way (and not panic)
-	_ = p.plugin.Stop()
-	err := p.plugin.Start()
+	_ = p.GenericPlugin.Stop()
+	err := p.GenericPlugin.Start()
 	if err != nil {
 		return err
 	}
@@ -343,7 +338,7 @@ func (p *PluginRegistrationWrapper) stop() (stopErr error) {
 		return fmt.Errorf("cleanup failed for %s with error: %v", p.Name(), err)
 	}
 
-	err = p.plugin.Stop()
+	err = p.GenericPlugin.Stop()
 	if err != nil {
 		return fmt.Errorf("stop wrapped plugin of %s failed with err: %v", p.Name(), err)
 	}
