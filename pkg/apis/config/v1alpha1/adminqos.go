@@ -189,6 +189,10 @@ type EvictionConfig struct {
 	// +optional
 	CPUPressureEvictionConfig *CPUPressureEvictionConfig `json:"cpuPressureEvictionConfig,omitempty"`
 
+	// SystemLoadPressureEvictionConfig is the config for system load eviction
+	// +optional
+	SystemLoadPressureEvictionConfig *SystemLoadPressureEvictionConfig `json:"systemLoadPressureEvictionConfig,omitempty"`
+
 	// MemoryPressureEvictionConfig is the config for memory pressure eviction
 	// +optional
 	MemoryPressureEvictionConfig *MemoryPressureEvictionConfig `json:"memoryPressureEvictionConfig,omitempty"`
@@ -318,6 +322,42 @@ type MemoryPressureEvictionConfig struct {
 	// +kubectl:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+}
+
+type SystemLoadPressureEvictionConfig struct {
+	// SoftThreshold is the soft threshold of system load pressure, it should be an integral multiple of 100, which means
+	// the real threshold is (SoftThreshold / 100) * CoreNumber
+	// +optional
+	SoftThreshold *int64 `json:"softThreshold,omitempty"`
+
+	// HardThreshold is the hard threshold of system load pressure, it should be an integral multiple of 100, which means
+	// the real threshold is (SoftThreshold / 100) * CoreNumber
+	// +optional
+	HardThreshold *int64 `json:"hardThreshold,omitempty"`
+
+	// HistorySize is the size of the load metric ring, which is used to calculate the system load
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	HistorySize *int64 `json:"historySize,omitempty"`
+
+	// SyncPeriod is the interval in seconds of the plugin fetch the load information
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	SyncPeriod *int64 `json:"syncPeriod,omitempty"`
+
+	// CoolDownTime is the cool-down time of the plugin evict pods
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	CoolDownTime *int64 `json:"coolDownTime,omitempty"`
+
+	// GracePeriod is the grace period of pod deletion
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// the plugin considers the node is facing load pressure only when the ratio of load history which is greater than
+	// threshold is greater than this percentage
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
 }
 
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the

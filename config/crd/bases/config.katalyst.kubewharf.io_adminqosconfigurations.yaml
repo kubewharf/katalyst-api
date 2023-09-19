@@ -217,6 +217,52 @@ spec:
                             format: int64
                             type: integer
                         type: object
+                      systemLoadPressureEvictionConfig:
+                        description: SystemLoadPressureEvictionConfig is the config
+                          for system load eviction
+                        properties:
+                          coolDownTime:
+                            description: CoolDownTime is the cool-down time of the
+                              plugin evict pods
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          gracePeriod:
+                            description: GracePeriod is the grace period of pod deletion
+                            format: int64
+                            type: integer
+                          hardThreshold:
+                            description: HardThreshold is the hard threshold of system
+                              load pressure, it should be an integral multiple of
+                              100, which means the real threshold is (SoftThreshold
+                              / 100) * CoreNumber
+                            format: int64
+                            type: integer
+                          historySize:
+                            description: HistorySize is the size of the load metric
+                              ring, which is used to calculate the system load
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          softThreshold:
+                            description: SoftThreshold is the soft threshold of system
+                              load pressure, it should be an integral multiple of
+                              100, which means the real threshold is (SoftThreshold
+                              / 100) * CoreNumber
+                            format: int64
+                            type: integer
+                          syncPeriod:
+                            description: SyncPeriod is the interval in seconds of
+                              the plugin fetch the load information
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          thresholdMetPercentage:
+                            description: the plugin considers the node is facing load
+                              pressure only when the ratio of load history which is
+                              greater than threshold is greater than this percentage
+                            type: number
+                        type: object
                     type: object
                   reclaimedResourceConfig:
                     description: ReclaimedResourceConfig is a configuration for reclaim
