@@ -28,10 +28,10 @@ type NodeOvercommitConfigSpec struct {
 	// +optional
 	NodeOvercommitSelectorVal string `json:"nodeOvercommitSelectorVal,omitempty"`
 
-	// ResourceOvercommitRatioConfig describes the resource overcommit ratio that needs to inject into Node.Annotations
+	// ResourceOvercommitRatio describes the resource overcommit ratio that needs to inject into Node.Annotations
 	// cpu,memory are supported.
 	// +optional
-	ResourceOvercommitRatioConfig map[v1.ResourceName]string `json:"resourceOvercommitRatioConfig,omitempty"`
+	ResourceOvercommitRatio map[v1.ResourceName]string `json:"resourceOvercommitRatio,omitempty"`
 }
 
 type NodeOvercommitConfigStatus struct {
@@ -45,7 +45,7 @@ type NodeOvercommitConfigStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,shortName=noc
-// +kubebuilder:printcolumn:name="OVERCOMMITRATIO",type=string,JSONPath=".spec.resourceOvercommitRatioConfig"
+// +kubebuilder:printcolumn:name="OVERCOMMITRATIO",type=string,JSONPath=".spec.resourceOvercommitRatio"
 // +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeOvercommitSelectorVal"
 
 // NodeOvercommitConfig is the Schema for the nodeovercommitconfigs API

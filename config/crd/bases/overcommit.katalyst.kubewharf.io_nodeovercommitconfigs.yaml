@@ -18,7 +18,7 @@ spec:
   scope: Cluster
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.resourceOvercommitRatioConfig
+    - jsonPath: .spec.resourceOvercommitRatio
       name: OVERCOMMITRATIO
       type: string
     - jsonPath: .spec.nodeOvercommitSelectorVal
@@ -50,12 +50,12 @@ spec:
                   selector with key consts.NodeOvercommitSelectorKey, it decides whether
                   to update Nodes if the Node matches the selector 'consts.NodeOvercommitSelectorKey=NodeOvercommitSelectorVal'
                 type: string
-              resourceOvercommitRatioConfig:
+              resourceOvercommitRatio:
                 additionalProperties:
                   type: string
-                description: ResourceOvercommitRatioConfig describes the resource
-                  overcommit ratio that needs to inject into Node.Annotations cpu,memory
-                  are supported.
+                description: ResourceOvercommitRatio describes the resource overcommit
+                  ratio that needs to inject into Node.Annotations cpu,memory are
+                  supported.
                 type: object
             type: object
           status:
