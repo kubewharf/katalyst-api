@@ -26,6 +26,8 @@ import (
 	fakeconfigv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/config/v1alpha1/fake"
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/node/v1alpha1"
 	fakenodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/node/v1alpha1/fake"
+	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/overcommit/v1alpha1"
+	fakeovercommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/overcommit/v1alpha1/fake"
 	workloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/workload/v1alpha1"
 	fakeworkloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/workload/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -98,6 +100,11 @@ func (c *Clientset) ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface {
 // NodeV1alpha1 retrieves the NodeV1alpha1Client
 func (c *Clientset) NodeV1alpha1() nodev1alpha1.NodeV1alpha1Interface {
 	return &fakenodev1alpha1.FakeNodeV1alpha1{Fake: &c.Fake}
+}
+
+// OvercommitV1alpha1 retrieves the OvercommitV1alpha1Client
+func (c *Clientset) OvercommitV1alpha1() overcommitv1alpha1.OvercommitV1alpha1Interface {
+	return &fakeovercommitv1alpha1.FakeOvercommitV1alpha1{Fake: &c.Fake}
 }
 
 // WorkloadV1alpha1 retrieves the WorkloadV1alpha1Client

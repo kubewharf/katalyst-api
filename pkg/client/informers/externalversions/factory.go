@@ -28,6 +28,7 @@ import (
 	config "github.com/kubewharf/katalyst-api/pkg/client/informers/externalversions/config"
 	internalinterfaces "github.com/kubewharf/katalyst-api/pkg/client/informers/externalversions/internalinterfaces"
 	node "github.com/kubewharf/katalyst-api/pkg/client/informers/externalversions/node"
+	overcommit "github.com/kubewharf/katalyst-api/pkg/client/informers/externalversions/overcommit"
 	workload "github.com/kubewharf/katalyst-api/pkg/client/informers/externalversions/workload"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -178,6 +179,7 @@ type SharedInformerFactory interface {
 	Autoscaling() autoscaling.Interface
 	Config() config.Interface
 	Node() node.Interface
+	Overcommit() overcommit.Interface
 	Workload() workload.Interface
 }
 
@@ -191,6 +193,10 @@ func (f *sharedInformerFactory) Config() config.Interface {
 
 func (f *sharedInformerFactory) Node() node.Interface {
 	return node.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Overcommit() overcommit.Interface {
+	return overcommit.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Workload() workload.Interface {

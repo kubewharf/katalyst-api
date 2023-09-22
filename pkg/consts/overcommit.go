@@ -26,3 +26,10 @@ const (
 	NodeAnnotationOriginalAllocatableCPUKey    = "katalyst.kubewharf.io/original_allocatable_cpu"
 	NodeAnnotationOriginalAllocatableMemoryKey = "katalyst.kubewharf.io/original_allocatable_memory"
 )
+
+const (
+	NodeOvercommitSelectorKey = "katalyst.kubewharf.io/overcommit_node_pool"
+
+	DefaultNodeCPUOvercommitRatio    = "1"
+	DefaultNodeMemoryOvercommitRatio = "1"
+)

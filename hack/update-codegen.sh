@@ -26,7 +26,7 @@ SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
 #                  instead of the $GOPATH directly. For normal projects this can be dropped.
 ./hack/generate-groups.sh all \
    github.com/kubewharf/katalyst-api/pkg/client  github.com/kubewharf/katalyst-api/pkg/apis \
-  "node:v1alpha1 autoscaling:v1alpha1 config:v1alpha1 workload:v1alpha1" \
+  "node:v1alpha1 autoscaling:v1alpha1 config:v1alpha1 workload:v1alpha1 overcommit:v1alpha1" \
   --output-base "$(dirname "${BASH_SOURCE[0]}")/../../../../" \
   --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt
 
