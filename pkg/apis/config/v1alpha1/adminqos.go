@@ -279,6 +279,11 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	EnableSystemLevelEviction *bool `json:"enableSystemLevelEviction,omitempty"`
 
+	// NumaVictimMinimumUtilizationThreshold is the victim's minimum memory usage on a NUMA node, if a pod
+	// uses less memory on a NUMA node than this threshold,it won't be evicted by this NUMA's memory pressure.
+	// +optional
+	NumaVictimMinimumUtilizationThreshold *float64 `json:"numaVictimMinimumUtilizationThreshold,omitempty"`
+
 	// NumaFreeBelowWatermarkTimesThreshold is the threshold for the number of
 	// times NUMA's free memory falls below the watermark
 	// +kubectl:validation:Minimum=0

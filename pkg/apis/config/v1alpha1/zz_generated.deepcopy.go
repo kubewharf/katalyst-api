@@ -688,6 +688,11 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(bool)
 		**out = **in
 	}
+	if in.NumaVictimMinimumUtilizationThreshold != nil {
+		in, out := &in.NumaVictimMinimumUtilizationThreshold, &out.NumaVictimMinimumUtilizationThreshold
+		*out = new(float64)
+		**out = **in
+	}
 	if in.NumaFreeBelowWatermarkTimesThreshold != nil {
 		in, out := &in.NumaFreeBelowWatermarkTimesThreshold, &out.NumaFreeBelowWatermarkTimesThreshold
 		*out = new(int)

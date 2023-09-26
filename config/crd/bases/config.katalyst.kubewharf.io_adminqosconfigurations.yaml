@@ -174,6 +174,12 @@ spec:
                               threshold for the number of times NUMA's free memory
                               falls below the watermark
                             type: integer
+                          numaVictimMinimumUtilizationThreshold:
+                            description: NumaVictimMinimumUtilizationThreshold is
+                              the victim's minimum memory usage on a NUMA node, if
+                              a pod uses less memory on a NUMA node than this threshold,it
+                              won't be evicted by this NUMA's memory pressure.
+                            type: number
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
                               for the rate of rss
