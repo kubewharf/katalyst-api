@@ -32,6 +32,8 @@ import (
 	fakeovercommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/overcommit/v1alpha1/fake"
 	recommendationv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/recommendation/v1alpha1"
 	fakerecommendationv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/recommendation/v1alpha1/fake"
+	tidev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/tide/v1alpha1"
+	faketidev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/tide/v1alpha1/fake"
 	workloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/workload/v1alpha1"
 	fakeworkloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/workload/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -119,6 +121,11 @@ func (c *Clientset) OvercommitV1alpha1() overcommitv1alpha1.OvercommitV1alpha1In
 // RecommendationV1alpha1 retrieves the RecommendationV1alpha1Client
 func (c *Clientset) RecommendationV1alpha1() recommendationv1alpha1.RecommendationV1alpha1Interface {
 	return &fakerecommendationv1alpha1.FakeRecommendationV1alpha1{Fake: &c.Fake}
+}
+
+// TideV1alpha1 retrieves the TideV1alpha1Client
+func (c *Clientset) TideV1alpha1() tidev1alpha1.TideV1alpha1Interface {
+	return &faketidev1alpha1.FakeTideV1alpha1{Fake: &c.Fake}
 }
 
 // WorkloadV1alpha1 retrieves the WorkloadV1alpha1Client
