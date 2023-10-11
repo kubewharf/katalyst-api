@@ -55,7 +55,7 @@ type KatalystVerticalPodAutoscalerSpec struct {
 	// for individual containers. If not specified, the autoscaler computes recommended
 	// resources for all containers in the pod, without additional constraints.
 	// +optional
-	ResourcePolicy recommendationapi.PodResourcePolicy `json:"resourcePolicy,omitempty"`
+	ResourcePolicy recommendationapi.ResourcePolicy `json:"resourcePolicy,omitempty"`
 
 	// Describes the rules on how changes are applied to the pods.
 	// If not specified, all fields in the `PodUpdatePolicy` are set to their default values.

@@ -568,45 +568,54 @@ spec:
                   constraints.
                 properties:
                   algorithmPolicy:
-                    description: policy of algorithm, if no algorithm is provided,
-                      using default
+                    description: policy of algorithm, if not provided, using default
                     properties:
                       algorithm:
-                        description: Algorithm is the recommended algorithm of choice
+                        default: percentile
+                        description: Algorithm specifies the recommendation algorithm
+                          used by the recommender, default to "percentile"
                         type: string
                       extensions:
                         description: Extensions config by key-value format.
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
                       recommender:
-                        description: Recommenders of the Algorithm used to this Pod;
-                          if end-user wants to define their own recommenders algorithms,
-                          they should manage this field to match their recommend implementations.
+                        default: default
+                        description: Recommender specify the Recommender to recommend
+                          if end-user wants to define their own recommender, they
+                          should manage this field to match their recommend implementations.
+                          When the value is "default", the default recommender is
+                          used. Default to "default"
                         type: string
                     type: object
                   containerPolicies:
-                    description: Per-container resource policies.
+                    description: Per-container resource recommend policies.
                     items:
-                      description: ContainerResourcePolicy controls how computes the
-                        recommended resources for a specific container.
+                      description: ContainerResourcePolicy provides the policy for
+                        recommender to manage the given container resources, including
+                        the container name, resource kind, usage buffer etc.
                       properties:
                         containerName:
-                          description: Name of the container or DefaultContainerResourcePolicy,
-                            in which case the policy is used by the containers that
-                            don't have their own policy specified.
+                          description: Name of the container, or uses the wildcard
+                            "*". If wildcard is used, the policy will apply to all
+                            containers under the workload
                           type: string
-                        controlledResourcesPolicy:
-                          description: ControlledResourcesPolicy controls how the
+                        controlledResourcesPolicies:
+                          description: ControlledResourcesPolicies controls how the
                             recommenders computes recommended resources for the container.
                             If not specified, the recommenders computes recommended
                             resources for none of the container resources.
                           items:
                             properties:
-                              bufferPercents:
-                                description: BufferPercents is used to get extra resource
+                              bufferPercent:
+                                description: BufferPercent is used to get extra resource
                                   buffer for the given containers
                                 format: int32
                                 type: integer
+                              controlledValues:
+                                description: ControlledValues specifies which resource
+                                  values should be controlled. Defaults to RequestsOnly.
+                                type: string
                               maxAllowed:
                                 anyOf:
                                 - type: integer
@@ -628,29 +637,19 @@ spec:
                               resourceName:
                                 description: ResourceName is the name of the resource
                                   that is controlled.
-                                enum:
-                                - cpu
-                                - memory
                                 type: string
                             required:
                             - resourceName
                             type: object
                           type: array
-                        controlledValues:
-                          default: RequestsOnly
-                          description: Specifies which resource values should be controlled.
-                            The default is "RequestsOnly".
-                          enum:
-                          - RequestsAndLimits
-                          - RequestsOnly
-                          - LimitsOnly
-                          type: string
                       required:
                       - containerName
-                      - controlledResourcesPolicy
-                      - controlledValues
+                      - controlledResourcesPolicies
                       type: object
                     type: array
+                required:
+                - algorithmPolicy
+                - containerPolicies
                 type: object
               targetRef:
                 description: TargetRef points to the controller managing the set of
@@ -748,9 +747,9 @@ spec:
                     description: Resources recommended by the recommenders for each
                       container.
                     items:
-                      description: ContainerResources is the recommendation of resources
+                      description: ContainerResources is the recommendations of resources
                         computed by recommenders for a specific container. Respects
-                        the container resource policy if present in the spec.
+                        the container resource policy in spec
                       properties:
                         containerName:
                           description: Name of the container.
@@ -787,12 +786,12 @@ spec:
                                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                 x-kubernetes-int-or-string: true
                               description: The most recent recommended resources target
-                                computed by the recommender for the controlled pods,
+                                computed by the recommender for the controlled containers,
                                 based only on actual resource usage, not taking into
                                 account the ContainerResourcePolicy (UsageBuffer).
-                                Used only as status indication, will not affect actual
-                                resource assignment.
                               type: object
+                          required:
+                          - target
                           type: object
                         requests:
                           description: Requests indicates the recommenders resources
@@ -826,31 +825,33 @@ spec:
                                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                 x-kubernetes-int-or-string: true
                               description: The most recent recommended resources target
-                                computed by the recommender for the controlled pods,
+                                computed by the recommender for the controlled containers,
                                 based only on actual resource usage, not taking into
                                 account the ContainerResourcePolicy (UsageBuffer).
-                                Used only as status indication, will not affect actual
-                                resource assignment.
                               type: object
+                          required:
+                          - target
                           type: object
+                      required:
+                      - containerName
                       type: object
                     type: array
-                  podResources:
+                  podRecommendations:
                     description: Resources recommended by the recommenders for specific
                       pod.
                     items:
                       description: PodResources is the recommendation of resources
                         computed by recommenders for a specific pod. Respects the
-                        container resource policy if present in the spec.
+                        container resource policy in the spec
                       properties:
                         containerRecommendations:
                           description: Resources recommended by the recommenders for
                             each container.
                           items:
-                            description: ContainerResources is the recommendation
+                            description: ContainerResources is the recommendations
                               of resources computed by recommenders for a specific
-                              container. Respects the container resource policy if
-                              present in the spec.
+                              container. Respects the container resource policy in
+                              spec
                             properties:
                               containerName:
                                 description: Name of the container.
@@ -888,11 +889,12 @@ spec:
                                       x-kubernetes-int-or-string: true
                                     description: The most recent recommended resources
                                       target computed by the recommender for the controlled
-                                      pods, based only on actual resource usage, not
-                                      taking into account the ContainerResourcePolicy
-                                      (UsageBuffer). Used only as status indication,
-                                      will not affect actual resource assignment.
+                                      containers, based only on actual resource usage,
+                                      not taking into account the ContainerResourcePolicy
+                                      (UsageBuffer).
                                     type: object
+                                required:
+                                - target
                                 type: object
                               requests:
                                 description: Requests indicates the recommenders resources
@@ -927,17 +929,22 @@ spec:
                                       x-kubernetes-int-or-string: true
                                     description: The most recent recommended resources
                                       target computed by the recommender for the controlled
-                                      pods, based only on actual resource usage, not
-                                      taking into account the ContainerResourcePolicy
-                                      (UsageBuffer). Used only as status indication,
-                                      will not affect actual resource assignment.
+                                      containers, based only on actual resource usage,
+                                      not taking into account the ContainerResourcePolicy
+                                      (UsageBuffer).
                                     type: object
+                                required:
+                                - target
                                 type: object
+                            required:
+                            - containerName
                             type: object
                           type: array
                         podName:
                           description: Name of the pod.
                           type: string
+                      required:
+                      - podName
                       type: object
                     type: array
                 type: object

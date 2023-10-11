@@ -25,19 +25,12 @@ import (
 
 // ResourceRecommendSpec defines the desired state of ResourceRecommend
 type ResourceRecommendSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// TargetRef points to the controller managing the set of pods for the
-	// recommenders to control - e.g. Deployment.
+	// TargetRef points to the controller managing the set of pods for the recommenders to control。
+	// e.g. Deployment.
 	TargetRef CrossVersionObjectReference `json:"targetRef"`
 
-	// Controls how the recommenders computes recommended resources.
-	// The resource policy may be used to set constraints on the recommendations
-	// for individual containers. If not specified, the recommenders computes recommended
-	// resources for all containers in the pod, without additional constraints.
-	// +optional
-	ResourcePolicy PodResourcePolicy `json:"resourcePolicy,omitempty"`
+	// ResourcePolicy controls how the recommender computes recommended resources.
+	ResourcePolicy ResourcePolicy `json:"resourcePolicy"`
 }
 
 // CrossVersionObjectReference contains enough information to let you identify the referred resource.
@@ -52,30 +45,31 @@ type CrossVersionObjectReference struct {
 	APIVersion string `json:"apiVersion,omitempty"`
 }
 
-// PodResourcePolicy controls how computes the recommended resources
-// for containers belonging to the pod. There can be at most one entry for every
-// named container.
-type PodResourcePolicy struct {
-	// policy of algorithm, if no algorithm is provided, using default
-	// +optional
-	AlgorithmPolicy AlgorithmPolicy `json:"algorithmPolicy,omitempty"`
+// ResourcePolicy controls how computes the recommended resources
+type ResourcePolicy struct {
+	// policy of algorithm, if not provided, using default
+	AlgorithmPolicy AlgorithmPolicy `json:"algorithmPolicy"`
 
-	// Per-container resource policies.
-	// +optional
+	// Per-container resource recommend policies.
 	// +patchMergeKey=containerName
 	// +patchStrategy=merge
-	ContainerPolicies []ContainerResourcePolicy `json:"containerPolicies,omitempty" patchStrategy:"merge" patchMergeKey:"containerName"`
+	ContainerPolicies []ContainerResourcePolicy `json:"containerPolicies" patchStrategy:"merge" patchMergeKey:"containerName"`
 }
 
 type AlgorithmPolicy struct {
-	// Recommenders of the Algorithm used to this Pod;
-	// if end-user wants to define their own recommenders algorithms,
+	// Recommender specify the Recommender to recommend
+	// if end-user wants to define their own recommender,
 	// they should manage this field to match their recommend implementations.
+	// When the value is "default", the default recommender is used.
+	// Default to "default"
 	// +optional
+	// +kubebuilder:default:=default
 	Recommender string `json:"recommender,omitempty"`
 
-	// Algorithm is the recommended algorithm of choice
+	// Algorithm specifies the recommendation algorithm used by the
+	// recommender, default to "percentile"
 	// +optional
+	// +kubebuilder:default:=percentile
 	Algorithm Algorithm `json:"algorithm,omitempty"`
 
 	// Extensions config by key-value format.
@@ -93,28 +87,21 @@ const (
 	AlgorithmPercentile Algorithm = "percentile"
 )
 
-// ContainerResourcePolicy controls how computes the recommended
-// resources for a specific container.
+// ContainerResourcePolicy provides the policy for recommender to manage the given container
+// resources, including the container name, resource kind, usage buffer etc.
 type ContainerResourcePolicy struct {
-	// Name of the container or DefaultContainerResourcePolicy, in which
-	// case the policy is used by the containers that don't have their own
-	// policy specified.
+	// Name of the container, or uses the wildcard "*".
+	// If wildcard is used, the policy will apply to all containers under the workload
 	ContainerName string `json:"containerName"`
 
-	// ControlledResourcesPolicy controls how the recommenders computes recommended resources
+	// ControlledResourcesPolicies controls how the recommenders computes recommended resources
 	// for the container. If not specified, the recommenders computes recommended resources
 	// for none of the container resources.
-	ControlledResourcesPolicy []ContainerControlledResourcesPolicy `json:"controlledResourcesPolicy" patchStrategy:"merge"`
-
-	// Specifies which resource values should be controlled.
-	// The default is "RequestsOnly".
-	// +kubebuilder:default:=RequestsOnly
-	ControlledValues ContainerControlledValues `json:"controlledValues"`
+	ControlledResourcesPolicies []ContainerControlledResourcesPolicy `json:"controlledResourcesPolicies" patchStrategy:"merge"`
 }
 
 type ContainerControlledResourcesPolicy struct {
 	// ResourceName is the name of the resource that is controlled.
-	// +kubebuilder:validation:Enum=cpu;memory
 	ResourceName v1.ResourceName `json:"resourceName"`
 
 	// MinAllowed Specifies the minimal amount of resources that will be recommended
@@ -127,38 +114,39 @@ type ContainerControlledResourcesPolicy struct {
 	// +optional
 	MaxAllowed *resource.Quantity `json:"maxAllowed,omitempty"`
 
-	// BufferPercents is used to get extra resource buffer for the given containers
+	// BufferPercent is used to get extra resource buffer for the given containers
 	// +optional
-	BufferPercents *int32 `json:"bufferPercents,omitempty"`
+	BufferPercent *int32 `json:"bufferPercent,omitempty"`
+
+	// ControlledValues specifies which resource values should be controlled.
+	// Defaults to RequestsOnly.
+	// +optional
+	ControlledValues *ContainerControlledValues `json:"controlledValues,omitempty"`
 }
 
-// ContainerControlledValues controls which resource value should be autoscaled.
-// +kubebuilder:validation:Enum=RequestsAndLimits;RequestsOnly;LimitsOnly
+// ContainerControlledValues controls which resource value should be recommended.
 type ContainerControlledValues string
 
 const (
 	// ContainerControlledValuesRequestsAndLimits means resource request and limits
-	// are scaled automatically.
+	// are recommended automatically.
 	ContainerControlledValuesRequestsAndLimits ContainerControlledValues = "RequestsAndLimits"
-	// ContainerControlledValuesRequestsOnly means only requested resource is autoscaled.
+	// ContainerControlledValuesRequestsOnly means only requested resource is recommended.
 	ContainerControlledValuesRequestsOnly ContainerControlledValues = "RequestsOnly"
-	// ContainerControlledValuesLimitsOnly means only requested resource is autoscaled.
+	// ContainerControlledValuesLimitsOnly means only limited resource is recommended.
 	ContainerControlledValuesLimitsOnly ContainerControlledValues = "LimitsOnly"
 )
 
 // ResourceRecommendStatus defines the observed state of ResourceRecommend
 type ResourceRecommendStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// LastRecommendationTime is last recommendation generation time
 	// +optional
-	LastRecommendationTime metav1.Time `json:"lastRecommendationTime"`
+	LastRecommendationTime *metav1.Time `json:"lastRecommendationTime,omitempty"`
 
 	// RecommendResources is the last recommendation of resources computed by
 	// recommenders
 	// +optional
-	RecommendResources RecommendResources `json:"recommendResources,omitempty"`
+	RecommendResources *RecommendResources `json:"recommendResources,omitempty"`
 
 	// Conditions is the set of conditions required for this recommender to recommend,
 	// and indicates whether those conditions are met.
@@ -168,8 +156,7 @@ type ResourceRecommendStatus struct {
 	Conditions []ResourceRecommendCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// ObservedGeneration used to record the generation number when status is updated.
-	// +optional
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
+	ObservedGeneration int64 `json:"observedGeneration"`
 }
 
 // RecommendResources is the recommendation of resources computed by recommenders for
@@ -177,26 +164,32 @@ type ResourceRecommendStatus struct {
 type RecommendResources struct {
 	// Resources recommended by the recommenders for specific pod.
 	// +optional
-	PodResources []PodResources `json:"podResources,omitempty"`
+	// +patchMergeKey=podName
+	// +patchStrategy=merge
+	PodRecommendations []PodResources `json:"podRecommendations,omitempty"`
 
 	// Resources recommended by the recommenders for each container.
 	// +optional
-	ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
+	// +patchMergeKey=containerName
+	// +patchStrategy=merge
+	ContainerRecommendations []ContainerResources `json:"containerRecommendations,omitempty"`
 }
 
-// PodResources is the recommendation of resources computed by
-// recommenders for a specific pod. Respects the container resource policy
-// if present in the spec.
+// PodResources is the recommendation of resources computed by recommenders for a specific pod.
+// Respects the container resource policy in the spec
 type PodResources struct {
 	// Name of the pod.
 	PodName string `json:"podName"`
+
 	// Resources recommended by the recommenders for each container.
-	ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
+	// +optional
+	// +patchMergeKey=containerName
+	// +patchStrategy=merge
+	ContainerRecommendations []ContainerResources `json:"containerRecommendations,omitempty"`
 }
 
-// ContainerResources is the recommendation of resources computed by
-// recommenders for a specific container. Respects the container resource policy
-// if present in the spec.
+// ContainerResources is the recommendations of resources computed by recommenders for a specific container.
+// Respects the container resource policy in spec
 type ContainerResources struct {
 	// Name of the container.
 	ContainerName string `json:"containerName"`
@@ -214,12 +207,10 @@ type ContainerResourceList struct {
 	// +optional
 	Current v1.ResourceList `json:"current,omitempty"`
 	// Recommended amount of resources. Observes ContainerResourcePolicy.
-	// +optional
-	Target v1.ResourceList `json:"target,omitempty"`
+	Target v1.ResourceList `json:"target"`
 	// The most recent recommended resources target computed by the recommender
-	// for the controlled pods, based only on actual resource usage, not taking
+	// for the controlled containers, based only on actual resource usage, not taking
 	// into account the ContainerResourcePolicy (UsageBuffer).
-	// Used only as status indication, will not affect actual resource assignment.
 	// +optional
 	UncappedTarget v1.ResourceList `json:"uncappedTarget,omitempty"`
 }
@@ -266,7 +257,7 @@ type ResourceRecommend struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ResourceRecommendSpec   `json:"spec,omitempty"`
+	Spec   ResourceRecommendSpec   `json:"spec"`
 	Status ResourceRecommendStatus `json:"status,omitempty"`
 }
 
