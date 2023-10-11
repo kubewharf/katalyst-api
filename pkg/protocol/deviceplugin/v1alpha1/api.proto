@@ -1,0 +1,44 @@
+syntax = 'proto3';
+
+package deviceplugin.v1alpha1;
+
+
+option go_package = "./v1alpha1";
+
+
+service Registration {
+  rpc Register(RegisterRequest) returns (Empty) {}
+}
+
+message RegisterRequest {
+  // Version of the API the Device Plugin was built against
+  string version = 1;
+  // Name of the unix socket the device plugin is listening on
+  // PATH = path.Join(DevicePluginPath, endpoint)
+  string endpoint = 2;
+  // Schedulable resource name. As of now it's expected to be a DNS Label
+  string resource_name = 3;
+}
+
+message Empty {
+}
+
+// DevicePlugin is the service advertised by Device Plugins
+service DevicePlugin {
+  rpc ListAndWatch(Empty) returns (stream ListAndWatchResponse) {}
+}
+
+// response message
+message ListAndWatchResponse {
+  repeated TopologyInfo topologyInfos = 1;
+}
+
+message TopologyInfo{
+  string deviceID = 1;
+  string switchID = 2;
+  NUMANode nodes = 3;
+}
+
+message NUMANode {
+  int64 ID = 1;
+}
