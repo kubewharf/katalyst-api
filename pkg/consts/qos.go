@@ -71,7 +71,10 @@ const (
 	//   participate in priority comparison.
 	// - 300: Indicates that the OOM priority is set to the highest level, the pod
 	//   will never be terminated due to OOM events from the perspective of OOM enhancement
-	PodAnnotationMemoryEnhancementOOMPriority = "oom_priority"
+	PodAnnotationMemoryEnhancementOOMPriority  = "oom_priority"
+	PodAnnotationMicroTopologyInterPodAffinity = "katalyst.kubewharf.io/microtopology_affinity"
+
+	PodAnnotationMicroTopologyInterPodAntiAffinity = "katalyst.kubewharf.io/microtopology_antiaffinity"
 )
 
 // const variables for pod annotations about qos level enhancement in cpu
