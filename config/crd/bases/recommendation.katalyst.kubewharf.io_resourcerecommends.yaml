@@ -1,0 +1,412 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
+  name: resourcerecommends.recommendation.katalyst.kubewharf.io
+spec:
+  group: recommendation.katalyst.kubewharf.io
+  names:
+    kind: ResourceRecommend
+    listKind: ResourceRecommendList
+    plural: resourcerecommends
+    shortNames:
+    - rec
+    singular: resourcerecommend
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ResourceRecommend is the Schema for the resourcerecommends API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResourceRecommendSpec defines the desired state of ResourceRecommend
+            properties:
+              resourcePolicy:
+                description: ResourcePolicy controls how the recommender computes
+                  recommended resources.
+                properties:
+                  algorithmPolicy:
+                    description: policy of algorithm, if not provided, using default
+                    properties:
+                      algorithm:
+                        default: percentile
+                        description: Algorithm specifies the recommendation algorithm
+                          used by the recommender, default to "percentile"
+                        type: string
+                      extensions:
+                        description: Extensions config by key-value format.
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                      recommender:
+                        default: default
+                        description: Recommender specify the Recommender to recommend
+                          if end-user wants to define their own recommender, they
+                          should manage this field to match their recommend implementations.
+                          When the value is "default", the default recommender is
+                          used. Default to "default"
+                        type: string
+                    type: object
+                  containerPolicies:
+                    description: Per-container resource recommend policies.
+                    items:
+                      description: ContainerResourcePolicy provides the policy for
+                        recommender to manage the given container resources, including
+                        the container name, resource kind, usage buffer etc.
+                      properties:
+                        containerName:
+                          description: Name of the container, or uses the wildcard
+                            "*". If wildcard is used, the policy will apply to all
+                            containers under the workload
+                          type: string
+                        controlledResourcesPolicies:
+                          description: ControlledResourcesPolicies controls how the
+                            recommenders computes recommended resources for the container.
+                            If not specified, the recommenders computes recommended
+                            resources for none of the container resources.
+                          items:
+                            properties:
+                              bufferPercent:
+                                description: BufferPercent is used to get extra resource
+                                  buffer for the given containers
+                                format: int32
+                                type: integer
+                              controlledValues:
+                                description: ControlledValues specifies which resource
+                                  values should be controlled. Defaults to RequestsOnly.
+                                type: string
+                              maxAllowed:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: MaxAllowed Specifies the maximum amount
+                                  of resources that will be recommended for the container.
+                                  The default is no maximum.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              minAllowed:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: MinAllowed Specifies the minimal amount
+                                  of resources that will be recommended for the container.
+                                  The default is no minimum.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              resourceName:
+                                description: ResourceName is the name of the resource
+                                  that is controlled.
+                                type: string
+                            required:
+                            - resourceName
+                            type: object
+                          type: array
+                      required:
+                      - containerName
+                      - controlledResourcesPolicies
+                      type: object
+                    type: array
+                required:
+                - algorithmPolicy
+                - containerPolicies
+                type: object
+              targetRef:
+                description: TargetRef points to the controller managing the set of
+                  pods for the recommenders to control。 e.g. Deployment.
+                properties:
+                  apiVersion:
+                    description: API version of the referent
+                    type: string
+                  kind:
+                    description: Kind of the referent
+                    type: string
+                  name:
+                    description: Name of the referent
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+            required:
+            - resourcePolicy
+            - targetRef
+            type: object
+          status:
+            description: ResourceRecommendStatus defines the observed state of ResourceRecommend
+            properties:
+              conditions:
+                description: Conditions is the set of conditions required for this
+                  recommender to recommend, and indicates whether those conditions
+                  are met.
+                items:
+                  description: ResourceRecommendCondition describes the state of a
+                    ResourceRecommender at a certain point.
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition
+                        transitioned from one status to another
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: status is the status of the condition (True, False,
+                        Unknown)
+                      type: string
+                    type:
+                      description: type describes the current condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              lastRecommendationTime:
+                description: LastRecommendationTime is last recommendation generation
+                  time
+                format: date-time
+                type: string
+              observedGeneration:
+                description: ObservedGeneration used to record the generation number
+                  when status is updated.
+                format: int64
+                type: integer
+              recommendResources:
+                description: RecommendResources is the last recommendation of resources
+                  computed by recommenders
+                properties:
+                  containerRecommendations:
+                    description: Resources recommended by the recommenders for each
+                      container.
+                    items:
+                      description: ContainerResources is the recommendations of resources
+                        computed by recommenders for a specific container. Respects
+                        the container resource policy in spec
+                      properties:
+                        containerName:
+                          description: Name of the container.
+                          type: string
+                        limits:
+                          description: Limits indicates the recommendation resources
+                            for limits of this container
+                          properties:
+                            current:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: Current indicates the real resource configuration
+                                from the view of CRI interface.
+                              type: object
+                            target:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: Recommended amount of resources. Observes
+                                ContainerResourcePolicy.
+                              type: object
+                            uncappedTarget:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: The most recent recommended resources target
+                                computed by the recommender for the controlled containers,
+                                based only on actual resource usage, not taking into
+                                account the ContainerResourcePolicy (UsageBuffer).
+                              type: object
+                          required:
+                          - target
+                          type: object
+                        requests:
+                          description: Requests indicates the recommenders resources
+                            for requests of this container
+                          properties:
+                            current:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: Current indicates the real resource configuration
+                                from the view of CRI interface.
+                              type: object
+                            target:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: Recommended amount of resources. Observes
+                                ContainerResourcePolicy.
+                              type: object
+                            uncappedTarget:
+                              additionalProperties:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: The most recent recommended resources target
+                                computed by the recommender for the controlled containers,
+                                based only on actual resource usage, not taking into
+                                account the ContainerResourcePolicy (UsageBuffer).
+                              type: object
+                          required:
+                          - target
+                          type: object
+                      required:
+                      - containerName
+                      type: object
+                    type: array
+                  podRecommendations:
+                    description: Resources recommended by the recommenders for specific
+                      pod.
+                    items:
+                      description: PodResources is the recommendation of resources
+                        computed by recommenders for a specific pod. Respects the
+                        container resource policy in the spec
+                      properties:
+                        containerRecommendations:
+                          description: Resources recommended by the recommenders for
+                            each container.
+                          items:
+                            description: ContainerResources is the recommendations
+                              of resources computed by recommenders for a specific
+                              container. Respects the container resource policy in
+                              spec
+                            properties:
+                              containerName:
+                                description: Name of the container.
+                                type: string
+                              limits:
+                                description: Limits indicates the recommendation resources
+                                  for limits of this container
+                                properties:
+                                  current:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: Current indicates the real resource
+                                      configuration from the view of CRI interface.
+                                    type: object
+                                  target:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: Recommended amount of resources.
+                                      Observes ContainerResourcePolicy.
+                                    type: object
+                                  uncappedTarget:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: The most recent recommended resources
+                                      target computed by the recommender for the controlled
+                                      containers, based only on actual resource usage,
+                                      not taking into account the ContainerResourcePolicy
+                                      (UsageBuffer).
+                                    type: object
+                                required:
+                                - target
+                                type: object
+                              requests:
+                                description: Requests indicates the recommenders resources
+                                  for requests of this container
+                                properties:
+                                  current:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: Current indicates the real resource
+                                      configuration from the view of CRI interface.
+                                    type: object
+                                  target:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: Recommended amount of resources.
+                                      Observes ContainerResourcePolicy.
+                                    type: object
+                                  uncappedTarget:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    description: The most recent recommended resources
+                                      target computed by the recommender for the controlled
+                                      containers, based only on actual resource usage,
+                                      not taking into account the ContainerResourcePolicy
+                                      (UsageBuffer).
+                                    type: object
+                                required:
+                                - target
+                                type: object
+                            required:
+                            - containerName
+                            type: object
+                          type: array
+                        podName:
+                          description: Name of the pod.
+                          type: string
+                      required:
+                      - podName
+                      type: object
+                    type: array
+                type: object
+            required:
+            - observedGeneration
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
