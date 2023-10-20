@@ -71,10 +71,7 @@ const (
 	//   participate in priority comparison.
 	// - 300: Indicates that the OOM priority is set to the highest level, the pod
 	//   will never be terminated due to OOM events from the perspective of OOM enhancement
-	PodAnnotationMemoryEnhancementOOMPriority  = "oom_priority"
-	PodAnnotationMicroTopologyInterPodAffinity = "katalyst.kubewharf.io/microtopology_affinity"
-
-	PodAnnotationMicroTopologyInterPodAntiAffinity = "katalyst.kubewharf.io/microtopology_antiaffinity"
+	PodAnnotationMemoryEnhancementOOMPriority = "oom_priority"
 )
 
 // const variables for pod annotations about qos level enhancement in cpu
@@ -129,3 +126,28 @@ const (
 	PodAnnotationNetworkEnhancementAffinityRestricted     = "topology_affinity_restricted"
 	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
 )
+
+// const variables for pod annotations about qos level enhancement for micro-topology level inter-pod affinity
+
+const (
+	PodAnnotationMicroTopologyInterPodAffinity     = "katalyst.kubewharf.io/microtopology_affinity"
+	PodAnnotationMicroTopologyInterPodAntiAffinity = "katalyst.kubewharf.io/microtopology_antiaffinity"
+
+	PodAnnotationMicroTopologyRequiredAffinity  = "required"
+	PodAnnotationMicroTopologyPreferredAffinity = "preferred"
+
+	PodAnnotationMicroTopologyAffinityNUMA   = "numa"
+	PodAnnotationMicroTopologyAffinitySocket = "socket"
+
+	PodAnnotationMicroTopologyAffinityDefaultZone = "numa"
+)
+
+// 解析后的inter-pod affinity annotations
+type Selector struct {
+	MatchLabels map[string]string
+	Zone        string
+}
+type MicroTopologyPodAffinityAnnotation struct {
+	Required  []Selector
+	Preferred []Selector
+}
