@@ -302,6 +302,11 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	SystemKswapdRateExceedDurationThreshold *int `json:"systemKswapdRateExceedDurationThreshold,omitempty"`
 
+	// SystemFreeMemoryThresholdMinimum is the system free memory threshold minimum in bytes.
+	// +kubectl:validation:Minimum=0
+	// +optional
+	SystemFreeMemoryThresholdMinimum *int64 `json:"systemFreeMemoryThresholdMinimum,omitempty"`
+
 	// NumaEvictionRankingMetrics is the metrics used to rank pods for eviction
 	// at the NUMA level
 	// +kubebuilder:validation:MinItems=1
