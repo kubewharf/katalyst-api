@@ -197,6 +197,11 @@ spec:
                               type: string
                             minItems: 1
                             type: array
+                          systemFreeMemoryThresholdMinimum:
+                            description: SystemFreeMemoryThresholdMinimum is the system
+                              free memory threshold minimum in bytes.
+                            format: int64
+                            type: integer
                           systemKswapdRateExceedDurationThreshold:
                             description: SystemKswapdRateExceedDurationThreshold is
                               the threshold for the duration the kswapd reclaiming

@@ -874,6 +874,11 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(int)
 		**out = **in
 	}
+	if in.SystemFreeMemoryThresholdMinimum != nil {
+		in, out := &in.SystemFreeMemoryThresholdMinimum, &out.SystemFreeMemoryThresholdMinimum
+		*out = new(int64)
+		**out = **in
+	}
 	if in.NumaEvictionRankingMetrics != nil {
 		in, out := &in.NumaEvictionRankingMetrics, &out.NumaEvictionRankingMetrics
 		*out = make([]NumaEvictionRankingMetric, len(*in))
