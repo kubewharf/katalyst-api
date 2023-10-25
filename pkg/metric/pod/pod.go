@@ -23,6 +23,7 @@ package pod
 const (
 	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min"
 	CustomMetricPodCPUUsage    = "pod_cpu_usage"
+	CustomMetricPodCPUCPI      = "pod_cpu_cpi"
 )
 
 const (
