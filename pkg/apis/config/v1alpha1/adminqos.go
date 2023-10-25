@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -302,10 +303,10 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	SystemKswapdRateExceedDurationThreshold *int `json:"systemKswapdRateExceedDurationThreshold,omitempty"`
 
-	// SystemFreeMemoryThresholdMinimum is the system free memory threshold minimum in bytes.
+	// SystemFreeMemoryThresholdMinimum is the system free memory threshold minimum.
 	// +kubectl:validation:Minimum=0
 	// +optional
-	SystemFreeMemoryThresholdMinimum *int64 `json:"systemFreeMemoryThresholdMinimum,omitempty"`
+	SystemFreeMemoryThresholdMinimum *resource.Quantity `json:"systemFreeMemoryThresholdMinimum,omitempty"`
 
 	// NumaEvictionRankingMetrics is the metrics used to rank pods for eviction
 	// at the NUMA level

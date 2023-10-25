@@ -198,10 +198,13 @@ spec:
                             minItems: 1
                             type: array
                           systemFreeMemoryThresholdMinimum:
+                            anyOf:
+                            - type: integer
+                            - type: string
                             description: SystemFreeMemoryThresholdMinimum is the system
-                              free memory threshold minimum in bytes.
-                            format: int64
-                            type: integer
+                              free memory threshold minimum.
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
                           systemKswapdRateExceedDurationThreshold:
                             description: SystemKswapdRateExceedDurationThreshold is
                               the threshold for the duration the kswapd reclaiming
