@@ -29,3 +29,12 @@ const (
 
 	WorkloadAnnotationSPDNameKey = "spd.katalyst.kubewharf.io/name"
 )
+
+// const variables for spd annotations.
+const (
+	// SPDAnnotationBaselinePercentileKey is updated by the SPD controller. It represents
+	// the baseline percentile across all pods managed by this SPD. Agents or controllers
+	// can use this key to determine if a pod falls within the baseline by comparing it
+	// with the pod's baseline coefficient.
+	SPDAnnotationBaselinePercentileKey = "spd.katalyst.kubewharf.io/baselinePercentile"
+)
