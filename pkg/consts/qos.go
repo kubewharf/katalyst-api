@@ -141,13 +141,3 @@ const (
 
 	PodAnnotationMicroTopologyAffinityDefaultZone = "numa"
 )
-
-// 解析后的inter-pod affinity annotations
-type Selector struct {
-	MatchLabels map[string]string
-	Zone        string
-}
-type MicroTopologyPodAffinityAnnotation struct {
-	Required  []Selector
-	Preferred []Selector
-}
