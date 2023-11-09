@@ -180,6 +180,19 @@ spec:
                               a pod uses less memory on a NUMA node than this threshold,it
                               won't be evicted by this NUMA's memory pressure.
                             type: number
+                          rssOveruseHighMemPodBound:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: RSSOveruseHighMemPodBound is the bound of
+                              high memory pods. Pods have memory request more than
+                              it will be considered as high mem pods.
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          rssOveruseHighMemPodRateThreshold:
+                            description: RSSOveruseHighMemPodRateThreshold is the
+                              rss ratio threshold for high memory pods.
+                            type: number
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
                               for the rate of rss

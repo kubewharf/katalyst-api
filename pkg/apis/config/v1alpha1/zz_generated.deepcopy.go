@@ -899,6 +899,16 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(float64)
 		**out = **in
 	}
+	if in.RSSOveruseHighMemPodBound != nil {
+		in, out := &in.RSSOveruseHighMemPodBound, &out.RSSOveruseHighMemPodBound
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.RSSOveruseHighMemPodRateThreshold != nil {
+		in, out := &in.RSSOveruseHighMemPodRateThreshold, &out.RSSOveruseHighMemPodRateThreshold
+		*out = new(float64)
+		**out = **in
+	}
 	if in.GracePeriod != nil {
 		in, out := &in.GracePeriod, &out.GracePeriod
 		*out = new(int64)

@@ -329,6 +329,15 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	RSSOveruseRateThreshold *float64 `json:"rssOveruseRateThreshold,omitempty"`
 
+	// RSSOveruseHighMemPodBound is the bound of high memory pods. Pods have memory request more than it
+	// will be considered as high mem pods.
+	// +optional
+	RSSOveruseHighMemPodBound *resource.Quantity `json:"rssOveruseHighMemPodBound"`
+
+	// RSSOveruseHighMemPodRateThreshold is the rss ratio threshold for high memory pods.
+	// +optional
+	RSSOveruseHighMemPodRateThreshold *float64 `json:"rssOveruseHighMemPodRateThreshold"`
+
 	// GracePeriod is the grace period of memory pressure eviction
 	// +kubectl:validation:Minimum=0
 	// +optional
