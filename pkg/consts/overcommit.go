@@ -18,13 +18,20 @@ package consts
 
 // const variables for node annotations about overcommit ratio
 const (
-	NodeAnnotationCPUOvercommitRatioKey    = "katalyst.kubewharf.io/cpu_overcommit_ratio"
-	NodeAnnotationMemoryOvercommitRatioKey = "katalyst.kubewharf.io/memory_overcommit_ratio"
+	NodeAnnotationCPUOvercommitRatioKey            = "katalyst.kubewharf.io/cpu_overcommit_ratio"
+	NodeAnnotationMemoryOvercommitRatioKey         = "katalyst.kubewharf.io/memory_overcommit_ratio"
+	NodeAnnotationRealtimeCPUOvercommitRatioKey    = "katalyst.kubewharf.io/realtime_cpu_overcommit_ratio"
+	NodeAnnotationRealtimeMemoryOvercommitRatioKey = "katalyst.kubewharf.io/realtime_memory_overcommit_ratio"
 
 	NodeAnnotationOriginalCapacityCPUKey       = "katalyst.kubewharf.io/original_capacity_cpu"
 	NodeAnnotationOriginalCapacityMemoryKey    = "katalyst.kubewharf.io/original_capacity_memory"
 	NodeAnnotationOriginalAllocatableCPUKey    = "katalyst.kubewharf.io/original_allocatable_cpu"
 	NodeAnnotationOriginalAllocatableMemoryKey = "katalyst.kubewharf.io/original_allocatable_memory"
+
+	NodeAnnotationOvercommitCapacityCPUKey       = "katalyst.kubewharf.io/overcommit_capacity_cpu"
+	NodeAnnotationOvercommitAllocatableCPUKey    = "katalyst.kubewharf.io/overcommit_allocatable_cpu"
+	NodeAnnotationOvercommitCapacityMemoryKey    = "katalyst.kubewharf.io/overcommit_capacity_memory"
+	NodeAnnotationOvercommitAllocatableMemoryKey = "katalyst.kubewharf.io/overcommit_allocatable_memory"
 )
 
 // const variables for matching up with node labels about overcommit
@@ -33,4 +40,21 @@ const (
 
 	DefaultNodeCPUOvercommitRatio    = "1"
 	DefaultNodeMemoryOvercommitRatio = "1"
+)
+
+type KCNRAnnotationCPUManagerPolicy string
+type KCNRAnnotationMemoryManagerPolicy string
+
+const (
+	// KCNRAnnotationGuaranteedCPUs sum of pod guaranteed cpus in node
+	KCNRAnnotationGuaranteedCPUs = "katalyst.kubewharf.io/guaranteed_cpus"
+
+	KCNRAnnotationCPUManager    = "katalyst.kubewharf.io/overcommit_cpu_manager"
+	KCNRAnnotationMemoryManager = "katalyst.kubewharf.io/overcommit_memory_manager"
+
+	CPUManagerOff        KCNRAnnotationCPUManagerPolicy = "none"
+	CPUManagerPolicyNone KCNRAnnotationCPUManagerPolicy = "none"
+
+	MemoryManagerOff        KCNRAnnotationMemoryManagerPolicy = "None"
+	MemoryManagerPolicyNone KCNRAnnotationMemoryManagerPolicy = "None"
 )
