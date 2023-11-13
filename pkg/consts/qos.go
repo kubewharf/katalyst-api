@@ -37,6 +37,22 @@ const (
 
 	PodAnnotationMemoryEnhancementNumaExclusive       = "numa_exclusive"
 	PodAnnotationMemoryEnhancementNumaExclusiveEnable = "true"
+
+	// PodAnnotationMemoryEnhancementOOMPriority provides a mechanism to specify
+	// the OOM priority for pods. Higher priority values indicate a higher likelihood
+	// of surviving OOM events.
+	//
+	// For different QoS levels, the acceptable value ranges are as follows:
+	// - reclaimed_cores: [-100, 0)
+	// - shared_cores: [0, 100)
+	// - dedicated_cores: [100, 200)
+	// - system_cores: [200, 300)
+	// Additionally, there are two predefined values for any pod:
+	// - -300: Indicates that the OOM priority is ignored, and the pod does not
+	//   participate in priority comparison.
+	// - 300: Indicates that the OOM priority is set to the highest level, the pod
+	//   will never be terminated due to OOM events from the perspective of OOM enhancement
+	PodAnnotationMemoryEnhancementOOMPriority = "oom_priority"
 )
 
 // const variables for pod annotations about qos level enhancement in cpu
