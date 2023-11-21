@@ -27,6 +27,7 @@ const (
 	NodeAnnotationOriginalAllocatableMemoryKey = "katalyst.kubewharf.io/original_allocatable_memory"
 )
 
+// const variables for matching up with node labels about overcommit
 const (
 	NodeOvercommitSelectorKey = "katalyst.kubewharf.io/overcommit_node_pool"
 

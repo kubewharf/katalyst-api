@@ -31,6 +31,7 @@ const (
 	WorkloadAnnotationVPASelectorKey = "vpa.katalyst.kubewharf.io/selector"
 )
 
+// const variables for workload annotations about vpaRec.
 const (
 	VPAAnnotationVPARecNameKey = "vpa.katalyst.kubewharf.io/recName"
 
