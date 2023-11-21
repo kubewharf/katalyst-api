@@ -17,17 +17,17 @@ limitations under the License.
 package consts
 
 const (
+	// PodAnnotationSPDNameKey is used to maintain corresponding spdName in pod
+	// annotation to make metaServer to target its spd more conveniently.
 	PodAnnotationSPDNameKey = "spd.katalyst.kubewharf.io/name"
 )
 
 // const variables for workload annotations about spd.
 const (
-	// WorkloadAnnotationSPDEnableKey disables for workload means that we should not
-	// maintain spd CR and much less to calculate service profiling automatically
+	// WorkloadAnnotationSPDEnableKey provides a mechanism for white list when enabling spd,
+	// if it's set as false, we should not maintain spd CR or calculate service profiling automatically.
 	WorkloadAnnotationSPDEnableKey = "spd.katalyst.kubewharf.io/enable"
 	WorkloadAnnotationSPDEnabled   = "true"
-
-	WorkloadAnnotationSPDNameKey = "spd.katalyst.kubewharf.io/name"
 )
 
 // const variables for spd annotations.
