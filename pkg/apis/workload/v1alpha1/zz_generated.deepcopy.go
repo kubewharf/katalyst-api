@@ -172,9 +172,9 @@ func (in *ServiceProfileDescriptorList) DeepCopyObject() runtime.Object {
 func (in *ServiceProfileDescriptorSpec) DeepCopyInto(out *ServiceProfileDescriptorSpec) {
 	*out = *in
 	out.TargetRef = in.TargetRef
-	if in.BaselineRatio != nil {
-		in, out := &in.BaselineRatio, &out.BaselineRatio
-		*out = new(float32)
+	if in.BaselinePercent != nil {
+		in, out := &in.BaselinePercent, &out.BaselinePercent
+		*out = new(int32)
 		**out = **in
 	}
 	if in.BusinessIndicator != nil {
