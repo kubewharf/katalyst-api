@@ -37,15 +37,16 @@ spec:
           spec:
             description: Spec defines the behavior of a ServiceProfileDescriptor.
             properties:
-              baselineRatio:
-                description: BaselineRatio marks off a bunch of instances, and skip
+              baselinePercent:
+                description: BaselinePercent marks off a bunch of instances, and skip
                   adjusting Knobs for them; those instances are defined as baselines,
                   and can be compared with other (experimental/production) instances
-                  to demonstrate the benefits. if BaselineRatio not set, it means
-                  we should take all instances as production instances.
-                maximum: 1
+                  to demonstrate the benefits. If BaselinePercent is not set, we should
+                  take all instances as production instances.
+                format: int32
+                maximum: 100
                 minimum: 0
-                type: number
+                type: integer
               businessIndicator:
                 description: if multiple BusinessIndicator are defined, it means that
                   we should try to satisfy all of those indicator targets
