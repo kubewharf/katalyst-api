@@ -28,6 +28,7 @@ import (
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/node/v1alpha1"
 	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/overcommit/v1alpha1"
 	recommendationv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/recommendation/v1alpha1"
+	tidev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/tide/v1alpha1"
 	workloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/workload/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -42,6 +43,7 @@ type Interface interface {
 	NodeV1alpha1() nodev1alpha1.NodeV1alpha1Interface
 	OvercommitV1alpha1() overcommitv1alpha1.OvercommitV1alpha1Interface
 	RecommendationV1alpha1() recommendationv1alpha1.RecommendationV1alpha1Interface
+	TideV1alpha1() tidev1alpha1.TideV1alpha1Interface
 	WorkloadV1alpha1() workloadv1alpha1.WorkloadV1alpha1Interface
 }
 
@@ -55,6 +57,7 @@ type Clientset struct {
 	nodeV1alpha1           *nodev1alpha1.NodeV1alpha1Client
 	overcommitV1alpha1     *overcommitv1alpha1.OvercommitV1alpha1Client
 	recommendationV1alpha1 *recommendationv1alpha1.RecommendationV1alpha1Client
+	tideV1alpha1           *tidev1alpha1.TideV1alpha1Client
 	workloadV1alpha1       *workloadv1alpha1.WorkloadV1alpha1Client
 }
 
@@ -86,6 +89,11 @@ func (c *Clientset) OvercommitV1alpha1() overcommitv1alpha1.OvercommitV1alpha1In
 // RecommendationV1alpha1 retrieves the RecommendationV1alpha1Client
 func (c *Clientset) RecommendationV1alpha1() recommendationv1alpha1.RecommendationV1alpha1Interface {
 	return c.recommendationV1alpha1
+}
+
+// TideV1alpha1 retrieves the TideV1alpha1Client
+func (c *Clientset) TideV1alpha1() tidev1alpha1.TideV1alpha1Interface {
+	return c.tideV1alpha1
 }
 
 // WorkloadV1alpha1 retrieves the WorkloadV1alpha1Client
@@ -161,6 +169,10 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 	if err != nil {
 		return nil, err
 	}
+	cs.tideV1alpha1, err = tidev1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
 	cs.workloadV1alpha1, err = workloadv1alpha1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -192,6 +204,7 @@ func New(c rest.Interface) *Clientset {
 	cs.nodeV1alpha1 = nodev1alpha1.New(c)
 	cs.overcommitV1alpha1 = overcommitv1alpha1.New(c)
 	cs.recommendationV1alpha1 = recommendationv1alpha1.New(c)
+	cs.tideV1alpha1 = tidev1alpha1.New(c)
 	cs.workloadV1alpha1 = workloadv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
