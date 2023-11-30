@@ -30,11 +30,14 @@ const (
 	WorkloadAnnotationSPDEnabled   = "true"
 )
 
-// const variables for spd annotations.
+// const variables for spd.
 const (
-	// SPDAnnotationBaselinePercentileKey is updated by the SPD controller. It represents
-	// the baseline percentile across all pods managed by this SPD. Agents or controllers
+	// SPDAnnotationBaselineSentinelKey is updated by the SPD controller. It represents
+	// the sentinel pod among all pods managed by this SPD. Agents or controllers
 	// can use this key to determine if a pod falls within the baseline by comparing it
-	// with the pod's baseline coefficient.
-	SPDAnnotationBaselinePercentileKey = "spd.katalyst.kubewharf.io/baselinePercentile"
+	// with the pod's createTime and podName.
+	SPDAnnotationBaselineSentinelKey = "spd.katalyst.kubewharf.io/baselineSentinel"
+
+	SPDBaselinePercentMax = 100
+	SPDBaselinePercentMin = 0
 )
