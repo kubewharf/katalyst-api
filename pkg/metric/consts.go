@@ -22,9 +22,10 @@ package metric
 // a single metric item to represent the max value of all collected items,
 // and we will put the corresponding time-window in response.
 const (
-	AggregateFunctionAvg = "_agg_avg"
-	AggregateFunctionMax = "_agg_max"
-	AggregateFunctionMin = "_agg_min"
-	AggregateFunctionP99 = "_agg_p99"
-	AggregateFunctionP90 = "_agg_p90"
+	AggregateFunctionAvg    = "_agg_avg"
+	AggregateFunctionMax    = "_agg_max"
+	AggregateFunctionMin    = "_agg_min"
+	AggregateFunctionP99    = "_agg_p99"
+	AggregateFunctionP90    = "_agg_p90"
+	AggregateFunctionLatest = "_agg_latest"
 )
