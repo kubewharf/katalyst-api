@@ -126,3 +126,25 @@ const (
 	PodAnnotationNetworkEnhancementAffinityRestricted     = "topology_affinity_restricted"
 	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
 )
+
+// const variables for pod annotations about qos level enhancement for micro-topology level inter-pod affinity,
+// PodAnnotationMicroTopologyRequired & Preferred stands for hard & soft affinity requirements,
+// PodAnnotationMicroTopologyAffinityNUMA & Socket stands for topology zone of seletor,
+// PodAnnotationMicroTopologyAffinityDefaultZone means the default topology zone is NUMA.
+// example of api is:
+//
+//	"katalyst.kubewharf.io/microtopology_antiaffinity": '{
+//			"required": [{"matchLabels": {"labelKey": "labelValue"}, "zone":"numa"}]
+//	}'
+const (
+	PodAnnotationMicroTopologyInterPodAffinity     = "katalyst.kubewharf.io/microtopology_affinity"
+	PodAnnotationMicroTopologyInterPodAntiAffinity = "katalyst.kubewharf.io/microtopology_antiaffinity"
+
+	PodAnnotationMicroTopologyRequiredAffinity  = "required"
+	PodAnnotationMicroTopologyPreferredAffinity = "preferred"
+
+	PodAnnotationMicroTopologyAffinityNUMA   = "numa"
+	PodAnnotationMicroTopologyAffinitySocket = "socket"
+
+	PodAnnotationMicroTopologyAffinityDefaultZone = "numa"
+)
