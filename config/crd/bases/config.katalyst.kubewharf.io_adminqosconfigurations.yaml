@@ -139,6 +139,15 @@ spec:
                         description: MemoryPressureEvictionConfig is the config for
                           memory pressure eviction
                         properties:
+                          enableEvictionOnceBelowNumaWatermark:
+                            description: EnableEvictionOnceBelowNumaWatermark is whether
+                              to enable eviction once numa free below numa watermark
+                            type: boolean
+                          enableEvictionOnceBelowSystemWatermark:
+                            description: EnableEvictionOnceBelowSystemWatermark is
+                              whether to enable eviction once system free below system
+                              watermark
+                            type: boolean
                           enableNumaLevelEviction:
                             description: EnableNumaLevelEviction is whether to enable
                               numa-level eviction

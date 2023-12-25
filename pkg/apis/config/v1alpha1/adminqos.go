@@ -276,9 +276,17 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	EnableNumaLevelEviction *bool `json:"enableNumaLevelEviction,omitempty"`
 
+	// EnableEvictionOnceBelowNumaWatermark is whether to enable eviction once numa free below numa watermark
+	// +optional
+	EnableEvictionOnceBelowNumaWatermark *bool `json:"enableEvictionOnceBelowNumaWatermark,omitempty"`
+
 	// EnableSystemLevelEviction is whether to enable system-level eviction
 	// +optional
 	EnableSystemLevelEviction *bool `json:"enableSystemLevelEviction,omitempty"`
+
+	// EnableEvictionOnceBelowSystemWatermark is whether to enable eviction once system free below system watermark
+	// +optional
+	EnableEvictionOnceBelowSystemWatermark *bool `json:"enableEvictionOnceBelowSystemWatermark,omitempty"`
 
 	// NumaVictimMinimumUtilizationThreshold is the victim's minimum memory usage on a NUMA node, if a pod
 	// uses less memory on a NUMA node than this threshold,it won't be evicted by this NUMA's memory pressure.
