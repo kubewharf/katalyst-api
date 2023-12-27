@@ -16,6 +16,8 @@ limitations under the License.
 
 package consts
 
+import kubeschedulerconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
+
 // const variables for pod annotations about qos level
 const (
 	PodAnnotationQoSLevelKey = "katalyst.kubewharf.io/qos_level"
@@ -125,4 +127,25 @@ const (
 	// we must ensure the numa affinity for nic devices, and we should admit failed if not possible
 	PodAnnotationNetworkEnhancementAffinityRestricted     = "topology_affinity_restricted"
 	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
+)
+
+// ResourcePluginPolicyName is a string type for QosResourceManager plugin policy
+type ResourcePluginPolicyName string
+
+// const variables for QRM plugin policy name
+const (
+	// ResourcePluginPolicyNameDynamic is the name of the dynamic policy.
+	ResourcePluginPolicyNameDynamic ResourcePluginPolicyName = "dynamic"
+	// ResourcePluginPolicyNameNative is the name of the native policy.
+	ResourcePluginPolicyNameNative ResourcePluginPolicyName = "native"
+	// ResourcePluginPolicyNameStatic is the name of the static policy.
+	ResourcePluginPolicyNameStatic ResourcePluginPolicyName = "static"
+)
+
+// const variables for node resource topology scoring strategy
+const (
+	// BalancedAllocation strategy favors nodes with balanced resource usage rate
+	BalancedAllocation kubeschedulerconfig.ScoringStrategyType = "BalancedAllocation"
+	// LeastNUMANodes strategy favors nodes which requires least amount of NUMA nodes to satisfy resource requests for given pod
+	LeastNUMANodes kubeschedulerconfig.ScoringStrategyType = "LeastNUMANodes"
 )

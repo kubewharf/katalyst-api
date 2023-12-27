@@ -16,6 +16,7 @@ package v1beta3
 
 import (
 	"fmt"
+
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/kube-scheduler/config/v1beta3"
 
@@ -31,6 +32,8 @@ var defaultReclaimedResourceSpec = []v1beta3.ResourceSpec{
 	{Name: fmt.Sprintf("%s", consts.ReclaimedResourceMilliCPU), Weight: 1},
 	{Name: fmt.Sprintf("%s", consts.ReclaimedResourceMemory), Weight: 1},
 }
+
+var defaultAlignedResourceSpec = []string{v1.ResourceCPU.String(), v1.ResourceMemory.String()}
 
 // SetDefaults_QoSAwareNodeResourcesFitArgs sets the default parameters for QoSAwareNodeResourcesFit plugin.
 func SetDefaults_QoSAwareNodeResourcesFitArgs(obj *QoSAwareNodeResourcesFitArgs) {
@@ -78,5 +81,29 @@ func SetDefaults_QoSAwareNodeResourcesBalancedAllocationArgs(obj *QoSAwareNodeRe
 		if obj.ReclaimedResources[i].Weight == 0 {
 			obj.ReclaimedResources[i].Weight = 1
 		}
+	}
+}
+
+func SetDefaults_NodeResourceTopologyArgs(obj *NodeResourceTopologyArgs) {
+	if len(obj.AlignedResources) == 0 {
+		obj.AlignedResources = append(obj.AlignedResources, defaultAlignedResourceSpec...)
+	}
+
+	if obj.ScoringStrategy == nil {
+		obj.ScoringStrategy = &ScoringStrategy{
+			Type:      v1beta3.LeastAllocated,
+			Resources: defaultResourceSpec,
+		}
+	}
+	if len(obj.ScoringStrategy.Resources) == 0 {
+		obj.ScoringStrategy.Resources = append(obj.ScoringStrategy.Resources, defaultResourceSpec...)
+	}
+	for i := range obj.ScoringStrategy.Resources {
+		if obj.ScoringStrategy.Resources[i].Weight == 0 {
+			obj.ScoringStrategy.Resources[i].Weight = 1
+		}
+	}
+	if obj.ResourcePluginPolicy == "" {
+		obj.ResourcePluginPolicy = consts.ResourcePluginPolicyNameDynamic
 	}
 }

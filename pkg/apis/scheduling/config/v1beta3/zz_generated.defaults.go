@@ -29,6 +29,7 @@ import (
 // Public to allow building arbitrary schemes.
 // All generated defaulters are covering - they call all nested defaulters.
 func RegisterDefaults(scheme *runtime.Scheme) error {
+	scheme.AddTypeDefaultingFunc(&NodeResourceTopologyArgs{}, func(obj interface{}) { SetObjectDefaults_NodeResourceTopologyArgs(obj.(*NodeResourceTopologyArgs)) })
 	scheme.AddTypeDefaultingFunc(&QoSAwareNodeResourcesBalancedAllocationArgs{}, func(obj interface{}) {
 		SetObjectDefaults_QoSAwareNodeResourcesBalancedAllocationArgs(obj.(*QoSAwareNodeResourcesBalancedAllocationArgs))
 	})
@@ -36,6 +37,10 @@ func RegisterDefaults(scheme *runtime.Scheme) error {
 		SetObjectDefaults_QoSAwareNodeResourcesFitArgs(obj.(*QoSAwareNodeResourcesFitArgs))
 	})
 	return nil
+}
+
+func SetObjectDefaults_NodeResourceTopologyArgs(in *NodeResourceTopologyArgs) {
+	SetDefaults_NodeResourceTopologyArgs(in)
 }
 
 func SetObjectDefaults_QoSAwareNodeResourcesBalancedAllocationArgs(in *QoSAwareNodeResourcesBalancedAllocationArgs) {

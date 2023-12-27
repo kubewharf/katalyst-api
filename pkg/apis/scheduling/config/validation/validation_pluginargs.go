@@ -22,6 +22,7 @@ import (
 	kubeschedulerconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
 
 	"github.com/kubewharf/katalyst-api/pkg/apis/scheduling/config"
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
 // ValidateQoSAwareNodeResourcesFitArgs validates that QoSAwareNodeResourcesFitArgs are set correctly.
@@ -116,4 +117,42 @@ func validateFunctionShape(shape []kubeschedulerconfig.UtilizationShapePoint, pa
 	}
 
 	return allErrs
+}
+
+var validScoringStrategy = sets.NewString(
+	string(kubeschedulerconfig.MostAllocated),
+	string(kubeschedulerconfig.LeastAllocated),
+	string(consts.BalancedAllocation),
+	string(consts.LeastNUMANodes),
+)
+
+// ValidateNodeResourceTopologyMatchArgs ...
+func ValidateNodeResourceTopologyMatchArgs(path *field.Path, args *config.NodeResourceTopologyArgs) error {
+	var allErrs field.ErrorList
+	scoringStrategyTypePath := path.Child("scoringStrategy.type")
+	if err := validateScoringStrategyType(args.ScoringStrategy.Type, scoringStrategyTypePath); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	resourcePluginPolicyPath := path.Child("resourcePluginPolicy")
+	if err := validateResourcePolicy(args.ResourcePluginPolicy, resourcePluginPolicyPath); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	return allErrs.ToAggregate()
+}
+
+func validateScoringStrategyType(scoringStrategy kubeschedulerconfig.ScoringStrategyType, path *field.Path) *field.Error {
+	if !validScoringStrategy.Has(string(scoringStrategy)) {
+		return field.Invalid(path, scoringStrategy, "invalid ScoringStrategyType")
+	}
+	return nil
+}
+
+func validateResourcePolicy(resourcePolicy consts.ResourcePluginPolicyName, path *field.Path) *field.Error {
+	if resourcePolicy != consts.ResourcePluginPolicyNameDynamic &&
+		resourcePolicy != consts.ResourcePluginPolicyNameNative {
+		return field.Invalid(path, resourcePolicy, "invalid ResourcePolicy")
+	}
+	return nil
 }

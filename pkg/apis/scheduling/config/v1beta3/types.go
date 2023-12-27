@@ -17,6 +17,8 @@ package v1beta3
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kube-scheduler/config/v1beta3"
+
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -66,4 +68,20 @@ type ScoringStrategy struct {
 
 	// Arguments specific to RequestedToCapacityRatio strategy.
 	ReclaimedRequestedToCapacityRatio *v1beta3.RequestedToCapacityRatioParam `json:"reclaimedRequestedToCapacityRatio,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// NodeResourceTopologyArgs holds arguments used to configure the NodeResourceTopologyMatch plugin
+type NodeResourceTopologyArgs struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// ScoringStrategy a scoring model that determine how the plugin will score the nodes.
+	ScoringStrategy *ScoringStrategy `json:"scoringStrategy,omitempty"`
+
+	// AlignedResources are resources should be aligned for dedicated pods.
+	AlignedResources []string `json:"alignedResources,omitempty"`
+
+	// ResourcePluginPolicy are QRMPlugin resource policy to allocate topology resource for containers.
+	ResourcePluginPolicy consts.ResourcePluginPolicyName `json:"resourcePluginPolicy,omitempty"`
 }

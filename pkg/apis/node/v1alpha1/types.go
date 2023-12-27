@@ -132,6 +132,12 @@ const (
 
 	// TopologyPolicyBestEffortPodLevel represents best-effort policy and pod level.
 	TopologyPolicyBestEffortPodLevel TopologyPolicy = "BestEffortPodLevel"
+
+	// TopologyPolicyNumericContainerLevel represents numeric policy and container level.
+	TopologyPolicyNumericContainerLevel TopologyPolicy = "NumericContainerLevel"
+
+	// TopologyPolicyNumericPodLevel represents numeric policy and pod level.
+	TopologyPolicyNumericPodLevel TopologyPolicy = "NumericPodLevel"
 )
 
 // CNRCondition contains condition information for a cnr.

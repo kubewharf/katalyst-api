@@ -17,6 +17,8 @@ package config
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubeschedulerconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
+
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -43,6 +45,22 @@ type QoSAwareNodeResourcesBalancedAllocationArgs struct {
 	// The default resource set includes "resource.katalyst.kubewharf.io/reclaimed_millicpu"
 	// and "resource.katalyst.kubewharf.io/reclaimed_memory", only valid weight is 1.
 	ReclaimedResources []kubeschedulerconfig.ResourceSpec `json:"reclaimedResources,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// NodeResourceTopologyArgs holds arguments used to configure the NodeResourceTopologyMatch plugin
+type NodeResourceTopologyArgs struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// ScoringStrategy a scoring model that determine how the plugin will score the nodes.
+	ScoringStrategy *ScoringStrategy `json:"scoringStrategy,omitempty"`
+
+	// AlignedResources are resources should be aligned for dedicated pods.
+	AlignedResources []string `json:"alignedResources,omitempty"`
+
+	// ResourcePluginPolicy are QRMPlugin resource policy to allocate topology resource for containers.
+	ResourcePluginPolicy consts.ResourcePluginPolicyName `json:"resourcePluginPolicy,omitempty"`
 }
 
 // ScoringStrategy define ScoringStrategyType for node resource plugin
