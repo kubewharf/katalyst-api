@@ -198,6 +198,10 @@ type EvictionConfig struct {
 	// +optional
 	MemoryPressureEvictionConfig *MemoryPressureEvictionConfig `json:"memoryPressureEvictionConfig,omitempty"`
 
+	// RootfsPressureEvictionConfig is the config for rootfs pressure eviction
+	// +optional
+	RootfsPressureEvictionConfig *RootfsPressureEvictionConfig `json:"rootfsPressureEvictionConfig,omitempty"`
+
 	// ReclaimedResourcesEvictionConfig is the config for reclaimed resources' eviction
 	// +optional
 	ReclaimedResourcesEvictionConfig *ReclaimedResourcesEvictionConfig `json:"reclaimedResourcesEvictionConfig,omitempty"`
@@ -369,6 +373,58 @@ type SystemLoadPressureEvictionConfig struct {
 	// threshold is greater than this percentage
 	// +optional
 	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+}
+
+type RootfsPressureEvictionConfig struct {
+	// EnableRootfsPressureEviction is whether to enable rootfs pressure eviction.
+	// +optional
+	EnableRootfsPressureEviction *bool `json:"enableRootfsPressureEviction,omitempty"`
+
+	// MinimumFreeThreshold is a threshold for a node.
+	// Once the rootfs free space of current node is lower than this threshold, the eviction manager will try to evict some pods.
+	// For example: "200Gi", "10%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$`
+	MinimumFreeThreshold string `json:"minimumFreeThreshold,omitempty"`
+
+	// MinimumInodesFreeThreshold is a threshold for a node.
+	// Once the rootfs free inodes of current node is lower than this threshold, the eviction manager will try to evict some pods.
+	// For example: "100000", "10%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$`
+	MinimumInodesFreeThreshold string `json:"minimumInodesFreeThreshold,omitempty"`
+
+	// PodMinimumUsedThreshold is a threshold for all pods.
+	// The eviction manager will ignore this pod if its rootfs used in bytes is lower than this threshold.
+	// For example: "200Gi", "1%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$`
+	PodMinimumUsedThreshold string `json:"podMinimumUsedThreshold,omitempty"`
+
+	// PodMinimumInodesUsedThreshold is a threshold for all pods.
+	// The eviction manager will ignore this pod if its rootfs inodes used is lower than this threshold.
+	// For example: "1000", "1%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$`
+	PodMinimumInodesUsedThreshold string `json:"podMinimumInodesUsedThreshold,omitempty"`
+
+	// ReclaimedQoSPodUsedPriorityThreshold is a threshold for all offline pods.
+	// The eviction manager will prioritize the eviction of offline pods that reach this threshold.
+	// For example: "100Gi", "1%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$`
+	ReclaimedQoSPodUsedPriorityThreshold string `json:"reclaimedQoSPodUsedPriorityThreshold,omitempty"`
+
+	// ReclaimedQoSPodInodesUsedPriorityThreshold is a threshold for all offline pods.
+	// The eviction manager will prioritize the eviction of reclaimed pods that reach this threshold.
+	// For example: "500", "1%".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$`
+	ReclaimedQoSPodInodesUsedPriorityThreshold string `json:"reclaimedQoSPodInodesUsedPriorityThreshold,omitempty"`
+
+	// GracePeriod is the grace period of pod deletion
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
 
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
