@@ -32,16 +32,16 @@ type TideNodePoolSpec struct {
 type EvictStrategy struct {
 	Type string `json:"type"`
 	// +optional
-	WaterFlow WaterFlow `json:"waterFlow,omitempty"`
+	Watermark Watermark `json:"watermark,omitempty"`
 }
 
 type EvictStrategyType string
 
 const (
-	WaterFlowStrategy EvictStrategyType = "water-flow"
+	WatermarkStrategy EvictStrategyType = "watermark"
 )
 
-type WaterFlow struct {
+type Watermark struct {
 	// +optional
 	EvictOnlinePodTaint *TaintOption `json:"evictOnlinePodTaint,omitempty"`
 	// +optional
@@ -87,12 +87,12 @@ type TideNodePoolStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	// +optional
-	ReverseNodes ReverseNodes `json:"reverseNodes,omitempty"`
+	ReserveNodes ReserveNodes `json:"reverseNodes,omitempty"`
 	// +optional
 	TideNodes TideNodes `json:"tideNodes,omitempty"`
 }
 
-type ReverseNodes struct {
+type ReserveNodes struct {
 	OnlineNodes  []string `json:"onlineNodes,omitempty"`
 	OfflineNodes []string `json:"offlineNodes,omitempty"`
 }
