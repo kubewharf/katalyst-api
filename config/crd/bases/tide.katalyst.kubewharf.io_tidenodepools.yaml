@@ -99,7 +99,7 @@ spec:
                     - key
                     - value
                     type: object
-                  reverse:
+                  reserve:
                     properties:
                       offline:
                         anyOf:
@@ -129,7 +129,7 @@ spec:
           status:
             description: TideNodePoolStatus defines the observed state of TideNodePool
             properties:
-              reverseNodes:
+              reserveNodes:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
