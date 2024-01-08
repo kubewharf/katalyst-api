@@ -257,13 +257,6 @@ spec:
                               try to evict some pods. For example: "100000", "10%".'
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
-                          podMinimumUsedThreshold:
-                            description: 'PodMinimumUsedThreshold is a threshold for
-                              all pods. The eviction manager will ignore this pod
-                              if its rootfs used in bytes is lower than this threshold.
-                              For example: "200Gi", "1%".'
-                            pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
-                            type: string
                           podMinimumInodesUsedThreshold:
                             description: 'PodMinimumInodesUsedThreshold is a threshold
                               for all pods. The eviction manager will ignore this
@@ -271,11 +264,11 @@ spec:
                               For example: "1000", "1%".'
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
-                          reclaimedQoSPodUsedPriorityThreshold:
-                            description: 'ReclaimedQoSPodUsedPriorityThreshold is
-                              a threshold for all offline pods. The eviction manager
-                              will prioritize the eviction of offline pods that reach
-                              this threshold. For example: "100Gi", "1%".'
+                          podMinimumUsedThreshold:
+                            description: 'PodMinimumUsedThreshold is a threshold for
+                              all pods. The eviction manager will ignore this pod
+                              if its rootfs used in bytes is lower than this threshold.
+                              For example: "200Gi", "1%".'
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
                           reclaimedQoSPodInodesUsedPriorityThreshold:
@@ -284,6 +277,13 @@ spec:
                               will prioritize the eviction of reclaimed pods that
                               reach this threshold. For example: "500", "1%".'
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
+                            type: string
+                          reclaimedQoSPodUsedPriorityThreshold:
+                            description: 'ReclaimedQoSPodUsedPriorityThreshold is
+                              a threshold for all offline pods. The eviction manager
+                              will prioritize the eviction of offline pods that reach
+                              this threshold. For example: "100Gi", "1%".'
+                            pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:

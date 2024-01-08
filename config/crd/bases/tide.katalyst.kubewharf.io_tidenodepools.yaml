@@ -43,7 +43,7 @@ spec:
                 properties:
                   type:
                     type: string
-                  waterFlow:
+                  watermark:
                     properties:
                       evictOfflinePodTaint:
                         properties:
