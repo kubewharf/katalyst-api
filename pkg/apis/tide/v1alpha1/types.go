@@ -57,14 +57,14 @@ type NodeConfigs struct {
 	// +optional
 	TideLabel *LabelOption `json:"tideLabel,omitempty"`
 	// +optional
-	Reverse ReverseOptions `json:"reverse,omitempty"`
+	Reserve ReserveOptions `json:"reserve,omitempty"`
 }
 
 type PodSelector struct {
 	MatchLabels map[string]string `json:"matchLabels,omitempty"`
 }
 
-type ReverseOptions struct {
+type ReserveOptions struct {
 	// +optional
 	Online *intstr.IntOrString `json:"online,omitempty"`
 	// +optional
@@ -87,7 +87,7 @@ type TideNodePoolStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	// +optional
-	ReserveNodes ReserveNodes `json:"reverseNodes,omitempty"`
+	ReserveNodes ReserveNodes `json:"reserveNodes,omitempty"`
 	// +optional
 	TideNodes TideNodes `json:"tideNodes,omitempty"`
 }
