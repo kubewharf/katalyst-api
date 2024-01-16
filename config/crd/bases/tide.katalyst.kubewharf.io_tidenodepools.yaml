@@ -13,7 +13,7 @@ spec:
     listKind: TideNodePoolList
     plural: tidenodepools
     shortNames:
-    - kcnr
+    - tnp
     singular: tidenodepool
   scope: Cluster
   versions:
