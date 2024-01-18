@@ -1054,6 +1054,11 @@ func (in *ReclaimedResourcesEvictionConfig) DeepCopyInto(out *ReclaimedResources
 		*out = new(int64)
 		**out = **in
 	}
+	if in.ThresholdMetToleranceDuration != nil {
+		in, out := &in.ThresholdMetToleranceDuration, &out.ThresholdMetToleranceDuration
+		*out = new(int64)
+		**out = **in
+	}
 	return
 }
 
