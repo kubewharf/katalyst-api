@@ -85,6 +85,7 @@ spec:
                             description: GracePeriod is the grace period of cpu pressure
                               eviction
                             format: int64
+                            minimum: 0
                             type: integer
                           loadEvictionCoolDownTime:
                             description: LoadEvictionCoolDownTime is the cool-down
@@ -104,12 +105,15 @@ spec:
                               to the total number of times the load is measured, if
                               the percentage is greater than the load threshold met
                               percentage, the eviction or node tainted will be triggered
+                            maximum: 1
+                            minimum: 0
                             type: number
                           loadUpperBoundRatio:
                             description: LoadUpperBoundRatio is the upper bound ratio
                               of cpuset pool load, if the load of the target cpuset
                               pool is greater than the load upper bound repeatedly,
                               the eviction will be triggered
+                            minimum: 1
                             type: number
                           maxSuppressionToleranceRate:
                             description: MaxSuppressionToleranceRate is the maximum
@@ -119,6 +123,7 @@ spec:
                               rate, the cpu suppression tolerance rate of the pod
                               will be set to the maximum cpu suppression tolerance
                               rate
+                            minimum: 0
                             type: number
                           minSuppressionToleranceDuration:
                             description: MinSuppressionToleranceDuration is the minimum
@@ -155,6 +160,7 @@ spec:
                             description: GracePeriod is the grace period of memory
                               pressure eviction
                             format: int64
+                            minimum: 0
                             type: integer
                           numaEvictionRankingMetrics:
                             description: NumaEvictionRankingMetrics is the metrics
@@ -173,6 +179,7 @@ spec:
                             description: NumaFreeBelowWatermarkTimesThreshold is the
                               threshold for the number of times NUMA's free memory
                               falls below the watermark
+                            minimum: 0
                             type: integer
                           numaVictimMinimumUtilizationThreshold:
                             description: NumaVictimMinimumUtilizationThreshold is
@@ -183,6 +190,7 @@ spec:
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
                               for the rate of rss
+                            minimum: 0
                             type: number
                           systemEvictionRankingMetrics:
                             description: SystemEvictionRankingMetrics is the metrics
@@ -209,10 +217,12 @@ spec:
                             description: SystemKswapdRateExceedDurationThreshold is
                               the threshold for the duration the kswapd reclaiming
                               rate exceeds the threshold
+                            minimum: 0
                             type: integer
                           systemKswapdRateThreshold:
                             description: NumaFreeBelowWatermarkTimesThreshold is the
                               threshold for the rate of kswapd reclaiming rate
+                            minimum: 0
                             type: integer
                         type: object
                       reclaimedResourcesEvictionConfig:
@@ -229,6 +239,13 @@ spec:
                             description: GracePeriod is the grace period of reclaimed
                               resources' eviction
                             format: int64
+                            minimum: 0
+                            type: integer
+                          thresholdMetToleranceDuration:
+                            description: ThresholdMetToleranceDuration is the tolerance
+                              duration before eviction.
+                            format: int64
+                            minimum: 0
                             type: integer
                         type: object
                       rootfsPressureEvictionConfig:
@@ -353,22 +370,28 @@ spec:
                                 description: MaxHeadroomCapacityRate is the max headroom
                                   capacity rate of cpu headroom to the total cpu capacity
                                   of node
+                                minimum: 0
                                 type: number
                               maxOversoldRate:
                                 description: MaxOversoldRate is the max oversold rate
                                   of cpu headroom to the actual size of reclaimed_cores
                                   pool
+                                minimum: 0
                                 type: number
                               maxReclaimedCoreUtilization:
                                 description: MaxReclaimedCoreUtilization is the max
                                   reclaimed core utilization of reclaimed_cores pool,
                                   which is used to calculate the oversold cpu headroom,
                                   if zero means no limit
+                                maximum: 1
+                                minimum: 0
                                 type: number
                               targetReclaimedCoreUtilization:
                                 description: TargetReclaimedCoreUtilization is the
                                   target reclaimed core utilization to be used for
                                   calculating the oversold cpu headroom
+                                maximum: 1
+                                minimum: 0
                                 type: number
                             type: object
                         type: object
@@ -390,6 +413,8 @@ spec:
                               cacheBasedRatio:
                                 description: CacheBasedRatio is the rate of cache
                                   oversold, 0 means disable cache oversold
+                                maximum: 1
+                                minimum: 0
                                 type: number
                               enable:
                                 description: Enable is a flag to enable utilization
@@ -399,10 +424,13 @@ spec:
                                 description: FreeBasedRatio is the estimation of free
                                   memory utilization, which can be used as system
                                   buffer to oversold memory.
+                                maximum: 1
+                                minimum: 0
                                 type: number
                               staticBasedCapacity:
                                 description: StaticBasedCapacity is the static oversold
                                   memory size by bytes
+                                minimum: 0
                                 type: number
                             type: object
                         type: object
