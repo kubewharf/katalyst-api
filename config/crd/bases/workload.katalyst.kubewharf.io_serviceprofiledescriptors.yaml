@@ -20,7 +20,8 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ServiceProfileDescriptor captures information about a VPA object
+        description: ServiceProfileDescriptor captures information about a service
+          workload
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -87,6 +88,35 @@ spec:
                   - name
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+              extendedIndicator:
+                description: if multiple ExtendedIndicator are defined, it means that
+                  the service should satisfy all the strategies in those extended
+                  indicators
+                items:
+                  description: ServiceExtendedIndicatorSpec specifies extended workload
+                    characteristics and can serve as an extension to indicators beyond
+                    business and system scopes. Examples include policies for custom
+                    memory reclamation and I/O limitations specific to a service.
+                  properties:
+                    indicators:
+                      description: Indicators defines extend workload characteristics,
+                        Indicators can have arbitrary structure. Each kind of Indicator
+                        must be named using Name, followed by the suffix 'Indicators'.
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    name:
+                      description: Name defines the name of extended module
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               systemIndicator:
                 description: if multiple SystemIndicator are defined, it means that
                   we should try to satisfy all of those indicator targets
@@ -127,6 +157,9 @@ spec:
                   - name
                   type: object
                 type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
               targetRef:
                 description: TargetRef points to the controller managing the set of
                   pods for the spd-controller to control - e.g. Deployment, StatefulSet.
