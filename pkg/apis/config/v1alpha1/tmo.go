@@ -1,0 +1,144 @@
+/*
+Copyright 2022 The Katalyst Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=tmoconfigurations,shortName=tmo
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="AGE",type=date,JSONPath=.metadata.creationTimestamp
+// +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeLabelSelector"
+// +kubebuilder:printcolumn:name="PRIORITY",type=string,JSONPath=".spec.priority"
+// +kubebuilder:printcolumn:name="NODES",type=string,JSONPath=".spec.ephemeralSelector.nodeNames"
+// +kubebuilder:printcolumn:name="DURATION",type=string,JSONPath=".spec.ephemeralSelector.lastDuration"
+// +kubebuilder:printcolumn:name="VALID",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].status"
+// +kubebuilder:printcolumn:name="REASON",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].reason"
+// +kubebuilder:printcolumn:name="MESSAGE",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].message"
+
+// TransparentMemoryOffloadingConfiguration is the Schema for the configuration API used by Transparent Memory Offloading
+type TransparentMemoryOffloadingConfiguration struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   TransparentMemoryOffloadingConfigurationSpec `json:"spec,omitempty"`
+	Status GenericConfigStatus                          `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
+
+// TransparentMemoryOffloadingConfigurationList contains a list of TransparentMemoryOffloadingConfiguration
+type TransparentMemoryOffloadingConfigurationList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []TransparentMemoryOffloadingConfiguration `json:"items"`
+}
+
+// TransparentMemoryOffloadingConfigurationSpec defines the desired state of TransparentMemoryOffloadingConfiguration
+type TransparentMemoryOffloadingConfigurationSpec struct {
+	GenericConfigSpec `json:",inline"`
+
+	// Config is custom field for TMO configuration
+	Config TransparentMemoryOffloadingConfig `json:"config"`
+}
+
+type TransparentMemoryOffloadingConfig struct {
+	// QoSLevelConfig is a configuration for manipulating TMO on Different QoS Level
+	// +optional
+	// +listMapKey=qosLevel
+	// +listType=map
+	QoSLevelConfig []QoSLevelConfig `json:"qosConfig,omitempty"`
+
+	// CgroupConfig is a configuration for manipulating TMO on specified cgroups
+	// +optional
+	// +listMapKey=cgroupPath
+	// +listType=map
+	CgroupConfig []CgroupConfig `json:"CgroupConfig"`
+}
+
+type QoSLevelConfig struct {
+	// QoSLevel is either of reclaimed_cores, shared_cores, dedicated_cores, system_cores
+	QoSLevel QoSLevel `json:"qosLevel"`
+
+	// ConfigDetail is configuration details of TMO
+	ConfigDetail TMOConfigDetail `json:"configDetail"`
+}
+
+type QoSLevel string
+
+const (
+	QoSLevelReclaimedCores QoSLevel = "reclaimed_cores"
+	QoSLevelSharedCores    QoSLevel = "shared_cores"
+	QoSLevelDedicatedCores QoSLevel = "dedicated_cores"
+	QoSLevelSystemCores    QoSLevel = "system_cores"
+)
+
+type CgroupConfig struct {
+	// CgroupPath is an cgroupV2 absolute path, e.g. /sys/fs/cgroup/hdfs
+	CgroupPath string `json:"cgroupPath"`
+
+	// ConfigDetail is configuration details of TMO
+	ConfigDetail TMOConfigDetail `json:"configDetail"`
+}
+
+type TMOConfigDetail struct {
+	// EnableTMO is whether to enable TMO on target objective
+	// +optional
+	EnableTMO *bool `json:"enableTMO,omitempty"`
+
+	// EnableSwap is whether to enable swap to offloading anon pages
+	// +optional
+	EnableSwap *bool `json:"enableSwap,omitempty"`
+
+	// Interval is the minimum duration the objectives got memory reclaimed by TMO
+	// +optional
+	Interval *metav1.Duration `json:"interval,omitempty"`
+
+	// PolicyName is used to specify the policy for calculating memory offloading size
+	PolicyName TMOPolicyName `json:"policyName"`
+
+	// PsiPolicyConf is configurations of a TMO policy which reclaim memory by PSI
+	// +optional
+	PsiPolicyConf *PsiPolicyConf `json:"psiPolicy,omitempty"`
+
+	// RefaultPolicy is configurations of a TMO policy which reclaim memory by refault
+	// +optional
+	RefaultPolicConf *RefaultPolicyConf `json:"refaultPolicy,omitempty"`
+}
+
+type TMOPolicyName string
+
+const (
+	DefaultPolicy TMOPolicyName = "default_policy"
+	PsiPolicy     TMOPolicyName = "psi_policy"
+	RefaultPolicy TMOPolicyName = "refault_policy"
+)
+
+type PsiPolicyConf struct {
+	MaxProbe          float64 `json:"maxProbe"`
+	PsiAvg60Threshold float64 `json:"psiAvg60Threshold"`
+}
+
+type RefaultPolicyConf struct {
+	MaxProbe                    float64 `json:"maxProbe"`
+	ReclaimAccuracyTarget       float64 `json:"reclaimAccuracyTarget"`
+	ReclaimScanEfficiencyTarget float64 `json:"reclaimScanEfficiencyTarget"`
+}
