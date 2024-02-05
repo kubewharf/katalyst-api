@@ -110,6 +110,137 @@ spec:
                   - type
                   type: object
                 type: array
+              nodeMetricStatus:
+                description: NodeMetricStatus report node real-time metrics
+                properties:
+                  groupMetric:
+                    description: GroupMetric contains the metrics aggregated by QoS
+                      level groups
+                    items:
+                      properties:
+                        QoSLevel:
+                          enum:
+                          - reclaimed_cores
+                          - shared_cores
+                          - dedicated_cores
+                          - system_cores
+                          type: string
+                        genericUsage:
+                          description: GenericUsage contains the real-time resource
+                            usage
+                          properties:
+                            cpu:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            memory:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                          type: object
+                        numaUsage:
+                          description: NUMAUsage contains the real-time resource usage
+                            for each NUMA
+                          items:
+                            properties:
+                              numaId:
+                                type: integer
+                              usage:
+                                description: Usage contains the real-time resource
+                                  usage for this NUMA node
+                                properties:
+                                  cpu:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
+                                  memory:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
+                                type: object
+                            required:
+                            - numaId
+                            - usage
+                            type: object
+                          type: array
+                        podList:
+                          description: PodList indicates the pods belongs to this
+                            qos group, in format of {namespace}/{name}. Pods that
+                            have been scheduled but are not listed in the PodList
+                            need to be estimated by the scheduler.
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - QoSLevel
+                      type: object
+                    type: array
+                  nodeMetric:
+                    description: NodeMetric contains the metrics for this node.
+                    properties:
+                      genericUsage:
+                        description: GenericUsage contains the real-time resource
+                          usage
+                        properties:
+                          cpu:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          memory:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                        type: object
+                      numaUsage:
+                        description: NUMAUsage contains the real-time resource usage
+                          for each NUMA
+                        items:
+                          properties:
+                            numaId:
+                              type: integer
+                            usage:
+                              description: Usage contains the real-time resource usage
+                                for this NUMA node
+                              properties:
+                                cpu:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                memory:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                              type: object
+                          required:
+                          - numaId
+                          - usage
+                          type: object
+                        type: array
+                    type: object
+                  updateTime:
+                    description: UpdateTime is the last time this NodeMetricStatus
+                      was updated.
+                    format: date-time
+                    type: string
+                required:
+                - updateTime
+                type: object
               resources:
                 description: Resources defines the numeric quantities in this node;
                   for instance reclaimed resources for this node
