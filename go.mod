@@ -14,6 +14,7 @@ require (
 	k8s.io/kubelet v0.24.6
 	k8s.io/kubernetes v1.24.6
 	k8s.io/metrics v0.24.6
+	sigs.k8s.io/yaml v1.2.0
 )
 
 require (
@@ -61,7 +62,6 @@ require (
 	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-	sigs.k8s.io/yaml v1.2.0 // indirect
 )
 
 replace (

@@ -30,6 +30,8 @@ CONTROLLER_GEN := $(abspath $(TOOLS_BIN_DIR)/controller-gen)
 Protocol_PATH = pkg/protocol
 
 all: generate
+crd: generate-manifests generate-go
+pb: generate-pb
 
 ## --------------------------------------
 ## Binaries
