@@ -229,9 +229,9 @@ type ServiceBusinessIndicatorSpec struct {
 type ServiceSystemIndicatorName string
 
 const (
-	TargetIndicatorNameCPUSchedWait  ServiceSystemIndicatorName = "cpu_sched_wait"
-	TargetIndicatorNameCPUUsageRatio ServiceSystemIndicatorName = "cpu_usage_ratio"
-	TargetIndicatorNameCPI           ServiceSystemIndicatorName = "cpi"
+	ServiceSystemIndicatorNameCPUSchedWait  ServiceSystemIndicatorName = "cpu_sched_wait"
+	ServiceSystemIndicatorNameCPUUsageRatio ServiceSystemIndicatorName = "cpu_usage_ratio"
+	ServiceSystemIndicatorNameCPI           ServiceSystemIndicatorName = "cpi"
 )
 
 // ServiceSystemIndicatorSpec defines workload profiling in system level, such as
