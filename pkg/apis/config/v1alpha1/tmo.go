@@ -120,18 +120,25 @@ type TMOConfigDetail struct {
 type TMOPolicyName string
 
 const (
-	Default TMOPolicyName = "default"
-	PSI     TMOPolicyName = "psi"
-	Refault TMOPolicyName = "refault"
+	TMOPolicyNamePSI     TMOPolicyName = "PSI"
+	TMOPolicyNameRefault TMOPolicyName = "Refault"
 )
 
 type PSIPolicyConf struct {
-	MaxProbe          *float64 `json:"maxProbe,omitempty"`
+	// MaxProbe limits the memory offloading size in one cycle, it's a ratio of memory usage.
+	MaxProbe *float64 `json:"maxProbe,omitempty"`
+
+	// PsiAvg60Threshold indicates the threshold of memory pressure. If observed pressure exceeds
+	// this threshold, memory offloading will be paused.
 	PsiAvg60Threshold *float64 `json:"psiAvg60Threshold,omitempty"`
 }
 
 type RefaultPolicyConf struct {
-	MaxProbe                    *float64 `json:"maxProbe,omitempty"`
-	ReclaimAccuracyTarget       *float64 `json:"reclaimAccuracyTarget,omitempty"`
+	// MaxProbe limits the memory offloading size in one cycle, it's a ratio of memory usage.
+	MaxProbe *float64 `json:"maxProbe,omitempty"`
+	// ReclaimAccuracyTarget indicates the desired level of precision or accuracy in offloaded pages.
+	ReclaimAccuracyTarget *float64 `json:"reclaimAccuracyTarget,omitempty"`
+	// ReclaimScanEfficiencyTarget indicates the desired level of efficiency in scanning and
+	// identifying memory pages that can be offloaded.
 	ReclaimScanEfficiencyTarget *float64 `json:"reclaimScanEfficiencyTarget,omitempty"`
 }

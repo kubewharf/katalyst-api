@@ -100,8 +100,13 @@ spec:
                                 policy which reclaim memory by PSI
                               properties:
                                 maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 psiAvg60Threshold:
+                                  description: PsiAvg60Threshold indicates the threshold
+                                    of memory pressure. If observed pressure exceeds
+                                    this threshold, memory offloading will be paused.
                                   type: number
                               type: object
                             refaultPolicy:
@@ -109,10 +114,18 @@ spec:
                                 policy which reclaim memory by refault
                               properties:
                                 maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 reclaimAccuracyTarget:
+                                  description: ReclaimAccuracyTarget indicates the
+                                    desired level of precision or accuracy in offloaded
+                                    pages.
                                   type: number
                                 reclaimScanEfficiencyTarget:
+                                  description: ReclaimScanEfficiencyTarget indicates
+                                    the desired level of efficiency in scanning and
+                                    identifying memory pages that can be offloaded.
                                   type: number
                               type: object
                           type: object
@@ -153,8 +166,13 @@ spec:
                                 policy which reclaim memory by PSI
                               properties:
                                 maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 psiAvg60Threshold:
+                                  description: PsiAvg60Threshold indicates the threshold
+                                    of memory pressure. If observed pressure exceeds
+                                    this threshold, memory offloading will be paused.
                                   type: number
                               type: object
                             refaultPolicy:
@@ -162,10 +180,18 @@ spec:
                                 policy which reclaim memory by refault
                               properties:
                                 maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 reclaimAccuracyTarget:
+                                  description: ReclaimAccuracyTarget indicates the
+                                    desired level of precision or accuracy in offloaded
+                                    pages.
                                   type: number
                                 reclaimScanEfficiencyTarget:
+                                  description: ReclaimScanEfficiencyTarget indicates
+                                    the desired level of efficiency in scanning and
+                                    identifying memory pages that can be offloaded.
                                   type: number
                               type: object
                           type: object
