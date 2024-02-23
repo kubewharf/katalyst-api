@@ -96,16 +96,13 @@ spec:
                                 for calculating memory offloading size
                               type: string
                             psiPolicy:
-                              description: PsiPolicyConf is configurations of a TMO
+                              description: PSIPolicyConf is configurations of a TMO
                                 policy which reclaim memory by PSI
                               properties:
                                 maxProbe:
                                   type: number
                                 psiAvg60Threshold:
                                   type: number
-                              required:
-                              - maxProbe
-                              - psiAvg60Threshold
                               type: object
                             refaultPolicy:
                               description: RefaultPolicy is configurations of a TMO
@@ -117,13 +114,7 @@ spec:
                                   type: number
                                 reclaimScanEfficiencyTarget:
                                   type: number
-                              required:
-                              - maxProbe
-                              - reclaimAccuracyTarget
-                              - reclaimScanEfficiencyTarget
                               type: object
-                          required:
-                          - policyName
                           type: object
                       required:
                       - cgroupPath
@@ -133,7 +124,7 @@ spec:
                     x-kubernetes-list-map-keys:
                     - cgroupPath
                     x-kubernetes-list-type: map
-                  qosConfig:
+                  qosLevelConfig:
                     description: QoSLevelConfig is a configuration for manipulating
                       TMO on Different QoS Level
                     items:
@@ -158,16 +149,13 @@ spec:
                                 for calculating memory offloading size
                               type: string
                             psiPolicy:
-                              description: PsiPolicyConf is configurations of a TMO
+                              description: PSIPolicyConf is configurations of a TMO
                                 policy which reclaim memory by PSI
                               properties:
                                 maxProbe:
                                   type: number
                                 psiAvg60Threshold:
                                   type: number
-                              required:
-                              - maxProbe
-                              - psiAvg60Threshold
                               type: object
                             refaultPolicy:
                               description: RefaultPolicy is configurations of a TMO
@@ -179,13 +167,7 @@ spec:
                                   type: number
                                 reclaimScanEfficiencyTarget:
                                   type: number
-                              required:
-                              - maxProbe
-                              - reclaimAccuracyTarget
-                              - reclaimScanEfficiencyTarget
                               type: object
-                          required:
-                          - policyName
                           type: object
                         qosLevel:
                           description: QoSLevel is either of reclaimed_cores, shared_cores,

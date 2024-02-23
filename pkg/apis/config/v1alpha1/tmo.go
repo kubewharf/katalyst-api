@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -65,31 +66,22 @@ type TransparentMemoryOffloadingConfig struct {
 	// +optional
 	// +listMapKey=qosLevel
 	// +listType=map
-	QoSLevelConfig []QoSLevelConfig `json:"qosConfig,omitempty"`
+	QoSLevelConfig []QoSLevelConfig `json:"qosLevelConfig,omitempty"`
 
 	// CgroupConfig is a configuration for manipulating TMO on specified cgroups
 	// +optional
 	// +listMapKey=cgroupPath
 	// +listType=map
-	CgroupConfig []CgroupConfig `json:"CgroupConfig"`
+	CgroupConfig []CgroupConfig `json:"CgroupConfig,omitempty"`
 }
 
 type QoSLevelConfig struct {
 	// QoSLevel is either of reclaimed_cores, shared_cores, dedicated_cores, system_cores
-	QoSLevel QoSLevel `json:"qosLevel"`
+	QoSLevel consts.QoSLevel `json:"qosLevel"`
 
 	// ConfigDetail is configuration details of TMO
 	ConfigDetail TMOConfigDetail `json:"configDetail"`
 }
-
-type QoSLevel string
-
-const (
-	QoSLevelReclaimedCores QoSLevel = "reclaimed_cores"
-	QoSLevelSharedCores    QoSLevel = "shared_cores"
-	QoSLevelDedicatedCores QoSLevel = "dedicated_cores"
-	QoSLevelSystemCores    QoSLevel = "system_cores"
-)
 
 type CgroupConfig struct {
 	// CgroupPath is an cgroupV2 absolute path, e.g. /sys/fs/cgroup/hdfs
@@ -113,11 +105,12 @@ type TMOConfigDetail struct {
 	Interval *metav1.Duration `json:"interval,omitempty"`
 
 	// PolicyName is used to specify the policy for calculating memory offloading size
-	PolicyName TMOPolicyName `json:"policyName"`
-
-	// PsiPolicyConf is configurations of a TMO policy which reclaim memory by PSI
 	// +optional
-	PsiPolicyConf *PsiPolicyConf `json:"psiPolicy,omitempty"`
+	PolicyName *TMOPolicyName `json:"policyName,omitempty"`
+
+	// PSIPolicyConf is configurations of a TMO policy which reclaim memory by PSI
+	// +optional
+	PSIPolicyConf *PSIPolicyConf `json:"psiPolicy,omitempty"`
 
 	// RefaultPolicy is configurations of a TMO policy which reclaim memory by refault
 	// +optional
@@ -127,18 +120,18 @@ type TMOConfigDetail struct {
 type TMOPolicyName string
 
 const (
-	DefaultPolicy TMOPolicyName = "default_policy"
-	PsiPolicy     TMOPolicyName = "psi_policy"
-	RefaultPolicy TMOPolicyName = "refault_policy"
+	Default TMOPolicyName = "default"
+	PSI     TMOPolicyName = "psi"
+	Refault TMOPolicyName = "refault"
 )
 
-type PsiPolicyConf struct {
-	MaxProbe          float64 `json:"maxProbe"`
-	PsiAvg60Threshold float64 `json:"psiAvg60Threshold"`
+type PSIPolicyConf struct {
+	MaxProbe          *float64 `json:"maxProbe,omitempty"`
+	PsiAvg60Threshold *float64 `json:"psiAvg60Threshold,omitempty"`
 }
 
 type RefaultPolicyConf struct {
-	MaxProbe                    float64 `json:"maxProbe"`
-	ReclaimAccuracyTarget       float64 `json:"reclaimAccuracyTarget"`
-	ReclaimScanEfficiencyTarget float64 `json:"reclaimScanEfficiencyTarget"`
+	MaxProbe                    *float64 `json:"maxProbe,omitempty"`
+	ReclaimAccuracyTarget       *float64 `json:"reclaimAccuracyTarget,omitempty"`
+	ReclaimScanEfficiencyTarget *float64 `json:"reclaimScanEfficiencyTarget,omitempty"`
 }
