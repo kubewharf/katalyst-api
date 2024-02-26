@@ -117,7 +117,7 @@ func (c *FakeResourceRecommends) UpdateStatus(ctx context.Context, resourceRecom
 // Delete takes name of the resourceRecommend and deletes it. Returns an error if one occurs.
 func (c *FakeResourceRecommends) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(resourcerecommendsResource, c.ns, name, opts), &v1alpha1.ResourceRecommend{})
+		Invokes(testing.NewDeleteAction(resourcerecommendsResource, c.ns, name), &v1alpha1.ResourceRecommend{})
 
 	return err
 }

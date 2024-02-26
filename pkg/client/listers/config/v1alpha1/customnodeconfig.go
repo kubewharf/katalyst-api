@@ -26,13 +26,10 @@ import (
 )
 
 // CustomNodeConfigLister helps list CustomNodeConfigs.
-// All objects returned here must be treated as read-only.
 type CustomNodeConfigLister interface {
 	// List lists all CustomNodeConfigs in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.CustomNodeConfig, err error)
 	// Get retrieves the CustomNodeConfig from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.CustomNodeConfig, error)
 	CustomNodeConfigListerExpansion
 }
