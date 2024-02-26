@@ -26,13 +26,10 @@ import (
 )
 
 // CustomNodeResourceLister helps list CustomNodeResources.
-// All objects returned here must be treated as read-only.
 type CustomNodeResourceLister interface {
 	// List lists all CustomNodeResources in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.CustomNodeResource, err error)
 	// Get retrieves the CustomNodeResource from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.CustomNodeResource, error)
 	CustomNodeResourceListerExpansion
 }

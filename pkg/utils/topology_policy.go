@@ -26,10 +26,6 @@ import (
 // GenerateTopologyPolicy generates TopologyPolicy which presents both Topology manager policy and scope.
 func GenerateTopologyPolicy(policy string, scope string) nodev1alpha1.TopologyPolicy {
 	switch scope {
-	case config.PodTopologyManagerScope:
-		return generateTopologyPolicyPodScope(policy)
-	case config.ContainerTopologyManagerScope:
-		return generateTopologyPolicyContainerScope(policy)
 	default:
 		return nodev1alpha1.TopologyPolicyNone
 	}
@@ -37,8 +33,6 @@ func GenerateTopologyPolicy(policy string, scope string) nodev1alpha1.TopologyPo
 
 func generateTopologyPolicyPodScope(policy string) nodev1alpha1.TopologyPolicy {
 	switch policy {
-	case config.SingleNumaNodeTopologyManagerPolicy:
-		return nodev1alpha1.TopologyPolicySingleNUMANodePodLevel
 	case config.RestrictedTopologyManagerPolicy:
 		return nodev1alpha1.TopologyPolicyRestrictedPodLevel
 	case config.BestEffortTopologyManagerPolicy:
@@ -54,8 +48,6 @@ func generateTopologyPolicyPodScope(policy string) nodev1alpha1.TopologyPolicy {
 
 func generateTopologyPolicyContainerScope(policy string) nodev1alpha1.TopologyPolicy {
 	switch policy {
-	case config.SingleNumaNodeTopologyManagerPolicy:
-		return nodev1alpha1.TopologyPolicySingleNUMANodeContainerLevel
 	case config.RestrictedTopologyManagerPolicy:
 		return nodev1alpha1.TopologyPolicyRestrictedContainerLevel
 	case config.BestEffortTopologyManagerPolicy:

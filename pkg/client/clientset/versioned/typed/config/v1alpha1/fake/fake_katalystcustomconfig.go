@@ -117,7 +117,7 @@ func (c *FakeKatalystCustomConfigs) UpdateStatus(ctx context.Context, katalystCu
 // Delete takes name of the katalystCustomConfig and deletes it. Returns an error if one occurs.
 func (c *FakeKatalystCustomConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(katalystcustomconfigsResource, c.ns, name, opts), &v1alpha1.KatalystCustomConfig{})
+		Invokes(testing.NewDeleteAction(katalystcustomconfigsResource, c.ns, name), &v1alpha1.KatalystCustomConfig{})
 
 	return err
 }

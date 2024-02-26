@@ -26,10 +26,8 @@ import (
 )
 
 // KatalystVerticalPodAutoscalerLister helps list KatalystVerticalPodAutoscalers.
-// All objects returned here must be treated as read-only.
 type KatalystVerticalPodAutoscalerLister interface {
 	// List lists all KatalystVerticalPodAutoscalers in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha2.KatalystVerticalPodAutoscaler, err error)
 	// KatalystVerticalPodAutoscalers returns an object that can list and get KatalystVerticalPodAutoscalers.
 	KatalystVerticalPodAutoscalers(namespace string) KatalystVerticalPodAutoscalerNamespaceLister
@@ -60,13 +58,10 @@ func (s *katalystVerticalPodAutoscalerLister) KatalystVerticalPodAutoscalers(nam
 }
 
 // KatalystVerticalPodAutoscalerNamespaceLister helps list and get KatalystVerticalPodAutoscalers.
-// All objects returned here must be treated as read-only.
 type KatalystVerticalPodAutoscalerNamespaceLister interface {
 	// List lists all KatalystVerticalPodAutoscalers in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha2.KatalystVerticalPodAutoscaler, err error)
 	// Get retrieves the KatalystVerticalPodAutoscaler from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha2.KatalystVerticalPodAutoscaler, error)
 	KatalystVerticalPodAutoscalerNamespaceListerExpansion
 }

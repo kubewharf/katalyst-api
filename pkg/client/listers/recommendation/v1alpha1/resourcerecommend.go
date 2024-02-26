@@ -26,10 +26,8 @@ import (
 )
 
 // ResourceRecommendLister helps list ResourceRecommends.
-// All objects returned here must be treated as read-only.
 type ResourceRecommendLister interface {
 	// List lists all ResourceRecommends in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.ResourceRecommend, err error)
 	// ResourceRecommends returns an object that can list and get ResourceRecommends.
 	ResourceRecommends(namespace string) ResourceRecommendNamespaceLister
@@ -60,13 +58,10 @@ func (s *resourceRecommendLister) ResourceRecommends(namespace string) ResourceR
 }
 
 // ResourceRecommendNamespaceLister helps list and get ResourceRecommends.
-// All objects returned here must be treated as read-only.
 type ResourceRecommendNamespaceLister interface {
 	// List lists all ResourceRecommends in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.ResourceRecommend, err error)
 	// Get retrieves the ResourceRecommend from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.ResourceRecommend, error)
 	ResourceRecommendNamespaceListerExpansion
 }
