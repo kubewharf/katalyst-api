@@ -110,7 +110,7 @@ func (c *FakeNodeOvercommitConfigs) UpdateStatus(ctx context.Context, nodeOverco
 // Delete takes name of the nodeOvercommitConfig and deletes it. Returns an error if one occurs.
 func (c *FakeNodeOvercommitConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(nodeovercommitconfigsResource, name, opts), &v1alpha1.NodeOvercommitConfig{})
+		Invokes(testing.NewRootDeleteAction(nodeovercommitconfigsResource, name), &v1alpha1.NodeOvercommitConfig{})
 	return err
 }
 

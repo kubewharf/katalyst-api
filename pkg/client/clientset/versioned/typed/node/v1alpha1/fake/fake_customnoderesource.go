@@ -110,7 +110,7 @@ func (c *FakeCustomNodeResources) UpdateStatus(ctx context.Context, customNodeRe
 // Delete takes name of the customNodeResource and deletes it. Returns an error if one occurs.
 func (c *FakeCustomNodeResources) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(customnoderesourcesResource, name, opts), &v1alpha1.CustomNodeResource{})
+		Invokes(testing.NewRootDeleteAction(customnoderesourcesResource, name), &v1alpha1.CustomNodeResource{})
 	return err
 }
 

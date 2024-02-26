@@ -16,8 +16,6 @@ limitations under the License.
 
 package consts
 
-import kubeschedulerconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
-
 // const variables for pod annotations about qos level
 const (
 	PodAnnotationQoSLevelKey = "katalyst.kubewharf.io/qos_level"
@@ -140,12 +138,4 @@ const (
 	ResourcePluginPolicyNameNative ResourcePluginPolicyName = "native"
 	// ResourcePluginPolicyNameStatic is the name of the static policy.
 	ResourcePluginPolicyNameStatic ResourcePluginPolicyName = "static"
-)
-
-// const variables for node resource topology scoring strategy
-const (
-	// BalancedAllocation strategy favors nodes with balanced resource usage rate
-	BalancedAllocation kubeschedulerconfig.ScoringStrategyType = "BalancedAllocation"
-	// LeastNUMANodes strategy favors nodes which requires least amount of NUMA nodes to satisfy resource requests for given pod
-	LeastNUMANodes kubeschedulerconfig.ScoringStrategyType = "LeastNUMANodes"
 )

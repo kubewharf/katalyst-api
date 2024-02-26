@@ -110,7 +110,7 @@ func (c *FakeTideNodePools) UpdateStatus(ctx context.Context, tideNodePool *v1al
 // Delete takes name of the tideNodePool and deletes it. Returns an error if one occurs.
 func (c *FakeTideNodePools) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(tidenodepoolsResource, name, opts), &v1alpha1.TideNodePool{})
+		Invokes(testing.NewRootDeleteAction(tidenodepoolsResource, name), &v1alpha1.TideNodePool{})
 	return err
 }
 
