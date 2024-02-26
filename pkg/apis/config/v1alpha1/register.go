@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	workloadapi "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -63,7 +64,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AdminQoSConfigurationList{},
 		&AuthConfiguration{},
 		&AuthConfigurationList{},
+		&TransparentMemoryOffloadingConfiguration{},
+		&TransparentMemoryOffloadingConfigurationList{},
 	)
+
+	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
+		&TransparentMemoryOffloadingIndicators{})
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

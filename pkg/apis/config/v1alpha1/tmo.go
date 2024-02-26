@@ -142,3 +142,12 @@ type RefaultPolicyConf struct {
 	// identifying memory pages that can be offloaded.
 	ReclaimScanEfficiencyTarget *float64 `json:"reclaimScanEfficiencyTarget,omitempty"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// TransparentMemoryOffloadingIndicators is indicator for transparent memory offloading
+type TransparentMemoryOffloadingIndicators struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// ConfigDetail is configuration details of TMO
+	ConfigDetail *TMOConfigDetail `json:"configDetail,omitempty"`
+}
