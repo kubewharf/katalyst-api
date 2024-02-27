@@ -37,6 +37,7 @@ const (
 	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
 	ResourceNameAdminQoSConfigurations = "adminqosconfigurations"
 	ResourceNameAuthConfigurations     = "authconfigurations"
+	ResourceNameTMOConfigurations      = "tmoconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
