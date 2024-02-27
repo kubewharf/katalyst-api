@@ -26,6 +26,7 @@ require (
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
+	github.com/go-openapi/spec v0.19.3 // indirect
 	github.com/go-openapi/swag v0.19.14 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
@@ -64,6 +65,7 @@ require (
 )
 
 replace (
+	github.com/googleapis/gnostic => github.com/googleapis/gnostic v0.1.0
 	k8s.io/api => k8s.io/api v0.18.10
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.18.10
 	k8s.io/apimachinery => k8s.io/apimachinery v0.18.10
@@ -81,7 +83,7 @@ replace (
 	k8s.io/klog => k8s.io/klog v1.0.0
 	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.18.10
 	k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.18.10
-	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
+	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20200410145947-61e04a5be9a6
 	k8s.io/kube-proxy => k8s.io/kube-proxy v0.18.10
 	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.18.10
 	k8s.io/kubectl => k8s.io/kubectl v0.18.10
