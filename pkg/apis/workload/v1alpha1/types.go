@@ -50,21 +50,12 @@ type ServiceProfileDescriptor struct {
 
 // DecodeNestedObjects decodes extended indicator for known types.
 func (c *ServiceProfileDescriptor) DecodeNestedObjects(d runtime.Decoder) error {
-	var strictDecodingErrs []error
 	for i := range c.Spec.ExtendedIndicator {
 		indicator := &c.Spec.ExtendedIndicator[i]
 		err := indicator.decodeNestedObjects(d)
 		if err != nil {
-			decodingErr := fmt.Errorf("decoding .spec.extendedIndicator[%d]: %w", i, err)
-			if runtime.IsStrictDecodingError(err) {
-				strictDecodingErrs = append(strictDecodingErrs, decodingErr)
-			} else {
-				return decodingErr
-			}
+			return fmt.Errorf("decoding .spec.extendedIndicator[%d]: %w", i, err)
 		}
-	}
-	if len(strictDecodingErrs) > 0 {
-		return runtime.NewStrictDecodingError(strictDecodingErrs)
 	}
 	return nil
 }
@@ -140,21 +131,15 @@ func (c *ServiceExtendedIndicatorSpec) decodeNestedObjects(d runtime.Decoder) er
 		return nil
 	}
 
-	var strictDecodingErr error
 	obj, parsedGvk, err := d.Decode(c.Indicators.Raw, &gvk, nil)
 	if err != nil {
-		decodingArgsErr := fmt.Errorf("decoding extended indicators %s: %w", c.Name, err)
-		if obj != nil && runtime.IsStrictDecodingError(err) {
-			strictDecodingErr = runtime.NewStrictDecodingError([]error{decodingArgsErr})
-		} else {
-			return decodingArgsErr
-		}
-	}
-	if parsedGvk.GroupKind() != gvk.GroupKind() {
+		return fmt.Errorf("decoding extended indicators %s: %w", c.Name, err)
+	} else if parsedGvk.GroupKind() != gvk.GroupKind() {
 		return fmt.Errorf("indicators for %s were not of type %s, got %s", c.Name, gvk.GroupKind(), parsedGvk.GroupKind())
 	}
+
 	c.Indicators.Object = obj
-	return strictDecodingErr
+	return nil
 }
 
 func (c *ServiceExtendedIndicatorSpec) encodeNestedObjects(e runtime.Encoder) error {
