@@ -117,6 +117,15 @@ type ServiceExtendedIndicatorSpec struct {
 	// Name defines the name of extended module
 	Name string `json:"name"`
 
+	// BaselinePercent marks off a bunch of instances, and skip applying extended indicator
+	// for them; those instances are defined as baselines, and can be compared
+	// with other (experimental/production) instances to demonstrate the benefits.
+	// If BaselinePercent is not set, we should take all instances as production instances.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	BaselinePercent *int32 `json:"baselinePercent,omitempty"`
+
 	// Indicators defines extend workload characteristics, Indicators can have arbitrary structure.
 	// Each kind of Indicator must be named using Name, followed by the suffix 'Indicators'.
 	// +optional
@@ -124,8 +133,12 @@ type ServiceExtendedIndicatorSpec struct {
 	Indicators runtime.RawExtension `json:"indicators,omitempty"`
 }
 
+const (
+	ExtendedIndicatorSuffix = "Indicators"
+)
+
 func (c *ServiceExtendedIndicatorSpec) decodeNestedObjects(d runtime.Decoder) error {
-	gvk := SchemeGroupVersion.WithKind(c.Name + "Indicators")
+	gvk := SchemeGroupVersion.WithKind(c.Name + ExtendedIndicatorSuffix)
 	// dry-run to detect and skip out-of-tree extended indicators.
 	if _, _, err := d.Decode(nil, &gvk, nil); runtime.IsNotRegisteredError(err) {
 		return nil

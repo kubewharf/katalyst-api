@@ -36,7 +36,8 @@ const (
 	// the sentinel pod among all pods managed by this SPD. Agents or controllers
 	// can use this key to determine if a pod falls within the baseline by comparing it
 	// with the pod's createTime and podName.
-	SPDAnnotationBaselineSentinelKey = "spd.katalyst.kubewharf.io/baselineSentinel"
+	SPDAnnotationBaselineSentinelKey         = "spd.katalyst.kubewharf.io/baselineSentinel"
+	SPDAnnotationExtenderBaselineSentinelKey = "spd.katalyst.kubewharf.io/extendedBaselineSentinel"
 
 	SPDBaselinePercentMax = 100
 	SPDBaselinePercentMin = 0
