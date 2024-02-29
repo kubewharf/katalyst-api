@@ -302,3 +302,16 @@ type ServiceProfileDescriptorList struct {
 	// items is the list of SPDs
 	Items []ServiceProfileDescriptor `json:"items"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// TestExtendedIndicators just for extended indicator test
+type TestExtendedIndicators struct {
+	metav1.TypeMeta `json:",inline"`
+
+	Indicators *TestIndicators `json:"indicators"`
+}
+
+type TestIndicators struct {
+	TestIndicator string `json:"testIndicator"`
+}
