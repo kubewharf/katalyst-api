@@ -227,9 +227,12 @@ type ServiceBusinessIndicatorSpec struct {
 type ServiceSystemIndicatorName string
 
 const (
-	ServiceSystemIndicatorNameCPUSchedWait  ServiceSystemIndicatorName = "cpu_sched_wait"
-	ServiceSystemIndicatorNameCPUUsageRatio ServiceSystemIndicatorName = "cpu_usage_ratio"
-	ServiceSystemIndicatorNameCPI           ServiceSystemIndicatorName = "cpi"
+	ServiceSystemIndicatorNameCPUSchedWait             ServiceSystemIndicatorName = "cpu_sched_wait"
+	ServiceSystemIndicatorNameCPUUsageRatio            ServiceSystemIndicatorName = "cpu_usage_ratio"
+	ServiceSystemIndicatorNameCPI                      ServiceSystemIndicatorName = "cpi"
+	ServiceSystemIndicatorNameMemoryAccessWriteLatency ServiceSystemIndicatorName = "mem_access_write_lat"
+	ServiceSystemIndicatorNameMemoryAccessReadLatency  ServiceSystemIndicatorName = "mem_access_read_lat"
+	ServiceSystemIndicatorNameMemoryL3MissLatency      ServiceSystemIndicatorName = "mem_l3_miss_lat"
 )
 
 // ServiceSystemIndicatorSpec defines workload profiling in system level, such as
