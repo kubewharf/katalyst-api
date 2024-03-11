@@ -17,10 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	workloadapi "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	workloadapi "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 )
 
 const (

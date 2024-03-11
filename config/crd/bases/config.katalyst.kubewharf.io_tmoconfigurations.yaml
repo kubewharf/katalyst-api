@@ -104,7 +104,7 @@ spec:
                                     size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 psiAvg60Threshold:
-                                  description: PsiAvg60Threshold indicates the threshold
+                                  description: PSIAvg60Threshold indicates the threshold
                                     of memory pressure. If observed pressure exceeds
                                     this threshold, memory offloading will be paused.
                                   type: number
@@ -170,7 +170,7 @@ spec:
                                     size in one cycle, it's a ratio of memory usage.
                                   type: number
                                 psiAvg60Threshold:
-                                  description: PsiAvg60Threshold indicates the threshold
+                                  description: PSIAvg60Threshold indicates the threshold
                                     of memory pressure. If observed pressure exceeds
                                     this threshold, memory offloading will be paused.
                                   type: number

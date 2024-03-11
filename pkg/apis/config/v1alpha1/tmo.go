@@ -128,9 +128,9 @@ type PSIPolicyConf struct {
 	// MaxProbe limits the memory offloading size in one cycle, it's a ratio of memory usage.
 	MaxProbe *float64 `json:"maxProbe,omitempty"`
 
-	// PsiAvg60Threshold indicates the threshold of memory pressure. If observed pressure exceeds
+	// PSIAvg60Threshold indicates the threshold of memory pressure. If observed pressure exceeds
 	// this threshold, memory offloading will be paused.
-	PsiAvg60Threshold *float64 `json:"psiAvg60Threshold,omitempty"`
+	PSIAvg60Threshold *float64 `json:"psiAvg60Threshold,omitempty"`
 }
 
 type RefaultPolicyConf struct {

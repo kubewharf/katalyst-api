@@ -947,8 +947,8 @@ func (in *PSIPolicyConf) DeepCopyInto(out *PSIPolicyConf) {
 		*out = new(float64)
 		**out = **in
 	}
-	if in.PsiAvg60Threshold != nil {
-		in, out := &in.PsiAvg60Threshold, &out.PsiAvg60Threshold
+	if in.PSIAvg60Threshold != nil {
+		in, out := &in.PSIAvg60Threshold, &out.PSIAvg60Threshold
 		*out = new(float64)
 		**out = **in
 	}
