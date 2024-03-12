@@ -260,6 +260,16 @@ spec:
                             description: GracePeriod is the grace period of pod deletion
                             format: int64
                             type: integer
+                          minimumImageFsDiskCapacityThreshold:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: 'MinimumImageFsDiskCapacityThreshold is a
+                              threshold for all nodes. The eviction manager will ignore
+                              those nodes whose image fs disk capacity is less than
+                              this threshold. Fox example: "100Gi".'
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
                           minimumImageFsFreeThreshold:
                             description: 'MinimumImageFsFreeThreshold is a threshold
                               for a node. Once the image rootfs free space of current
