@@ -426,6 +426,11 @@ type RootfsPressureEvictionConfig struct {
 	// +kubebuilder:validation:Pattern=`^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$`
 	ReclaimedQoSPodInodesUsedPriorityThreshold *string `json:"reclaimedQoSPodInodesUsedPriorityThreshold,omitempty"`
 
+	// MinimumImageFsDiskCapacityThreshold is a threshold for all nodes.
+	// The eviction manager will ignore those nodes whose image fs disk capacity is less than this threshold.
+	// Fox example: "100Gi".
+	MinimumImageFsDiskCapacityThreshold *resource.Quantity `json:"minimumImageFsDiskCapacityThreshold,omitempty"`
+
 	// GracePeriod is the grace period of pod deletion
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`

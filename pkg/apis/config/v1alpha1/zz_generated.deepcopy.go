@@ -1110,6 +1110,11 @@ func (in *RootfsPressureEvictionConfig) DeepCopyInto(out *RootfsPressureEviction
 		*out = new(string)
 		**out = **in
 	}
+	if in.MinimumImageFsDiskCapacityThreshold != nil {
+		in, out := &in.MinimumImageFsDiskCapacityThreshold, &out.MinimumImageFsDiskCapacityThreshold
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	if in.GracePeriod != nil {
 		in, out := &in.GracePeriod, &out.GracePeriod
 		*out = new(int64)
