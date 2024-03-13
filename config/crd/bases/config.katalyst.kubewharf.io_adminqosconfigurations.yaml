@@ -260,18 +260,29 @@ spec:
                             description: GracePeriod is the grace period of pod deletion
                             format: int64
                             type: integer
-                          minimumFreeThreshold:
-                            description: 'MinimumFreeThreshold is a threshold for
-                              a node. Once the rootfs free space of current node is
-                              lower than this threshold, the eviction manager will
-                              try to evict some pods. For example: "200Gi", "10%".'
+                          minimumImageFsDiskCapacityThreshold:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: 'MinimumImageFsDiskCapacityThreshold is a
+                              threshold for all nodes. The eviction manager will ignore
+                              those nodes whose image fs disk capacity is less than
+                              this threshold. Fox example: "100Gi".'
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          minimumImageFsFreeThreshold:
+                            description: 'MinimumImageFsFreeThreshold is a threshold
+                              for a node. Once the image rootfs free space of current
+                              node is lower than this threshold, the eviction manager
+                              will try to evict some pods. For example: "200Gi", "10%".'
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
-                          minimumInodesFreeThreshold:
-                            description: 'MinimumInodesFreeThreshold is a threshold
-                              for a node. Once the rootfs free inodes of current node
-                              is lower than this threshold, the eviction manager will
-                              try to evict some pods. For example: "100000", "10%".'
+                          minimumImageFsInodesFreeThreshold:
+                            description: 'MinimumImageFsInodesFreeThreshold is a threshold
+                              for a node. Once the image rootfs free inodes of current
+                              node is lower than this threshold, the eviction manager
+                              will try to evict some pods. For example: "100000",
+                              "10%".'
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
                           podMinimumInodesUsedThreshold:

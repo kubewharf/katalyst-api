@@ -1080,6 +1080,41 @@ func (in *RootfsPressureEvictionConfig) DeepCopyInto(out *RootfsPressureEviction
 		*out = new(bool)
 		**out = **in
 	}
+	if in.MinimumImageFsFreeThreshold != nil {
+		in, out := &in.MinimumImageFsFreeThreshold, &out.MinimumImageFsFreeThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.MinimumImageFsInodesFreeThreshold != nil {
+		in, out := &in.MinimumImageFsInodesFreeThreshold, &out.MinimumImageFsInodesFreeThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.PodMinimumUsedThreshold != nil {
+		in, out := &in.PodMinimumUsedThreshold, &out.PodMinimumUsedThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.PodMinimumInodesUsedThreshold != nil {
+		in, out := &in.PodMinimumInodesUsedThreshold, &out.PodMinimumInodesUsedThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.ReclaimedQoSPodUsedPriorityThreshold != nil {
+		in, out := &in.ReclaimedQoSPodUsedPriorityThreshold, &out.ReclaimedQoSPodUsedPriorityThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.ReclaimedQoSPodInodesUsedPriorityThreshold != nil {
+		in, out := &in.ReclaimedQoSPodInodesUsedPriorityThreshold, &out.ReclaimedQoSPodInodesUsedPriorityThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.MinimumImageFsDiskCapacityThreshold != nil {
+		in, out := &in.MinimumImageFsDiskCapacityThreshold, &out.MinimumImageFsDiskCapacityThreshold
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	if in.GracePeriod != nil {
 		in, out := &in.GracePeriod, &out.GracePeriod
 		*out = new(int64)
