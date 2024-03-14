@@ -24,7 +24,8 @@ const (
 
 // const variables for resource names of guaranteed resource
 const (
-	ResourceNetBandwidth v1.ResourceName = "resource.katalyst.kubewharf.io/net_bandwidth"
+	ResourceNetBandwidth    v1.ResourceName = "resource.katalyst.kubewharf.io/net_bandwidth"
+	ResourceMemoryBandwidth v1.ResourceName = "resource.katalyst.kubewharf.io/memory_bandwidth"
 )
 
 // ResourceAnnotationKeyResourceIdentifier nominated the key to override the default name
