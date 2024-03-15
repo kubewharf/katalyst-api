@@ -101,6 +101,16 @@ spec:
                     business and system scopes. Examples include policies for custom
                     memory reclamation and I/O limitations specific to a service.
                   properties:
+                    baselinePercent:
+                      description: BaselinePercent marks off a bunch of instances,
+                        and skip applying extended indicator for them; those instances
+                        are defined as baselines, and can be compared with other (experimental/production)
+                        instances to demonstrate the benefits. If BaselinePercent
+                        is not set, we should take all instances as production instances.
+                      format: int32
+                      maximum: 100
+                      minimum: 0
+                      type: integer
                     indicators:
                       description: Indicators defines extend workload characteristics,
                         Indicators can have arbitrary structure. Each kind of Indicator

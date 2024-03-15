@@ -52,6 +52,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&ServiceProfileDescriptor{},
 		&ServiceProfileDescriptorList{},
+
+		&TestExtendedIndicators{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
