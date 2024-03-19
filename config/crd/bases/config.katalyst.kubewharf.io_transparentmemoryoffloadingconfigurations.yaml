@@ -5,13 +5,13 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.0
   creationTimestamp: null
-  name: tmoconfigurations.config.katalyst.kubewharf.io
+  name: transparentmemoryoffloadingconfigurations.config.katalyst.kubewharf.io
 spec:
   group: config.katalyst.kubewharf.io
   names:
     kind: TransparentMemoryOffloadingConfiguration
     listKind: TransparentMemoryOffloadingConfigurationList
-    plural: tmoconfigurations
+    plural: transparentmemoryoffloadingconfigurations
     shortNames:
     - tmo
     singular: transparentmemoryoffloadingconfiguration

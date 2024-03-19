@@ -23,7 +23,7 @@ import (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=tmoconfigurations,shortName=tmo
+// +kubebuilder:resource:path=transparentmemoryoffloadingconfigurations,shortName=tmo
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AGE",type=date,JSONPath=.metadata.creationTimestamp
 // +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeLabelSelector"
