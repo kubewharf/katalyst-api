@@ -18,6 +18,15 @@ package consts
 
 import kubeschedulerconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
 
+type QoSLevel string
+
+const (
+	QoSLevelReclaimedCores QoSLevel = "reclaimed_cores"
+	QoSLevelSharedCores    QoSLevel = "shared_cores"
+	QoSLevelDedicatedCores QoSLevel = "dedicated_cores"
+	QoSLevelSystemCores    QoSLevel = "system_cores"
+)
+
 // const variables for pod annotations about qos level
 const (
 	PodAnnotationQoSLevelKey = "katalyst.kubewharf.io/qos_level"
