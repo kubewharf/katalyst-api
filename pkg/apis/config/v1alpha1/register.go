@@ -24,6 +24,13 @@ import (
 	workloadapi "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 )
 
+func init() {
+	// We only register manually written functions here. The registration of the
+	// generated functions takes place in the generated files. The separation
+	// makes the code compile even when the generated files are missing.
+	workloadapi.SchemeBuilder.Register(addSPDKnownTypes)
+}
+
 const (
 	// GroupName is the group name used in this package
 	GroupName string = "config.katalyst.kubewharf.io"
@@ -53,6 +60,12 @@ var (
 	AddToScheme = SchemeBuilder.AddToScheme
 )
 
+func addSPDKnownTypes(scheme *runtime.Scheme) error {
+	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
+		&TransparentMemoryOffloadingIndicators{})
+	return nil
+}
+
 // Adds the list of known types to the given scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
@@ -69,9 +82,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&TransparentMemoryOffloadingConfiguration{},
 		&TransparentMemoryOffloadingConfigurationList{},
 	)
-
-	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
-		&TransparentMemoryOffloadingIndicators{})
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
