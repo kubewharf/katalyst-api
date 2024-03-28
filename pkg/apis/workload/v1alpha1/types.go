@@ -260,6 +260,7 @@ type Aggregator string
 const (
 	Avg Aggregator = "avg"
 	Max Aggregator = "max"
+	Sum Aggregator = "sum"
 )
 
 // ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec with Name
