@@ -26,6 +26,7 @@ const (
 	AggregateFunctionMax    = "_agg_max"
 	AggregateFunctionMin    = "_agg_min"
 	AggregateFunctionP99    = "_agg_p99"
+	AggregateFunctionP95    = "_agg_p95"
 	AggregateFunctionP90    = "_agg_p90"
 	AggregateFunctionLatest = "_agg_latest"
 )
