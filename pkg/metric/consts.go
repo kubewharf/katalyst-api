@@ -30,3 +30,10 @@ const (
 	AggregateFunctionP90    = "_agg_p90"
 	AggregateFunctionLatest = "_agg_latest"
 )
+
+// MetricSelectorKeyGroupBy is the key of groupBy in metric selector. It's value should be a set of the real metric
+// selector keys which will be used to group the metrics. MetricSelectorKeyGroupBy should only be used in aggregated
+// metrics.
+// For example, if we want to get the max cpu load of each container,we can query the `pod_cpu_load_1min_agg_max` with
+// following metric selector: `groupBy=container`.
+const MetricSelectorKeyGroupBy = "groupBy"
