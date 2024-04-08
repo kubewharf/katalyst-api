@@ -70,6 +70,9 @@ type AdminQoSConfig struct {
 	// EvictionConfig is a configuration for eviction
 	// +optional
 	EvictionConfig *EvictionConfig `json:"evictionConfig,omitempty"`
+
+	// +optional
+	AdvisorConfig *AdvisorConfig `json:"advisorConfig,omitempty"`
 }
 
 type ReclaimedResourceConfig struct {
@@ -114,6 +117,24 @@ type MemoryHeadroomConfig struct {
 	// MemoryHeadroomUtilBasedConfig is a config for utilization based memory headroom policy
 	// +optional
 	UtilBasedConfig *MemoryHeadroomUtilBasedConfig `json:"utilBasedConfig,omitempty"`
+}
+
+type AdvisorConfig struct {
+	// +optional
+	MemoryAdvisorConfig *MemoryAdvisorConfig `json:"memoryAdvisorConfig,omitempty"`
+}
+
+type MemoryAdvisorConfig struct {
+	// MemoryGuardConfig is a config for memory guard plugin, which is used to avoid high priority workload from being
+	// affected by memory bursting caused by low priority workload.
+	// +optional
+	MemoryGuardConfig *MemoryGuardConfig `json:"memoryGuardConfig,omitempty"`
+}
+
+type MemoryGuardConfig struct {
+	// Enable is a flag to enable memory guard plugin
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
 }
 
 type MemoryHeadroomUtilBasedConfig struct {
