@@ -66,6 +66,23 @@ spec:
               config:
                 description: Config is custom field for admin qos configuration
                 properties:
+                  advisorConfig:
+                    properties:
+                      memoryAdvisorConfig:
+                        properties:
+                          memoryGuardConfig:
+                            description: MemoryGuardConfig is a config for memory
+                              guard plugin, which is used to avoid high priority workload
+                              from being affected by memory bursting caused by low
+                              priority workload.
+                            properties:
+                              enable:
+                                description: Enable is a flag to enable memory guard
+                                  plugin
+                                type: boolean
+                            type: object
+                        type: object
+                    type: object
                   evictionConfig:
                     description: EvictionConfig is a configuration for eviction
                     properties:
