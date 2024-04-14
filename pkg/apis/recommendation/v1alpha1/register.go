@@ -30,7 +30,7 @@ const (
 // SchemeGroupVersion is group version used to register these objects
 var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
 
-// ResourceName const is used to construct standard gvr
+// ResourceNameResourceRecommend const is used to construct standard gvr
 const (
 	ResourceNameResourceRecommend = "resourcerecommends"
 )
