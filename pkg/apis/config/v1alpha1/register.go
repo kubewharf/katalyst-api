@@ -20,7 +20,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	workloadapi "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 )
+
+func init() {
+	// We only register manually written functions here. The registration of the
+	// generated functions takes place in the generated files. The separation
+	// makes the code compile even when the generated files are missing.
+	workloadapi.SchemeBuilder.Register(addSPDKnownTypes)
+}
 
 const (
 	// GroupName is the group name used in this package
@@ -36,6 +45,7 @@ const (
 	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
 	ResourceNameAdminQoSConfigurations = "adminqosconfigurations"
 	ResourceNameAuthConfigurations     = "authconfigurations"
+	ResourceNameTMOConfigurations      = "transparentmemoryoffloadingconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -50,6 +60,12 @@ var (
 	AddToScheme = SchemeBuilder.AddToScheme
 )
 
+func addSPDKnownTypes(scheme *runtime.Scheme) error {
+	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
+		&TransparentMemoryOffloadingIndicators{})
+	return nil
+}
+
 // Adds the list of known types to the given scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
@@ -63,6 +79,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AdminQoSConfigurationList{},
 		&AuthConfiguration{},
 		&AuthConfigurationList{},
+		&TransparentMemoryOffloadingConfiguration{},
+		&TransparentMemoryOffloadingConfigurationList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
