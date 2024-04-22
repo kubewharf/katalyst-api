@@ -32,6 +32,10 @@ func (c *FakeConfigV1alpha1) CustomNodeConfigs() v1alpha1.CustomNodeConfigInterf
 	return &FakeCustomNodeConfigs{c}
 }
 
+func (c *FakeConfigV1alpha1) HyperParameterConfigurations(namespace string) v1alpha1.HyperParameterConfigurationInterface {
+	return &FakeHyperParameterConfigurations{c, namespace}
+}
+
 func (c *FakeConfigV1alpha1) KatalystCustomConfigs(namespace string) v1alpha1.KatalystCustomConfigInterface {
 	return &FakeKatalystCustomConfigs{c, namespace}
 }

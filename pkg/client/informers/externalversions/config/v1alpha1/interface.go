@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// CustomNodeConfigs returns a CustomNodeConfigInformer.
 	CustomNodeConfigs() CustomNodeConfigInformer
+	// HyperParameterConfigurations returns a HyperParameterConfigurationInformer.
+	HyperParameterConfigurations() HyperParameterConfigurationInformer
 	// KatalystCustomConfigs returns a KatalystCustomConfigInformer.
 	KatalystCustomConfigs() KatalystCustomConfigInformer
 }
@@ -44,6 +46,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // CustomNodeConfigs returns a CustomNodeConfigInformer.
 func (v *version) CustomNodeConfigs() CustomNodeConfigInformer {
 	return &customNodeConfigInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HyperParameterConfigurations returns a HyperParameterConfigurationInformer.
+func (v *version) HyperParameterConfigurations() HyperParameterConfigurationInformer {
+	return &hyperParameterConfigurationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // KatalystCustomConfigs returns a KatalystCustomConfigInformer.
