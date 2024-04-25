@@ -29,6 +29,7 @@ import (
 type ConfigV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CustomNodeConfigsGetter
+	HyperParameterConfigurationsGetter
 	KatalystCustomConfigsGetter
 }
 
@@ -39,6 +40,10 @@ type ConfigV1alpha1Client struct {
 
 func (c *ConfigV1alpha1Client) CustomNodeConfigs() CustomNodeConfigInterface {
 	return newCustomNodeConfigs(c)
+}
+
+func (c *ConfigV1alpha1Client) HyperParameterConfigurations(namespace string) HyperParameterConfigurationInterface {
+	return newHyperParameterConfigurations(c, namespace)
 }
 
 func (c *ConfigV1alpha1Client) KatalystCustomConfigs(namespace string) KatalystCustomConfigInterface {

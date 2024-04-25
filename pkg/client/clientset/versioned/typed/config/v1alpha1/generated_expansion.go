@@ -20,4 +20,6 @@ package v1alpha1
 
 type CustomNodeConfigExpansion interface{}
 
+type HyperParameterConfigurationExpansion interface{}
+
 type KatalystCustomConfigExpansion interface{}

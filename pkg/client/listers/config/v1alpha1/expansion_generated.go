@@ -22,6 +22,14 @@ package v1alpha1
 // CustomNodeConfigLister.
 type CustomNodeConfigListerExpansion interface{}
 
+// HyperParameterConfigurationListerExpansion allows custom methods to be added to
+// HyperParameterConfigurationLister.
+type HyperParameterConfigurationListerExpansion interface{}
+
+// HyperParameterConfigurationNamespaceListerExpansion allows custom methods to be added to
+// HyperParameterConfigurationNamespaceLister.
+type HyperParameterConfigurationNamespaceListerExpansion interface{}
+
 // KatalystCustomConfigListerExpansion allows custom methods to be added to
 // KatalystCustomConfigLister.
 type KatalystCustomConfigListerExpansion interface{}

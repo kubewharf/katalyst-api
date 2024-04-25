@@ -41,11 +41,12 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 
 // ResourceName const is used to construct standard gvr
 const (
-	ResourceNameKatalystCustomConfigs  = "katalystcustomconfigs"
-	ResourceNameCustomNodeConfigs      = "customnodeconfigs"
-	ResourceNameAdminQoSConfigurations = "adminqosconfigurations"
-	ResourceNameAuthConfigurations     = "authconfigurations"
-	ResourceNameTMOConfigurations      = "transparentmemoryoffloadingconfigurations"
+	ResourceNameKatalystCustomConfigs        = "katalystcustomconfigs"
+	ResourceNameCustomNodeConfigs            = "customnodeconfigs"
+	ResourceNameAdminQoSConfigurations       = "adminqosconfigurations"
+	ResourceNameAuthConfigurations           = "authconfigurations"
+	ResourceNameTMOConfigurations            = "transparentmemoryoffloadingconfigurations"
+	ResourceNameHyperParameterConfigurations = "hyperparameterconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -81,6 +82,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AuthConfigurationList{},
 		&TransparentMemoryOffloadingConfiguration{},
 		&TransparentMemoryOffloadingConfigurationList{},
+		&HyperParameterConfiguration{},
+		&HyperParameterConfigurationList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
