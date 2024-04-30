@@ -121,7 +121,16 @@ type MemoryHeadroomConfig struct {
 
 type AdvisorConfig struct {
 	// +optional
+	CPUAdvisorConfig *CPUAdvisorConfig `json:"cpuAdvisorConfig,omitempty"`
+	// +optional
 	MemoryAdvisorConfig *MemoryAdvisorConfig `json:"memoryAdvisorConfig,omitempty"`
+}
+
+type CPUAdvisorConfig struct {
+	// AllowSharedCoresOverlapReclaimedCores is a flag, when enabled,
+	// we will rely on kernel features to ensure that shared_cores pods can suppress and preempt reclaimed_cores pods.
+	// +optional
+	AllowSharedCoresOverlapReclaimedCores *bool `json:"allowSharedCoresOverlapReclaimedCores,omitempty"`
 }
 
 type MemoryAdvisorConfig struct {

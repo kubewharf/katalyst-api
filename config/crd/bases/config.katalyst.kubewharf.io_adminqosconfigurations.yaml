@@ -68,6 +68,15 @@ spec:
                 properties:
                   advisorConfig:
                     properties:
+                      cpuAdvisorConfig:
+                        properties:
+                          allowSharedCoresOverlapReclaimedCores:
+                            description: AllowSharedCoresOverlapReclaimedCores is
+                              a flag, when enabled, we will rely on kernel features
+                              to ensure that shared_cores pods can suppress and preempt
+                              reclaimed_cores pods.
+                            type: boolean
+                        type: object
                       memoryAdvisorConfig:
                         properties:
                           memoryGuardConfig:
