@@ -119,6 +119,13 @@ spec:
                               is triggered, the cpu load eviction will be disabled
                               for the cool-down time
                             type: string
+                          loadLowerBoundRatio:
+                            description: LoadLowerBoundRatio is the lower bound ratio
+                              of cpuset pool load, if the load of the target cpuset
+                              pool is greater than the load lower bound repeatedly,
+                              the node taint will be triggered
+                            minimum: 0
+                            type: number
                           loadMetricRingSize:
                             description: LoadMetricRingSize is the size of the load
                               metric ring, which is used to calculate the load of
