@@ -271,6 +271,13 @@ type CPUPressureEvictionConfig struct {
 	// +optional
 	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
 
+	// LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
+	// of the target cpuset pool is greater than the load lower bound repeatedly, the
+	// node taint will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
+
 	// LoadThresholdMetPercentage is the percentage of the number of times the load
 	// over the upper bound to the total number of times the load is measured, if the
 	// percentage is greater than the load threshold met percentage, the eviction or
