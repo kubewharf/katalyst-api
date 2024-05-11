@@ -28,7 +28,7 @@ import (
 // +kubebuilder:resource:scope=Cluster,shortName=kcnr
 // +kubebuilder:subresource:status
 
-// CustomNodeResource captures information about a custom defined node resource
+// CustomNodeResource captures information about a custom defined node resource, mainly focus on static attributes and resources
 // CustomNodeResource objects are non-namespaced.
 type CustomNodeResource struct {
 	metav1.TypeMeta `json:",inline"`
@@ -325,4 +325,123 @@ type NUMAMetricInfo struct {
 	NUMAId int `json:"numaId"`
 	// Usage contains the real-time resource usage for this NUMA node
 	Usage *ResourceMetric `json:"usage"`
+}
+
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster,shortName=npd
+// +kubebuilder:subresource:status
+
+// NodeProfileDescriptor captures information about node, such as node-related metrics
+// NodeProfileDescriptor objects are non-namespaced.
+type NodeProfileDescriptor struct {
+	metav1.TypeMeta `json:",inline"`
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// Spec defines the behavior of a NodeProfileDescriptor.
+	// +optional
+	Spec NodeProfileDescriptorSpec `json:"spec,omitempty"`
+
+	// Status represents the current information about a NodeProfileDescriptor.
+	// This data may not be up-to-date.
+	// +optional
+	Status NodeProfileDescriptorStatus `json:"status,omitempty"`
+}
+
+type NodeProfileDescriptorSpec struct {
+}
+
+type NodeProfileDescriptorStatus struct {
+	// NodeMetrics contains the node-related metrics
+	// +optional
+	NodeMetrics []ScopedNodeMetrics `json:"nodeMetrics,omitempty"`
+
+	// PodMetrics contains the pod-related metrics
+	// +optional
+	PodMetrics []ScopedPodMetrics `json:"podMetrics,omitempty"`
+}
+
+type ScopedNodeMetrics struct {
+	// +optional
+	Scope string `json:"scope,omitempty"`
+
+	// +optional
+	Metrics []MetricValue `json:"metrics,omitempty"`
+}
+
+type ScopedPodMetrics struct {
+	// +optional
+	Scope string `json:"scope,omitempty"`
+
+	// +optional
+	PodMetrics []PodMetric `json:"podMetrics,omitempty"`
+}
+
+type PodMetric struct {
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+
+	// +optional
+	Name string `json:"name,omitempty"`
+
+	// +optional
+	Metrics []MetricValue `json:"metrics,omitempty"`
+}
+
+type Aggregator string
+
+const (
+	AggregatorAvg   Aggregator = "avg"
+	AggregatorMax   Aggregator = "max"
+	AggregatorMin   Aggregator = "min"
+	AggregatorCount Aggregator = "count"
+	AggregatorP99   Aggregator = "p99"
+	AggregatorP95   Aggregator = "p95"
+	AggregatorP90   Aggregator = "p90"
+)
+
+type MetricValue struct {
+	// the name of the metric
+	// +optional
+	MetricName string `json:"metricName,omitempty"`
+
+	// a set of labels that identify a single time series for the metric
+	// +optional
+	MetricLabels map[string]string `json:"metricLabels,omitempty"`
+
+	// indicates the time at which the metrics were produced
+	// +optional
+	Timestamp metav1.Time `json:"timestamp,omitempty"`
+
+	// the aggregator of the metric
+	// +optional
+	Aggregator *Aggregator `json:"aggregator,omitempty"`
+
+	// indicates the window ([Timestamp-Window, Timestamp]) from
+	// which these metrics were calculated, when returning rate
+	// metrics calculated from cumulative metrics (or zero for
+	// non-calculated instantaneous metrics).
+	// +optional
+	Window *metav1.Duration `json:"window,omitempty"`
+
+	// the value of the metric
+	// +optional
+	Value resource.Quantity `json:"value,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// NodeProfileDescriptorList is a collection of NodeProfileDescriptor objects.
+type NodeProfileDescriptorList struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// Standard list metadata
+	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
+	// +optional
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	// items is the list of CNRs
+	Items []NodeProfileDescriptor `json:"items"`
 }
