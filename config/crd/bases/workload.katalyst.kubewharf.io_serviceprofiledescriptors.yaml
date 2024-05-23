@@ -205,6 +205,7 @@ spec:
                       enum:
                       - avg
                       - max
+                      - sum
                       type: string
                     items:
                       items:
@@ -264,6 +265,8 @@ spec:
                         - window
                         type: object
                       type: array
+                    scope:
+                      type: string
                   required:
                   - aggregator
                   type: object
