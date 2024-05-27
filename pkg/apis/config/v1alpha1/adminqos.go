@@ -222,7 +222,13 @@ type EvictionConfig struct {
 
 	// SystemLoadPressureEvictionConfig is the config for system load eviction
 	// +optional
+	//
+	// Deprecated: Please use CPUSystemPressureEvictionConfig instead to configure params for CPU eviction plugin at node level
 	SystemLoadPressureEvictionConfig *SystemLoadPressureEvictionConfig `json:"systemLoadPressureEvictionConfig,omitempty"`
+
+	// CPUSystemPressureEvictionConfig is the config for cpu system pressure eviction at node level
+	// +optional
+	CPUSystemPressureEvictionConfig *CPUSystemPressureEvictionConfig `json:"cpuSystemPressureEvictionConfig,omitempty"`
 
 	// MemoryPressureEvictionConfig is the config for memory pressure eviction
 	// +optional
@@ -466,6 +472,74 @@ type RootfsPressureEvictionConfig struct {
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
 
+type CPUSystemPressureEvictionConfig struct {
+	// +optional
+	EnableCPUSystemPressureEviction *bool `json:"enableCPUSystemPressureEviction,omitempty"`
+
+	// LoadUpperBoundRatio is the upper bound ratio of node, if the load
+	// of the node is greater than the load upper bound repeatedly, the
+	// eviction will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
+
+	// LoadLowerBoundRatio is the lower bound ratio of node, if the load
+	// of the node is greater than the load lower bound repeatedly, the
+	// cordon will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
+
+	// UsageUpperBoundRatio is the upper bound ratio of node, if the cpu usage
+	// of the node is greater than the usage upper bound repeatedly, the
+	// eviction will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	UsageUpperBoundRatio *float64 `json:"usageUpperBoundRatio,omitempty"`
+
+	// UsageLowerBoundRatio is the lower bound ratio of node, if the cpu usage
+	// of the node is greater than the usage lower bound repeatedly, the
+	// cordon will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	UsageLowerBoundRatio *float64 `json:"usageLowerBoundRatio,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of the number of times the metric
+	// over the upper bound to the total number of times the metric is measured, if the
+	// percentage is greater than the threshold met percentage, the eviction or
+	// node tainted will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+
+	// MetricRingSize is the size of the load metric ring
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// EvictionCoolDownTime is the cool down duration of pod eviction
+	// +optional
+	EvictionCoolDownTime *metav1.Duration `json:"evictionCoolDownTime,omitempty"`
+
+	// EvictionRankingMetrics is the metric list for ranking eviction pods
+	// +optional
+	EvictionRankingMetrics []string `json:"evictionRankingMetrics,omitempty"`
+
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// +optional
+	CheckCPUManager *bool `json:"checkCPUManager,omitempty"`
+
+	// +optional
+	RankingLabels map[string][]string `json:"RankingLabels,omitempty"`
+}
+
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // NUMA level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.total.numa.container
@@ -473,5 +547,5 @@ type NumaEvictionRankingMetric string
 
 // SystemEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // system level
-// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container
+// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string

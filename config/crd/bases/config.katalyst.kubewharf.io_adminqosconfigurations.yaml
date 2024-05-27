@@ -159,6 +159,78 @@ spec:
                               be triggered
                             type: string
                         type: object
+                      cpuSystemPressureEvictionConfig:
+                        description: CPUSystemPressureEvictionConfig is the config
+                          for cpu system pressure eviction at node level
+                        properties:
+                          RankingLabels:
+                            additionalProperties:
+                              items:
+                                type: string
+                              type: array
+                            type: object
+                          checkCPUManager:
+                            type: boolean
+                          enableCPUSystemPressureEviction:
+                            type: boolean
+                          evictionCoolDownTime:
+                            description: EvictionCoolDownTime is the cool down duration
+                              of pod eviction
+                            type: string
+                          evictionRankingMetrics:
+                            description: EvictionRankingMetrics is the metric list
+                              for ranking eviction pods
+                            items:
+                              type: string
+                            type: array
+                          gracePeriod:
+                            format: int64
+                            type: integer
+                          loadLowerBoundRatio:
+                            description: LoadLowerBoundRatio is the lower bound ratio
+                              of node, if the load of the node is greater than the
+                              load lower bound repeatedly, the cordon will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          loadUpperBoundRatio:
+                            description: LoadUpperBoundRatio is the upper bound ratio
+                              of node, if the load of the node is greater than the
+                              load upper bound repeatedly, the eviction will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          metricRingSize:
+                            description: MetricRingSize is the size of the load metric
+                              ring
+                            minimum: 1
+                            type: integer
+                          thresholdMetPercentage:
+                            description: ThresholdMetPercentage is the percentage
+                              of the number of times the metric over the upper bound
+                              to the total number of times the metric is measured,
+                              if the percentage is greater than the threshold met
+                              percentage, the eviction or node tainted will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          usageLowerBoundRatio:
+                            description: UsageLowerBoundRatio is the lower bound ratio
+                              of node, if the cpu usage of the node is greater than
+                              the usage lower bound repeatedly, the cordon will be
+                              triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          usageUpperBoundRatio:
+                            description: UsageUpperBoundRatio is the upper bound ratio
+                              of node, if the cpu usage of the node is greater than
+                              the usage upper bound repeatedly, the eviction will
+                              be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                        type: object
                       dryRun:
                         description: DryRun is the list of eviction plugins to dryRun
                           '*' means "all dry-run by default" 'foo' means "dry-run
@@ -228,6 +300,8 @@ spec:
                               - qos.pod
                               - priority.pod
                               - mem.usage.container
+                              - native.qos.pod
+                              - owner.pod
                               type: string
                             minItems: 1
                             type: array
@@ -341,8 +415,10 @@ spec:
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
-                        description: SystemLoadPressureEvictionConfig is the config
-                          for system load eviction
+                        description: "SystemLoadPressureEvictionConfig is the config
+                          for system load eviction \n Deprecated: Please use CPUSystemPressureEvictionConfig
+                          instead to configure params for CPU eviction plugin at node
+                          level"
                         properties:
                           coolDownTime:
                             description: CoolDownTime is the cool-down time of the
