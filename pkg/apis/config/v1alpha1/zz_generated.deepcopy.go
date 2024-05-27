@@ -724,6 +724,11 @@ func (in *EvictionConfig) DeepCopyInto(out *EvictionConfig) {
 		*out = new(SystemLoadPressureEvictionConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.CPUSystemPressureEvictionConfig != nil {
+		in, out := &in.CPUSystemPressureEvictionConfig, &out.CPUSystemPressureEvictionConfig
+		*out = new(CPUSystemPressureEvictionConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.MemoryPressureEvictionConfig != nil {
 		in, out := &in.MemoryPressureEvictionConfig, &out.MemoryPressureEvictionConfig
 		*out = new(MemoryPressureEvictionConfig)
@@ -737,11 +742,6 @@ func (in *EvictionConfig) DeepCopyInto(out *EvictionConfig) {
 	if in.ReclaimedResourcesEvictionConfig != nil {
 		in, out := &in.ReclaimedResourcesEvictionConfig, &out.ReclaimedResourcesEvictionConfig
 		*out = new(ReclaimedResourcesEvictionConfig)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.CPUSystemPressureEvictionConfig != nil {
-		in, out := &in.CPUSystemPressureEvictionConfig, &out.CPUSystemPressureEvictionConfig
-		*out = new(CPUSystemPressureEvictionConfig)
 		(*in).DeepCopyInto(*out)
 	}
 	return

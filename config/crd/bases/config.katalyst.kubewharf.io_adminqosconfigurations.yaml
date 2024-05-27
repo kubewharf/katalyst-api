@@ -161,7 +161,7 @@ spec:
                         type: object
                       cpuSystemPressureEvictionConfig:
                         description: CPUSystemPressureEvictionConfig is the config
-                          for cpu system pressure eviction
+                          for cpu system pressure eviction at node level
                         properties:
                           RankingLabels:
                             additionalProperties:
@@ -415,8 +415,10 @@ spec:
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
-                        description: SystemLoadPressureEvictionConfig is the config
-                          for system load eviction
+                        description: "SystemLoadPressureEvictionConfig is the config
+                          for system load eviction \n Deprecated: Please use CPUSystemPressureEvictionConfig
+                          instead to configure params for CPU eviction plugin at node
+                          level"
                         properties:
                           coolDownTime:
                             description: CoolDownTime is the cool-down time of the
