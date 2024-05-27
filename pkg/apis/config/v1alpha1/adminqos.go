@@ -222,7 +222,13 @@ type EvictionConfig struct {
 
 	// SystemLoadPressureEvictionConfig is the config for system load eviction
 	// +optional
+	//
+	// Deprecated: Please use CPUSystemPressureEvictionConfig instead to configure params for CPU eviction plugin at node level
 	SystemLoadPressureEvictionConfig *SystemLoadPressureEvictionConfig `json:"systemLoadPressureEvictionConfig,omitempty"`
+
+	// CPUSystemPressureEvictionConfig is the config for cpu system pressure eviction at node level
+	// +optional
+	CPUSystemPressureEvictionConfig *CPUSystemPressureEvictionConfig `json:"cpuSystemPressureEvictionConfig,omitempty"`
 
 	// MemoryPressureEvictionConfig is the config for memory pressure eviction
 	// +optional
@@ -235,10 +241,6 @@ type EvictionConfig struct {
 	// ReclaimedResourcesEvictionConfig is the config for reclaimed resources' eviction
 	// +optional
 	ReclaimedResourcesEvictionConfig *ReclaimedResourcesEvictionConfig `json:"reclaimedResourcesEvictionConfig,omitempty"`
-
-	// CPUSystemPressureEvictionConfig is the config for cpu system pressure eviction
-	// +optional
-	CPUSystemPressureEvictionConfig *CPUSystemPressureEvictionConfig `json:"cpuSystemPressureEvictionConfig,omitempty"`
 }
 
 type ReclaimedResourcesEvictionConfig struct {
