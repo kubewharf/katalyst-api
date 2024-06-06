@@ -62,7 +62,8 @@ var (
 
 func addSPDKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
-		&TransparentMemoryOffloadingIndicators{})
+		&TransparentMemoryOffloadingIndicators{},
+		&ResourcePortraitIndicators{})
 	return nil
 }
 
@@ -81,6 +82,9 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AuthConfigurationList{},
 		&TransparentMemoryOffloadingConfiguration{},
 		&TransparentMemoryOffloadingConfigurationList{},
+
+		// global resource portrait configuration
+		&GlobalResourcePortraitConfiguration{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)

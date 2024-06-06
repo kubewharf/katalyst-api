@@ -253,7 +253,7 @@ type ServiceSystemIndicatorSpec struct {
 	Indicators []Indicator `json:"indicators,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=avg;max
+// +kubebuilder:validation:Enum=avg;max;sum
 
 type Aggregator string
 
@@ -278,6 +278,9 @@ type AggPodMetrics struct {
 	// Aggregator indicates how the metrics data in Items are calculated, i.e.
 	// defines the aggregation functions.
 	Aggregator Aggregator `json:"aggregator"`
+
+	// +optional
+	Scope string `json:"scope,omitempty"`
 
 	// +optional
 	Items []metrics.PodMetrics `json:"items,omitempty"`
