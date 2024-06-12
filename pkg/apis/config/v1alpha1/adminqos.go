@@ -20,6 +20,8 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -131,6 +133,65 @@ type CPUAdvisorConfig struct {
 	// we will rely on kernel features to ensure that shared_cores pods can suppress and preempt reclaimed_cores pods.
 	// +optional
 	AllowSharedCoresOverlapReclaimedCores *bool `json:"allowSharedCoresOverlapReclaimedCores,omitempty"`
+
+	// optional
+	CPUProvisionConfig *CPUProvisionConfig `json:"cpuProvisionConfig"`
+}
+
+// QoSRegionType declares pre-defined region types
+type QoSRegionType string
+
+const (
+	// QoSRegionTypeShare for each share pool
+	QoSRegionTypeShare QoSRegionType = "share"
+
+	// QoSRegionTypeIsolation for each isolation pool
+	QoSRegionTypeIsolation QoSRegionType = "isolation"
+
+	// QoSRegionTypeDedicatedNumaExclusive for each dedicated core with numa binding
+	// and numa exclusive container
+	QoSRegionTypeDedicatedNumaExclusive QoSRegionType = "dedicated-numa-exclusive"
+)
+
+// ControlKnobName defines available control knob key for provision policy
+type ControlKnobName string
+
+const (
+	// ControlKnobNonReclaimedCPURequirement refers to cpu requirement of non-reclaimed workloads, like shared_cores and dedicated_cores
+	ControlKnobNonReclaimedCPURequirement ControlKnobName = "non-reclaimed-cpu-requirement"
+
+	// ControlKnobNonReclaimedCPURequirementUpper refers to the upper cpu size, for isolated pods now
+	ControlKnobNonReclaimedCPURequirementUpper ControlKnobName = "non-reclaimed-cpu-requirement-upper"
+
+	// ControlKnobNonReclaimedCPURequirementLower refers to the lower cpu size, for isolated pods now
+	ControlKnobNonReclaimedCPURequirementLower ControlKnobName = "non-reclaimed-cpu-requirement-lower"
+)
+
+type RegionIndicators struct {
+	RegionType QoSRegionType                  `json:"regionType"`
+	Targets    []IndicatorTargetConfiguration `json:"targets"`
+}
+
+type IndicatorTargetConfiguration struct {
+	Name   v1alpha1.ServiceSystemIndicatorName `json:"name"`
+	Target float64                             `json:"target"`
+}
+
+type ControlKnobConstraints struct {
+	Name ControlKnobName `json:"name"`
+	// RestrictControlKnobMaxUpperGap is the maximum upward offset value from the baseline
+	RestrictControlKnobMaxUpperGap *float64 `json:"restrictControlKnobMaxUpperGap,omitempty"`
+	// RestrictControlKnobMaxUpperGap is the maximum downward offset value from the baseline
+	RestrictControlKnobMaxLowerGap *float64 `json:"restrictControlKnobMaxLowerGap,omitempty"`
+	// RestrictControlKnobMaxUpperGap is the maximum upward offset ratio from the baseline
+	RestrictControlKnobMaxUpperGapRatio *float64 `json:"restrictControlKnobMaxUpperGapRatio,omitempty"`
+	// RestrictControlKnobMaxUpperGap is the maximum downward offset ratio from the baseline
+	RestrictControlKnobMaxLowerGapRatio *float64 `json:"restrictControlKnobMaxLowerGapRatio,omitempty"`
+}
+
+type CPUProvisionConfig struct {
+	RegionIndicators []RegionIndicators       `json:"indicatorTargets,omitempty"`
+	Constraints      []ControlKnobConstraints `json:"constraints,omitempty"`
 }
 
 type MemoryAdvisorConfig struct {

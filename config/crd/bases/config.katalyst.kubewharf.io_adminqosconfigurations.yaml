@@ -76,6 +76,67 @@ spec:
                               to ensure that shared_cores pods can suppress and preempt
                               reclaimed_cores pods.
                             type: boolean
+                          cpuProvisionConfig:
+                            description: optional
+                            properties:
+                              constraints:
+                                items:
+                                  properties:
+                                    name:
+                                      description: ControlKnobName defines available
+                                        control knob key for provision policy
+                                      type: string
+                                    restrictControlKnobMaxLowerGap:
+                                      description: RestrictControlKnobMaxUpperGap
+                                        is the maximum downward offset value from
+                                        the baseline
+                                      type: number
+                                    restrictControlKnobMaxLowerGapRatio:
+                                      description: RestrictControlKnobMaxUpperGap
+                                        is the maximum downward offset ratio from
+                                        the baseline
+                                      type: number
+                                    restrictControlKnobMaxUpperGap:
+                                      description: RestrictControlKnobMaxUpperGap
+                                        is the maximum upward offset value from the
+                                        baseline
+                                      type: number
+                                    restrictControlKnobMaxUpperGapRatio:
+                                      description: RestrictControlKnobMaxUpperGap
+                                        is the maximum upward offset ratio from the
+                                        baseline
+                                      type: number
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
+                              indicatorTargets:
+                                items:
+                                  properties:
+                                    regionType:
+                                      description: QoSRegionType declares pre-defined
+                                        region types
+                                      type: string
+                                    targets:
+                                      items:
+                                        properties:
+                                          name:
+                                            type: string
+                                          target:
+                                            type: number
+                                        required:
+                                        - name
+                                        - target
+                                        type: object
+                                      type: array
+                                  required:
+                                  - regionType
+                                  - targets
+                                  type: object
+                                type: array
+                            type: object
+                        required:
+                        - cpuProvisionConfig
                         type: object
                       memoryAdvisorConfig:
                         properties:
