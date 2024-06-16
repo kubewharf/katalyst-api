@@ -28,7 +28,9 @@ import (
 
 type AutoscalingV1alpha2Interface interface {
 	RESTClient() rest.Interface
+	IntelligentHorizontalPodAutoscalersGetter
 	KatalystVerticalPodAutoscalersGetter
+	VirtualWorkloadsGetter
 }
 
 // AutoscalingV1alpha2Client is used to interact with features provided by the autoscaling.katalyst.kubewharf.io group.
@@ -36,8 +38,16 @@ type AutoscalingV1alpha2Client struct {
 	restClient rest.Interface
 }
 
+func (c *AutoscalingV1alpha2Client) IntelligentHorizontalPodAutoscalers(namespace string) IntelligentHorizontalPodAutoscalerInterface {
+	return newIntelligentHorizontalPodAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha2Client) KatalystVerticalPodAutoscalers(namespace string) KatalystVerticalPodAutoscalerInterface {
 	return newKatalystVerticalPodAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha2Client) VirtualWorkloads(namespace string) VirtualWorkloadInterface {
+	return newVirtualWorkloads(c, namespace)
 }
 
 // NewForConfig creates a new AutoscalingV1alpha2Client for the given config.
