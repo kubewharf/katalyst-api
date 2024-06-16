@@ -24,8 +24,12 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// IntelligentHorizontalPodAutoscalers returns a IntelligentHorizontalPodAutoscalerInformer.
+	IntelligentHorizontalPodAutoscalers() IntelligentHorizontalPodAutoscalerInformer
 	// KatalystVerticalPodAutoscalers returns a KatalystVerticalPodAutoscalerInformer.
 	KatalystVerticalPodAutoscalers() KatalystVerticalPodAutoscalerInformer
+	// VirtualWorkloads returns a VirtualWorkloadInformer.
+	VirtualWorkloads() VirtualWorkloadInformer
 }
 
 type version struct {
@@ -39,7 +43,17 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// IntelligentHorizontalPodAutoscalers returns a IntelligentHorizontalPodAutoscalerInformer.
+func (v *version) IntelligentHorizontalPodAutoscalers() IntelligentHorizontalPodAutoscalerInformer {
+	return &intelligentHorizontalPodAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // KatalystVerticalPodAutoscalers returns a KatalystVerticalPodAutoscalerInformer.
 func (v *version) KatalystVerticalPodAutoscalers() KatalystVerticalPodAutoscalerInformer {
 	return &katalystVerticalPodAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// VirtualWorkloads returns a VirtualWorkloadInformer.
+func (v *version) VirtualWorkloads() VirtualWorkloadInformer {
+	return &virtualWorkloadInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
