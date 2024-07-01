@@ -110,7 +110,7 @@ spec:
                                   - name
                                   type: object
                                 type: array
-                              indicatorTargets:
+                              regionIndicators:
                                 items:
                                   properties:
                                     regionType:
