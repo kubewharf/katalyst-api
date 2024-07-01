@@ -190,7 +190,7 @@ type ControlKnobConstraints struct {
 }
 
 type CPUProvisionConfig struct {
-	RegionIndicators []RegionIndicators       `json:"indicatorTargets,omitempty"`
+	RegionIndicators []RegionIndicators       `json:"regionIndicators,omitempty"`
 	Constraints      []ControlKnobConstraints `json:"constraints,omitempty"`
 }
 
