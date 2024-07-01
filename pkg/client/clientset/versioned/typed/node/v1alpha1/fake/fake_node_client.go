@@ -32,6 +32,10 @@ func (c *FakeNodeV1alpha1) CustomNodeResources() v1alpha1.CustomNodeResourceInte
 	return &FakeCustomNodeResources{c}
 }
 
+func (c *FakeNodeV1alpha1) NodeProfileDescriptors() v1alpha1.NodeProfileDescriptorInterface {
+	return &FakeNodeProfileDescriptors{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeNodeV1alpha1) RESTClient() rest.Interface {

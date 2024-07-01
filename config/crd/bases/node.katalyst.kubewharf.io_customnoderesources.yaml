@@ -21,7 +21,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: CustomNodeResource captures information about a custom defined
-          node resource CustomNodeResource objects are non-namespaced.
+          node resource, mainly focus on static attributes and resources CustomNodeResource
+          objects are non-namespaced.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

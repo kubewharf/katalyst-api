@@ -33,6 +33,7 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 // ResourceNameKatalystCNR is used to construct standard gvr
 const (
 	ResourceNameKatalystCNR = "customnoderesources"
+	ResourceNameKatalystNPD = "nodeprofiledescriptor"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -52,6 +53,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&CustomNodeResource{},
 		&CustomNodeResourceList{},
+		&NodeProfileDescriptor{},
+		&NodeProfileDescriptorList{},
 	)
 
 	v1.AddToGroupVersion(scheme, SchemeGroupVersion)
