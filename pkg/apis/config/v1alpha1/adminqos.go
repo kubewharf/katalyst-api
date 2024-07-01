@@ -104,6 +104,11 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
+	// MaxNodeUtilizationPercent is the node resource utilization limit for reclaimed resource.
+	// node resources above the utilization will not be allocated to reclaimed pool.
+	// +optional
+	MaxNodeUtilizationPercent map[v1.ResourceName]int64 `json:"maxNodeUtilizationPercent,omitempty"`
+
 	// CPUHeadroomConfig is a configuration for cpu headroom
 	// +optional
 	CPUHeadroomConfig *CPUHeadroomConfig `json:"cpuHeadroomConfig,omitempty"`
