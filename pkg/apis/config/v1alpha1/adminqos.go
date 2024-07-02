@@ -177,16 +177,20 @@ type IndicatorTargetConfiguration struct {
 	Target float64                             `json:"target"`
 }
 
+type RestrictConstraints struct {
+	// MaxUpperGap is the maximum upward offset value from the baseline
+	MaxUpperGap *float64 `json:"maxUpperGap,omitempty"`
+	// MaxLowerGap is the maximum downward offset value from the baseline
+	MaxLowerGap *float64 `json:"maxLowerGap,omitempty"`
+	// MaxUpperGapRatio is the maximum upward offset ratio from the baseline
+	MaxUpperGapRatio *float64 `json:"maxUpperGapRatio,omitempty"`
+	// MaxLowerGapRatio is the maximum downward offset ratio from the baseline
+	MaxLowerGapRatio *float64 `json:"maxLowerGapRatio,omitempty"`
+}
+
 type ControlKnobConstraints struct {
-	Name ControlKnobName `json:"name"`
-	// RestrictControlKnobMaxUpperGap is the maximum upward offset value from the baseline
-	RestrictControlKnobMaxUpperGap *float64 `json:"restrictControlKnobMaxUpperGap,omitempty"`
-	// RestrictControlKnobMaxUpperGap is the maximum downward offset value from the baseline
-	RestrictControlKnobMaxLowerGap *float64 `json:"restrictControlKnobMaxLowerGap,omitempty"`
-	// RestrictControlKnobMaxUpperGap is the maximum upward offset ratio from the baseline
-	RestrictControlKnobMaxUpperGapRatio *float64 `json:"restrictControlKnobMaxUpperGapRatio,omitempty"`
-	// RestrictControlKnobMaxUpperGap is the maximum downward offset ratio from the baseline
-	RestrictControlKnobMaxLowerGapRatio *float64 `json:"restrictControlKnobMaxLowerGapRatio,omitempty"`
+	Name                ControlKnobName     `json:"name"`
+	RestrictConstraints RestrictConstraints `json:",inline"`
 }
 
 type CPUProvisionConfig struct {
