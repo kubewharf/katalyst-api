@@ -82,30 +82,26 @@ spec:
                               constraints:
                                 items:
                                   properties:
+                                    maxLowerGap:
+                                      description: MaxLowerGap is the maximum downward
+                                        offset value from the baseline
+                                      type: number
+                                    maxLowerGapRatio:
+                                      description: MaxLowerGapRatio is the maximum
+                                        downward offset ratio from the baseline
+                                      type: number
+                                    maxUpperGap:
+                                      description: MaxUpperGap is the maximum upward
+                                        offset value from the baseline
+                                      type: number
+                                    maxUpperGapRatio:
+                                      description: MaxUpperGapRatio is the maximum
+                                        upward offset ratio from the baseline
+                                      type: number
                                     name:
                                       description: ControlKnobName defines available
                                         control knob key for provision policy
                                       type: string
-                                    restrictControlKnobMaxLowerGap:
-                                      description: RestrictControlKnobMaxUpperGap
-                                        is the maximum downward offset value from
-                                        the baseline
-                                      type: number
-                                    restrictControlKnobMaxLowerGapRatio:
-                                      description: RestrictControlKnobMaxUpperGap
-                                        is the maximum downward offset ratio from
-                                        the baseline
-                                      type: number
-                                    restrictControlKnobMaxUpperGap:
-                                      description: RestrictControlKnobMaxUpperGap
-                                        is the maximum upward offset value from the
-                                        baseline
-                                      type: number
-                                    restrictControlKnobMaxUpperGapRatio:
-                                      description: RestrictControlKnobMaxUpperGap
-                                        is the maximum upward offset ratio from the
-                                        baseline
-                                      type: number
                                   required:
                                   - name
                                   type: object
