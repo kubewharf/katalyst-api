@@ -32,6 +32,10 @@ type NodeOvercommitConfigSpec struct {
 	// cpu,memory are supported.
 	// +optional
 	ResourceOvercommitRatio map[v1.ResourceName]string `json:"resourceOvercommitRatio,omitempty"`
+
+	// enableDynamicOvercommit determines whether to use the dynamic overcommitment automatically calculated by Katalyst as the overcommitment actually applied to the node.
+	// +optional
+	EnableDynamicOvercommit bool `json:"enableDynamicOvercommit"`
 }
 
 type NodeOvercommitConfigStatus struct {
