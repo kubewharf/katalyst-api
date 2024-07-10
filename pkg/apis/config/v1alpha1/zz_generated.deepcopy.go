@@ -455,6 +455,11 @@ func (in *CPUPressureEvictionConfig) DeepCopyInto(out *CPUPressureEvictionConfig
 		*out = new(float64)
 		**out = **in
 	}
+	if in.LoadLowerBoundRatio != nil {
+		in, out := &in.LoadLowerBoundRatio, &out.LoadLowerBoundRatio
+		*out = new(float64)
+		**out = **in
+	}
 	if in.LoadThresholdMetPercentage != nil {
 		in, out := &in.LoadThresholdMetPercentage, &out.LoadThresholdMetPercentage
 		*out = new(float64)
