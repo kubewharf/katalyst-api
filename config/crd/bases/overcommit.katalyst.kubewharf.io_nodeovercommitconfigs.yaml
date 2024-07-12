@@ -45,6 +45,16 @@ spec:
           spec:
             description: NodeOvercommitConfigSpec is a description of a NodeOvercommitConfig
             properties:
+              CronConsistency:
+                description: If CronConsistency is true, controller will ensure ResourceOvercommitRatio
+                  is consistent with the configuration of the TimeBound that should
+                  have been executed last time
+                type: boolean
+              StartingDeadlineSeconds:
+                description: controller is not going to schedule anything below now
+                  - StartingDeadlineSeconds
+                format: int64
+                type: integer
               nodeOvercommitSelectorVal:
                 description: NodeOvercommitSelectorVal is the value of node label
                   selector with key consts.NodeOvercommitSelectorKey, it decides whether
@@ -57,9 +67,47 @@ spec:
                   ratio that needs to inject into Node.Annotations cpu,memory are
                   supported.
                 type: object
+              timeBounds:
+                description: TimeBounds supports dynamically adjusting ResourceOvercommitRatio
+                items:
+                  properties:
+                    bounds:
+                      items:
+                        properties:
+                          cronTab:
+                            description: 'CronTab support standardSpec, requires 5
+                              entries representing: minute, hour, day of month, month
+                              and day of week'
+                            type: string
+                          resourceOvercommitRatio:
+                            additionalProperties:
+                              type: string
+                            description: Node overcommit ratio will be set as ResourceOvercommitRatio
+                              when CronTab is triggered cpu,memory are supported.
+                            type: object
+                        required:
+                        - cronTab
+                        type: object
+                      type: array
+                    end:
+                      format: date-time
+                      type: string
+                    start:
+                      description: TimeBound is valid between Start and End
+                      format: date-time
+                      type: string
+                  type: object
+                type: array
+            required:
+            - CronConsistency
             type: object
           status:
             properties:
+              lastScheduleTime:
+                description: LastScheduleTime recorded the time when the cronTab was
+                  triggered last time
+                format: date-time
+                type: string
               matchedNodeList:
                 description: NodeList which the nodeOvercommitConfig rules matched
                 items:
