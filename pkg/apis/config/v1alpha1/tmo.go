@@ -73,6 +73,10 @@ type TransparentMemoryOffloadingConfig struct {
 	// +listMapKey=cgroupPath
 	// +listType=map
 	CgroupConfig []CgroupConfig `json:"CgroupConfig,omitempty"`
+
+	// BlockConfig is a configuration for blocking tmo on specified pods.
+	// +optional
+	BlockConfig *BlockConfig `json:"blockConfig,omitempty"`
 }
 
 type QoSLevelConfig struct {
@@ -120,8 +124,9 @@ type TMOConfigDetail struct {
 type TMOPolicyName string
 
 const (
-	TMOPolicyNamePSI     TMOPolicyName = "PSI"
-	TMOPolicyNameRefault TMOPolicyName = "Refault"
+	TMOPolicyNamePSI        TMOPolicyName = "PSI"
+	TMOPolicyNameRefault    TMOPolicyName = "Refault"
+	TMOPolicyNameIntegrated TMOPolicyName = "Integrated"
 )
 
 type PSIPolicyConf struct {
@@ -141,6 +146,16 @@ type RefaultPolicyConf struct {
 	// ReclaimScanEfficiencyTarget indicates the desired level of efficiency in scanning and
 	// identifying memory pages that can be offloaded.
 	ReclaimScanEfficiencyTarget *float64 `json:"reclaimScanEfficiencyTarget,omitempty"`
+}
+
+type BlockConfig struct {
+	// Labels indicates disable tmo if pods with these labels. The requirements are ORed.
+	// +optional
+	Labels []metav1.LabelSelectorRequirement `json:"labels,omitempty"`
+
+	// Annotations indicates disable tmo if pods with these annotations. The requirements are ORed.
+	// +optional
+	Annotations []metav1.LabelSelectorRequirement `json:"annotations,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
