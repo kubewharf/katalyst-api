@@ -31,3 +31,8 @@ const (
 const (
 	PodAnnotationNetClassKey = "katalyst.kubewharf.io/net_class_id"
 )
+
+// PodAnnotationNUMABindResultKey is a const variable for pod annotation about numa bind result.
+const (
+	PodAnnotationNUMABindResultKey = "katalyst.kubewharf.io/numa_bind_result"
+)
