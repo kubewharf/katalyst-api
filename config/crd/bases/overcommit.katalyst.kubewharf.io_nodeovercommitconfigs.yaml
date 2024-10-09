@@ -45,6 +45,11 @@ spec:
           spec:
             description: NodeOvercommitConfigSpec is a description of a NodeOvercommitConfig
             properties:
+              enableDynamicOvercommit:
+                description: enableDynamicOvercommit determines whether to use the
+                  dynamic overcommitment automatically calculated by Katalyst as the
+                  overcommitment actually applied to the node.
+                type: boolean
               nodeOvercommitSelectorVal:
                 description: NodeOvercommitSelectorVal is the value of node label
                   selector with key consts.NodeOvercommitSelectorKey, it decides whether
