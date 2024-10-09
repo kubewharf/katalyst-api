@@ -579,6 +579,15 @@ spec:
                           colocation between reclaimed_cores pod and other pods, otherwise,
                           reclaim resource will be disabled.
                         type: boolean
+                      maxNodeUtilizationPercent:
+                        additionalProperties:
+                          format: int64
+                          type: integer
+                        description: MaxNodeUtilizationPercent is the node resource
+                          utilization limit for reclaimed resource. node resources
+                          above the utilization will not be allocated to reclaimed
+                          pool.
+                        type: object
                       memoryHeadroomConfig:
                         description: MemoryHeadroomConfig is a configuration for memory
                           headroom
