@@ -107,6 +107,23 @@ const (
 	//
 	// - this enhancement is only supported for shared-cores, for now and foreseeable future
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
+
+	// PodAnnotationCPUEnhancementCPUBurstPolicy indicates which policy to enable the cpu burst feature.
+	// Optional values: none/static/dynamic
+	// Default value: none
+	PodAnnotationCPUEnhancementCPUBurstPolicy = "cpu_burst_policy"
+
+	// PodAnnotationCPUEnhancementCPUBurstPolicyNone is the value of cpu burst policy none
+	PodAnnotationCPUEnhancementCPUBurstPolicyNone = "none"
+
+	// PodAnnotationCPUEnhancementCPUBurstPolicyStatic is the value of cpu burst policy static
+	PodAnnotationCPUEnhancementCPUBurstPolicyStatic = "static"
+
+	// PodAnnotationCPUEnhancementCPUBurstPolicyDynamic is the value of cpu burst policy dynamic
+	PodAnnotationCPUEnhancementCPUBurstPolicyDynamic = "dynamic"
+
+	// PodAnnotationCPUEnhancementCPUBurstPercent identifies the upper limit of the allowed burst percent
+	PodAnnotationCPUEnhancementCPUBurstPercent = "cpu_burst_percent"
 )
 
 // const variables for pod annotations about qos level enhancement in network
