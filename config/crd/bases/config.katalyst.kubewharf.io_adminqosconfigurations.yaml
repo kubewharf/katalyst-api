@@ -527,6 +527,26 @@ spec:
                             type: number
                         type: object
                     type: object
+                  fineGrainedResourceConfig:
+                    description: FineGrainedResourceConfig stores configurations related
+                      to fine-grained resource management
+                    properties:
+                      cpuBurstConfig:
+                        description: CPUBurstConfig stores cpu burst related configurations
+                        properties:
+                          cpuBurstPercent:
+                            description: CPUBurstPercent identifies the upper limit
+                              of the allowed burst percent optional
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          cpuBurstPolicy:
+                            description: 'CPUBurstPolicy indicates which policy to
+                              enable the cpu burst feature. Optional values: none/static/dynamic
+                              Default value: none optional'
+                            type: string
+                        type: object
+                    type: object
                   reclaimedResourceConfig:
                     description: ReclaimedResourceConfig is a configuration for reclaim
                       resource
