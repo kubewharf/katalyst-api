@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 type GenericConfigSpec struct {
@@ -45,6 +46,47 @@ type GenericConfigSpec struct {
 	// EphemeralSelector is a selector for temporary use only
 	// +optional
 	EphemeralSelector EphemeralSelector `json:"ephemeralSelector,omitempty"`
+
+	// Indicates that the config is paused.
+	// +optional
+	Paused bool `json:"paused,omitempty"`
+
+	// An update strategy to replace existing CustomNodeConfig configurations with new ones.
+	// +optional
+	UpdateStrategy ConfigUpdateStrategy `json:"updateStrategy,omitempty"`
+}
+
+// ConfigUpdateStrategy is a struct used to control the update strategy for a KatalystCustomConfig target.
+type ConfigUpdateStrategy struct {
+	// Type of config update. Only `RollingUpdate` is supported.
+	// +optional
+	Type ConfigUpdateStrategyType `json:"type,omitempty"`
+
+	// Rolling update config params. Present only if type = "RollingUpdate".
+	//---
+	// TODO: Update this to follow our convention for oneOf, whatever we decide it
+	// to be. Same as Deployment `strategy.rollingUpdate`.
+	// See https://github.com/kubernetes/kubernetes/issues/35345
+	// +optional
+	RollingUpdate *RollingUpdateConfig `json:"rollingUpdate,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=RollingUpdate
+type ConfigUpdateStrategyType string
+
+const (
+	// Replace the old configs by new ones using rolling update i.e replace them on each node one after the other.
+	RollingUpdateConfigStrategyType ConfigUpdateStrategyType = "RollingUpdate"
+)
+
+// Spec to control the desired behavior of config rolling update.
+type RollingUpdateConfig struct {
+	// The number or percentage of target CustomNodeConfigs to update to the current configuration.
+	// For example: `100`` and `20%` are valid values.
+	// +kubebuilder:validation:XIntOrString
+	// +kubebuilder:validation:Pattern=`^(100|[1-9][0-9]?|0)%$`
+	// +optional
+	Canary *intstr.IntOrString `json:"canary,omitempty"`
 }
 
 type EphemeralSelector struct {
@@ -58,6 +100,26 @@ type EphemeralSelector struct {
 }
 
 type GenericConfigStatus struct {
+	// The number of nodes that this config is targeting.
+	// +optional
+	TargetNodes int32 `json:"targetNodes"`
+
+	// The number of nodes that this config is targeting and should be updated given the current strategy.
+	// +optional
+	CanaryNodes int32 `json:"canaryNodes"`
+
+	// The number of target nodes that have been updated by this config.
+	// +optional
+	UpdatedTargetNodes int32 `json:"updatedTargetNodes"`
+
+	// The number of nodes (including non-target nodes) that have been updated by this config.
+	// +optional
+	UpdatedNodes int32 `json:"updatedNodes"`
+
+	// The hash of the current config observed by the kcc controller.
+	// +optional
+	CurrentHash string `json:"currentHash,omitempty"`
+
 	// Count of hash collisions for this cr. The kcc controller
 	// uses this field as a collision avoidance mechanism when it needs to
 	// create the name for the newest ControllerRevision.
@@ -69,6 +131,7 @@ type GenericConfigStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 
 	// Represents the latest available observations of a config's current state.
+	// +optional
 	Conditions []GenericConfigCondition `json:"conditions,omitempty"`
 }
 
