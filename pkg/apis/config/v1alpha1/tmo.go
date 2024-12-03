@@ -26,10 +26,15 @@ import (
 // +kubebuilder:resource:path=transparentmemoryoffloadingconfigurations,shortName=tmo
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AGE",type=date,JSONPath=.metadata.creationTimestamp
+// +kubebuilder:printcolumn:name="PAUSED",type=boolean,JSONPath=".spec.paused"
 // +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeLabelSelector"
 // +kubebuilder:printcolumn:name="PRIORITY",type=string,JSONPath=".spec.priority"
 // +kubebuilder:printcolumn:name="NODES",type=string,JSONPath=".spec.ephemeralSelector.nodeNames"
 // +kubebuilder:printcolumn:name="DURATION",type=string,JSONPath=".spec.ephemeralSelector.lastDuration"
+// +kubebuilder:printcolumn:name="TARGET",type=integer,JSONPath=".status.targetNodes"
+// +kubebuilder:printcolumn:name="CANARY",type=integer,JSONPath=".status.canaryNodes"
+// +kubebuilder:printcolumn:name="UPDATED-TARGET",type=integer,JSONPath=".status.updatedTargetNodes"
+// +kubebuilder:printcolumn:name="HASH",type=string,JSONPath=".status.currentHash"
 // +kubebuilder:printcolumn:name="VALID",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].status"
 // +kubebuilder:printcolumn:name="REASON",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].reason"
 // +kubebuilder:printcolumn:name="MESSAGE",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].message"
