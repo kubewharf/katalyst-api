@@ -21,7 +21,8 @@ spec:
     schema:
       openAPIV3Schema:
         description: CustomNodeResource captures information about a custom defined
-          node resource CustomNodeResource objects are non-namespaced.
+          node resource, mainly focus on static attributes and resources CustomNodeResource
+          objects are non-namespaced.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -61,21 +62,41 @@ spec:
                   type: object
                 type: array
               taints:
-                description: customized taint for katalyst, which may affect partial
-                  tasks
+                description: Taints customized taints for katalyst, which affect pod
+                  scheduling based on their QoS levels and the specified taint's QoS
+                  level.
                 items:
+                  description: Taint wraps standard Kubernetes Taint with QoSLevel.
                   properties:
                     effect:
                       description: Required. The effect of the taint on pods that
-                        do not tolerate the taint. Valid effects are NoScheduleForReclaimedTasks.
+                        do not tolerate the taint. Valid effects are NoSchedule, PreferNoSchedule
+                        and NoExecute.
                       type: string
                     key:
                       description: Required. The taint key to be applied to a node.
                       type: string
-                    value:
-                      description: Required. The taint value corresponding to the
-                        taint key.
+                    qosLevel:
+                      description: QoSLevel specifies the QoS level of pods that this
+                        taint applies to.
+                      enum:
+                      - reclaimed_cores
+                      - shared_cores
+                      - dedicated_cores
+                      - system_cores
                       type: string
+                    timeAdded:
+                      description: TimeAdded represents the time at which the taint
+                        was added. It is only written for NoExecute taints.
+                      format: date-time
+                      type: string
+                    value:
+                      description: The taint value corresponding to the taint key.
+                      type: string
+                  required:
+                  - effect
+                  - key
+                  - qosLevel
                   type: object
                 type: array
             type: object

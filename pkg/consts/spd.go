@@ -42,3 +42,9 @@ const (
 	SPDBaselinePercentMax = 100
 	SPDBaselinePercentMin = 0
 )
+
+// metric names for aggregate metric
+const (
+	// SPDAggMetricNameMemoryBandwidth is per core memory bandwidth
+	SPDAggMetricNameMemoryBandwidth = "memory_bandwidth"
+)

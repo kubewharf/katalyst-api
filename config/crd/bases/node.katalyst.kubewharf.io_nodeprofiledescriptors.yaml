@@ -1,0 +1,146 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
+  name: nodeprofiledescriptors.node.katalyst.kubewharf.io
+spec:
+  group: node.katalyst.kubewharf.io
+  names:
+    kind: NodeProfileDescriptor
+    listKind: NodeProfileDescriptorList
+    plural: nodeprofiledescriptors
+    shortNames:
+    - npd
+    singular: nodeprofiledescriptor
+  scope: Cluster
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: NodeProfileDescriptor captures information about node, such as
+          node-related metrics NodeProfileDescriptor objects are non-namespaced.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the behavior of a NodeProfileDescriptor.
+            type: object
+          status:
+            description: Status represents the current information about a NodeProfileDescriptor.
+              This data may not be up-to-date.
+            properties:
+              nodeMetrics:
+                description: NodeMetrics contains the node-related metrics
+                items:
+                  properties:
+                    metrics:
+                      items:
+                        properties:
+                          aggregator:
+                            description: the aggregator of the metric
+                            type: string
+                          metricLabels:
+                            additionalProperties:
+                              type: string
+                            description: a set of labels that identify a single time
+                              series for the metric
+                            type: object
+                          metricName:
+                            description: the name of the metric
+                            type: string
+                          timestamp:
+                            description: indicates the time at which the metrics were
+                              produced
+                            format: date-time
+                            type: string
+                          value:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: the value of the metric
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          window:
+                            description: indicates the window ([Timestamp-Window,
+                              Timestamp]) from which these metrics were calculated,
+                              when returning rate metrics calculated from cumulative
+                              metrics (or zero for non-calculated instantaneous metrics).
+                            type: string
+                        type: object
+                      type: array
+                    scope:
+                      type: string
+                  type: object
+                type: array
+              podMetrics:
+                description: PodMetrics contains the pod-related metrics
+                items:
+                  properties:
+                    podMetrics:
+                      items:
+                        properties:
+                          metrics:
+                            items:
+                              properties:
+                                aggregator:
+                                  description: the aggregator of the metric
+                                  type: string
+                                metricLabels:
+                                  additionalProperties:
+                                    type: string
+                                  description: a set of labels that identify a single
+                                    time series for the metric
+                                  type: object
+                                metricName:
+                                  description: the name of the metric
+                                  type: string
+                                timestamp:
+                                  description: indicates the time at which the metrics
+                                    were produced
+                                  format: date-time
+                                  type: string
+                                value:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  description: the value of the metric
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                window:
+                                  description: indicates the window ([Timestamp-Window,
+                                    Timestamp]) from which these metrics were calculated,
+                                    when returning rate metrics calculated from cumulative
+                                    metrics (or zero for non-calculated instantaneous
+                                    metrics).
+                                  type: string
+                              type: object
+                            type: array
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        type: object
+                      type: array
+                    scope:
+                      type: string
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

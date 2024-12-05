@@ -21,9 +21,10 @@ package pod
 
 // real-time cpu related metric
 const (
-	CustomMetricPodCPULoad1Min = "pod_cpu_load_1min"
-	CustomMetricPodCPUUsage    = "pod_cpu_usage"
-	CustomMetricPodCPUCPI      = "pod_cpu_cpi"
+	CustomMetricPodCPULoad1Min   = "pod_cpu_load_1min"
+	CustomMetricPodCPUUsage      = "pod_cpu_usage"
+	CustomMetricPodCPUUsageRatio = "pod_cpu_usage_ratio"
+	CustomMetricPodCPUCPI        = "pod_cpu_cpi"
 )
 
 const (
