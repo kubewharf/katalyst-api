@@ -21,6 +21,9 @@ spec:
     - jsonPath: .metadata.creationTimestamp
       name: AGE
       type: date
+    - jsonPath: .spec.paused
+      name: PAUSED
+      type: boolean
     - jsonPath: .spec.nodeLabelSelector
       name: SELECTOR
       type: string
@@ -32,6 +35,18 @@ spec:
       type: string
     - jsonPath: .spec.ephemeralSelector.lastDuration
       name: DURATION
+      type: string
+    - jsonPath: .status.targetNodes
+      name: TARGET
+      type: integer
+    - jsonPath: .status.canaryNodes
+      name: CANARY
+      type: integer
+    - jsonPath: .status.updatedTargetNodes
+      name: UPDATED-TARGET
+      type: integer
+    - jsonPath: .status.currentHash
+      name: HASH
       type: string
     - jsonPath: .status.conditions[?(@.type=="Valid")].status
       name: VALID
@@ -66,6 +81,89 @@ spec:
               config:
                 description: Config is custom field for admin qos configuration
                 properties:
+                  advisorConfig:
+                    properties:
+                      cpuAdvisorConfig:
+                        properties:
+                          allowSharedCoresOverlapReclaimedCores:
+                            description: AllowSharedCoresOverlapReclaimedCores is
+                              a flag, when enabled, we will rely on kernel features
+                              to ensure that shared_cores pods can suppress and preempt
+                              reclaimed_cores pods.
+                            type: boolean
+                          cpuProvisionConfig:
+                            description: optional
+                            properties:
+                              constraints:
+                                items:
+                                  properties:
+                                    maxLowerGap:
+                                      description: MaxLowerGap is the maximum downward
+                                        offset value from the baseline
+                                      type: number
+                                    maxLowerGapRatio:
+                                      description: MaxLowerGapRatio is the maximum
+                                        downward offset ratio from the baseline
+                                      type: number
+                                    maxUpperGap:
+                                      description: MaxUpperGap is the maximum upward
+                                        offset value from the baseline
+                                      type: number
+                                    maxUpperGapRatio:
+                                      description: MaxUpperGapRatio is the maximum
+                                        upward offset ratio from the baseline
+                                      type: number
+                                    name:
+                                      description: ControlKnobName defines available
+                                        control knob key for provision policy
+                                      type: string
+                                  required:
+                                  - name
+                                  type: object
+                                type: array
+                              regionIndicators:
+                                items:
+                                  properties:
+                                    regionType:
+                                      description: QoSRegionType declares pre-defined
+                                        region types
+                                      type: string
+                                    targets:
+                                      items:
+                                        properties:
+                                          name:
+                                            type: string
+                                          target:
+                                            type: number
+                                        required:
+                                        - name
+                                        - target
+                                        type: object
+                                      type: array
+                                  required:
+                                  - regionType
+                                  - targets
+                                  type: object
+                                type: array
+                            type: object
+                        required:
+                        - cpuProvisionConfig
+                        type: object
+                      memoryAdvisorConfig:
+                        properties:
+                          memoryGuardConfig:
+                            description: MemoryGuardConfig is a config for memory
+                              guard plugin, which is used to avoid high priority workload
+                              from being affected by memory bursting caused by low
+                              priority workload.
+                            properties:
+                              enable:
+                                description: Enable is a flag to enable memory guard
+                                  plugin
+                                type: boolean
+                            type: object
+                        type: object
+                    type: object
                   evictionConfig:
                     description: EvictionConfig is a configuration for eviction
                     properties:
@@ -93,6 +191,13 @@ spec:
                               is triggered, the cpu load eviction will be disabled
                               for the cool-down time
                             type: string
+                          loadLowerBoundRatio:
+                            description: LoadLowerBoundRatio is the lower bound ratio
+                              of cpuset pool load, if the load of the target cpuset
+                              pool is greater than the load lower bound repeatedly,
+                              the node taint will be triggered
+                            minimum: 0
+                            type: number
                           loadMetricRingSize:
                             description: LoadMetricRingSize is the size of the load
                               metric ring, which is used to calculate the load of
@@ -132,6 +237,78 @@ spec:
                               the minimum cpu suppression duration, the eviction will
                               be triggered
                             type: string
+                        type: object
+                      cpuSystemPressureEvictionConfig:
+                        description: CPUSystemPressureEvictionConfig is the config
+                          for cpu system pressure eviction at node level
+                        properties:
+                          RankingLabels:
+                            additionalProperties:
+                              items:
+                                type: string
+                              type: array
+                            type: object
+                          checkCPUManager:
+                            type: boolean
+                          enableCPUSystemPressureEviction:
+                            type: boolean
+                          evictionCoolDownTime:
+                            description: EvictionCoolDownTime is the cool down duration
+                              of pod eviction
+                            type: string
+                          evictionRankingMetrics:
+                            description: EvictionRankingMetrics is the metric list
+                              for ranking eviction pods
+                            items:
+                              type: string
+                            type: array
+                          gracePeriod:
+                            format: int64
+                            type: integer
+                          loadLowerBoundRatio:
+                            description: LoadLowerBoundRatio is the lower bound ratio
+                              of node, if the load of the node is greater than the
+                              load lower bound repeatedly, the cordon will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          loadUpperBoundRatio:
+                            description: LoadUpperBoundRatio is the upper bound ratio
+                              of node, if the load of the node is greater than the
+                              load upper bound repeatedly, the eviction will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          metricRingSize:
+                            description: MetricRingSize is the size of the load metric
+                              ring
+                            minimum: 1
+                            type: integer
+                          thresholdMetPercentage:
+                            description: ThresholdMetPercentage is the percentage
+                              of the number of times the metric over the upper bound
+                              to the total number of times the metric is measured,
+                              if the percentage is greater than the threshold met
+                              percentage, the eviction or node tainted will be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          usageLowerBoundRatio:
+                            description: UsageLowerBoundRatio is the lower bound ratio
+                              of node, if the cpu usage of the node is greater than
+                              the usage lower bound repeatedly, the cordon will be
+                              triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          usageUpperBoundRatio:
+                            description: UsageUpperBoundRatio is the upper bound ratio
+                              of node, if the cpu usage of the node is greater than
+                              the usage upper bound repeatedly, the eviction will
+                              be triggered
+                            maximum: 1
+                            minimum: 0
+                            type: number
                         type: object
                       dryRun:
                         description: DryRun is the list of eviction plugins to dryRun
@@ -202,6 +379,8 @@ spec:
                               - qos.pod
                               - priority.pod
                               - mem.usage.container
+                              - native.qos.pod
+                              - owner.pod
                               type: string
                             minItems: 1
                             type: array
@@ -315,8 +494,10 @@ spec:
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
-                        description: SystemLoadPressureEvictionConfig is the config
-                          for system load eviction
+                        description: "SystemLoadPressureEvictionConfig is the config
+                          for system load eviction \n Deprecated: Please use CPUSystemPressureEvictionConfig
+                          instead to configure params for CPU eviction plugin at node
+                          level"
                         properties:
                           coolDownTime:
                             description: CoolDownTime is the cool-down time of the
@@ -514,6 +695,9 @@ spec:
                   KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList, otherwise
                   it will not be synced.
                 type: string
+              paused:
+                description: Indicates that the config is paused.
+                type: boolean
               priority:
                 description: Priority is used by one node matched by NodeLabelSelector
                   of more than one configuration, and the higher priority will be
@@ -529,11 +713,42 @@ spec:
                   currently applied Spec version. The default value is 3.
                 format: int64
                 type: integer
+              updateStrategy:
+                description: An update strategy to replace existing CustomNodeConfig
+                  configurations with new ones.
+                properties:
+                  rollingUpdate:
+                    description: 'Rolling update config params. Present only if type
+                      = "RollingUpdate". --- TODO: Update this to follow our convention
+                      for oneOf, whatever we decide it to be. Same as Deployment `strategy.rollingUpdate`.
+                      See https://github.com/kubernetes/kubernetes/issues/35345'
+                    properties:
+                      canary:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: 'The number or percentage of target CustomNodeConfigs
+                          to update to the current configuration. For example: `100``
+                          and `20%` are valid values.'
+                        pattern: ^(100|[1-9][0-9]?|0)%$
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  type:
+                    description: Type of config update. Only `RollingUpdate` is supported.
+                    enum:
+                    - RollingUpdate
+                    type: string
+                type: object
             required:
             - config
             type: object
           status:
             properties:
+              canaryNodes:
+                description: The number of nodes that this config is targeting and
+                  should be updated given the current strategy.
+                format: int32
+                type: integer
               collisionCount:
                 description: Count of hash collisions for this cr. The kcc controller
                   uses this field as a collision avoidance mechanism when it needs
@@ -568,9 +783,26 @@ spec:
                   - type
                   type: object
                 type: array
+              currentHash:
+                description: The hash of the current config observed by the kcc controller.
+                type: string
               observedGeneration:
                 description: The most recent generation observed by the kcc controller.
                 format: int64
+                type: integer
+              targetNodes:
+                description: The number of nodes that this config is targeting.
+                format: int32
+                type: integer
+              updatedNodes:
+                description: The number of nodes (including non-target nodes) that
+                  have been updated by this config.
+                format: int32
+                type: integer
+              updatedTargetNodes:
+                description: The number of target nodes that have been updated by
+                  this config.
+                format: int32
                 type: integer
             type: object
         type: object

@@ -20,6 +20,8 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -27,10 +29,15 @@ import (
 // +kubebuilder:resource:path=adminqosconfigurations,shortName=aqc
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="AGE",type=date,JSONPath=.metadata.creationTimestamp
+// +kubebuilder:printcolumn:name="PAUSED",type=boolean,JSONPath=".spec.paused"
 // +kubebuilder:printcolumn:name="SELECTOR",type=string,JSONPath=".spec.nodeLabelSelector"
 // +kubebuilder:printcolumn:name="PRIORITY",type=string,JSONPath=".spec.priority"
 // +kubebuilder:printcolumn:name="NODES",type=string,JSONPath=".spec.ephemeralSelector.nodeNames"
 // +kubebuilder:printcolumn:name="DURATION",type=string,JSONPath=".spec.ephemeralSelector.lastDuration"
+// +kubebuilder:printcolumn:name="TARGET",type=integer,JSONPath=".status.targetNodes"
+// +kubebuilder:printcolumn:name="CANARY",type=integer,JSONPath=".status.canaryNodes"
+// +kubebuilder:printcolumn:name="UPDATED-TARGET",type=integer,JSONPath=".status.updatedTargetNodes"
+// +kubebuilder:printcolumn:name="HASH",type=string,JSONPath=".status.currentHash"
 // +kubebuilder:printcolumn:name="VALID",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].status"
 // +kubebuilder:printcolumn:name="REASON",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].reason"
 // +kubebuilder:printcolumn:name="MESSAGE",type=string,JSONPath=".status.conditions[?(@.type==\"Valid\")].message"
@@ -70,6 +77,9 @@ type AdminQoSConfig struct {
 	// EvictionConfig is a configuration for eviction
 	// +optional
 	EvictionConfig *EvictionConfig `json:"evictionConfig,omitempty"`
+
+	// +optional
+	AdvisorConfig *AdvisorConfig `json:"advisorConfig,omitempty"`
 }
 
 type ReclaimedResourceConfig struct {
@@ -114,6 +124,96 @@ type MemoryHeadroomConfig struct {
 	// MemoryHeadroomUtilBasedConfig is a config for utilization based memory headroom policy
 	// +optional
 	UtilBasedConfig *MemoryHeadroomUtilBasedConfig `json:"utilBasedConfig,omitempty"`
+}
+
+type AdvisorConfig struct {
+	// +optional
+	CPUAdvisorConfig *CPUAdvisorConfig `json:"cpuAdvisorConfig,omitempty"`
+	// +optional
+	MemoryAdvisorConfig *MemoryAdvisorConfig `json:"memoryAdvisorConfig,omitempty"`
+}
+
+type CPUAdvisorConfig struct {
+	// AllowSharedCoresOverlapReclaimedCores is a flag, when enabled,
+	// we will rely on kernel features to ensure that shared_cores pods can suppress and preempt reclaimed_cores pods.
+	// +optional
+	AllowSharedCoresOverlapReclaimedCores *bool `json:"allowSharedCoresOverlapReclaimedCores,omitempty"`
+
+	// optional
+	CPUProvisionConfig *CPUProvisionConfig `json:"cpuProvisionConfig"`
+}
+
+// QoSRegionType declares pre-defined region types
+type QoSRegionType string
+
+const (
+	// QoSRegionTypeShare for each share pool
+	QoSRegionTypeShare QoSRegionType = "share"
+
+	// QoSRegionTypeIsolation for each isolation pool
+	QoSRegionTypeIsolation QoSRegionType = "isolation"
+
+	// QoSRegionTypeDedicatedNumaExclusive for each dedicated core with numa binding
+	// and numa exclusive container
+	QoSRegionTypeDedicatedNumaExclusive QoSRegionType = "dedicated-numa-exclusive"
+)
+
+// ControlKnobName defines available control knob key for provision policy
+type ControlKnobName string
+
+const (
+	// ControlKnobNonReclaimedCPURequirement refers to cpu requirement of non-reclaimed workloads, like shared_cores and dedicated_cores
+	ControlKnobNonReclaimedCPURequirement ControlKnobName = "non-reclaimed-cpu-requirement"
+
+	// ControlKnobNonReclaimedCPURequirementUpper refers to the upper cpu size, for isolated pods now
+	ControlKnobNonReclaimedCPURequirementUpper ControlKnobName = "non-reclaimed-cpu-requirement-upper"
+
+	// ControlKnobNonReclaimedCPURequirementLower refers to the lower cpu size, for isolated pods now
+	ControlKnobNonReclaimedCPURequirementLower ControlKnobName = "non-reclaimed-cpu-requirement-lower"
+)
+
+type RegionIndicators struct {
+	RegionType QoSRegionType                  `json:"regionType"`
+	Targets    []IndicatorTargetConfiguration `json:"targets"`
+}
+
+type IndicatorTargetConfiguration struct {
+	Name   v1alpha1.ServiceSystemIndicatorName `json:"name"`
+	Target float64                             `json:"target"`
+}
+
+type RestrictConstraints struct {
+	// MaxUpperGap is the maximum upward offset value from the baseline
+	MaxUpperGap *float64 `json:"maxUpperGap,omitempty"`
+	// MaxLowerGap is the maximum downward offset value from the baseline
+	MaxLowerGap *float64 `json:"maxLowerGap,omitempty"`
+	// MaxUpperGapRatio is the maximum upward offset ratio from the baseline
+	MaxUpperGapRatio *float64 `json:"maxUpperGapRatio,omitempty"`
+	// MaxLowerGapRatio is the maximum downward offset ratio from the baseline
+	MaxLowerGapRatio *float64 `json:"maxLowerGapRatio,omitempty"`
+}
+
+type ControlKnobConstraints struct {
+	Name                ControlKnobName     `json:"name"`
+	RestrictConstraints RestrictConstraints `json:",inline"`
+}
+
+type CPUProvisionConfig struct {
+	RegionIndicators []RegionIndicators       `json:"regionIndicators,omitempty"`
+	Constraints      []ControlKnobConstraints `json:"constraints,omitempty"`
+}
+
+type MemoryAdvisorConfig struct {
+	// MemoryGuardConfig is a config for memory guard plugin, which is used to avoid high priority workload from being
+	// affected by memory bursting caused by low priority workload.
+	// +optional
+	MemoryGuardConfig *MemoryGuardConfig `json:"memoryGuardConfig,omitempty"`
+}
+
+type MemoryGuardConfig struct {
+	// Enable is a flag to enable memory guard plugin
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
 }
 
 type MemoryHeadroomUtilBasedConfig struct {
@@ -192,7 +292,13 @@ type EvictionConfig struct {
 
 	// SystemLoadPressureEvictionConfig is the config for system load eviction
 	// +optional
+	//
+	// Deprecated: Please use CPUSystemPressureEvictionConfig instead to configure params for CPU eviction plugin at node level
 	SystemLoadPressureEvictionConfig *SystemLoadPressureEvictionConfig `json:"systemLoadPressureEvictionConfig,omitempty"`
+
+	// CPUSystemPressureEvictionConfig is the config for cpu system pressure eviction at node level
+	// +optional
+	CPUSystemPressureEvictionConfig *CPUSystemPressureEvictionConfig `json:"cpuSystemPressureEvictionConfig,omitempty"`
 
 	// MemoryPressureEvictionConfig is the config for memory pressure eviction
 	// +optional
@@ -234,6 +340,13 @@ type CPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=1
 	// +optional
 	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
+
+	// LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
+	// of the target cpuset pool is greater than the load lower bound repeatedly, the
+	// node taint will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
 
 	// LoadThresholdMetPercentage is the percentage of the number of times the load
 	// over the upper bound to the total number of times the load is measured, if the
@@ -436,6 +549,74 @@ type RootfsPressureEvictionConfig struct {
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
 
+type CPUSystemPressureEvictionConfig struct {
+	// +optional
+	EnableCPUSystemPressureEviction *bool `json:"enableCPUSystemPressureEviction,omitempty"`
+
+	// LoadUpperBoundRatio is the upper bound ratio of node, if the load
+	// of the node is greater than the load upper bound repeatedly, the
+	// eviction will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
+
+	// LoadLowerBoundRatio is the lower bound ratio of node, if the load
+	// of the node is greater than the load lower bound repeatedly, the
+	// cordon will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
+
+	// UsageUpperBoundRatio is the upper bound ratio of node, if the cpu usage
+	// of the node is greater than the usage upper bound repeatedly, the
+	// eviction will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	UsageUpperBoundRatio *float64 `json:"usageUpperBoundRatio,omitempty"`
+
+	// UsageLowerBoundRatio is the lower bound ratio of node, if the cpu usage
+	// of the node is greater than the usage lower bound repeatedly, the
+	// cordon will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	UsageLowerBoundRatio *float64 `json:"usageLowerBoundRatio,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of the number of times the metric
+	// over the upper bound to the total number of times the metric is measured, if the
+	// percentage is greater than the threshold met percentage, the eviction or
+	// node tainted will be triggered
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+
+	// MetricRingSize is the size of the load metric ring
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// EvictionCoolDownTime is the cool down duration of pod eviction
+	// +optional
+	EvictionCoolDownTime *metav1.Duration `json:"evictionCoolDownTime,omitempty"`
+
+	// EvictionRankingMetrics is the metric list for ranking eviction pods
+	// +optional
+	EvictionRankingMetrics []string `json:"evictionRankingMetrics,omitempty"`
+
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// +optional
+	CheckCPUManager *bool `json:"checkCPUManager,omitempty"`
+
+	// +optional
+	RankingLabels map[string][]string `json:"RankingLabels,omitempty"`
+}
+
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // NUMA level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.total.numa.container
@@ -443,5 +624,5 @@ type NumaEvictionRankingMetric string
 
 // SystemEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // system level
-// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container
+// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string

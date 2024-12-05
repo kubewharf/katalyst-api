@@ -26,6 +26,27 @@ const (
 	AggregateFunctionMax    = "_agg_max"
 	AggregateFunctionMin    = "_agg_min"
 	AggregateFunctionP99    = "_agg_p99"
+	AggregateFunctionP95    = "_agg_p95"
 	AggregateFunctionP90    = "_agg_p90"
 	AggregateFunctionLatest = "_agg_latest"
+)
+
+// MetricSelectorKeyGroupBy is the key of groupBy in metric selector. It's value should be a set of the real metric
+// selector keys which will be used to group the metrics. MetricSelectorKeyGroupBy should only be used in aggregated
+// metrics.
+// For example, if we want to get the max cpu load of each container,we can query the `pod_cpu_load_1min_agg_max` with
+// following metric selector: `groupBy=container`.
+const MetricSelectorKeyGroupBy = "groupBy"
+
+// MetricNameSPDAggMetrics represents the metric name provided to the API Server when exposing
+// the metrics in SPD in the form of Extermal Metric.
+const MetricNameSPDAggMetrics = "spd_agg_metrics"
+
+// MetricSelectorKeySPD represents a series of External Metric labels, used by the SPD Metric Store to
+// filter and return specific workload metric data.
+const (
+	MetricSelectorKeySPDName          = "metric.katalyst.kubewharf.io/spd-name"
+	MetricSelectorKeySPDResourceName  = "metric.katalyst.kubewharf.io/spd-resource-name"
+	MetricSelectorKeySPDScopeName     = "metric.katalyst.kubewharf.io/spd-scope-name"
+	MetricSelectorKeySPDContainerName = "metric.katalyst.kubewharf.io/spd-container-name"
 )

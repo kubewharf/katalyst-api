@@ -227,9 +227,12 @@ type ServiceBusinessIndicatorSpec struct {
 type ServiceSystemIndicatorName string
 
 const (
-	ServiceSystemIndicatorNameCPUSchedWait  ServiceSystemIndicatorName = "cpu_sched_wait"
-	ServiceSystemIndicatorNameCPUUsageRatio ServiceSystemIndicatorName = "cpu_usage_ratio"
-	ServiceSystemIndicatorNameCPI           ServiceSystemIndicatorName = "cpi"
+	ServiceSystemIndicatorNameCPUSchedWait             ServiceSystemIndicatorName = "cpu_sched_wait"
+	ServiceSystemIndicatorNameCPUUsageRatio            ServiceSystemIndicatorName = "cpu_usage_ratio"
+	ServiceSystemIndicatorNameCPI                      ServiceSystemIndicatorName = "cpi"
+	ServiceSystemIndicatorNameMemoryAccessWriteLatency ServiceSystemIndicatorName = "mem_access_write_lat"
+	ServiceSystemIndicatorNameMemoryAccessReadLatency  ServiceSystemIndicatorName = "mem_access_read_lat"
+	ServiceSystemIndicatorNameMemoryL3MissLatency      ServiceSystemIndicatorName = "mem_l3_miss_lat"
 )
 
 // ServiceSystemIndicatorSpec defines workload profiling in system level, such as
@@ -250,13 +253,14 @@ type ServiceSystemIndicatorSpec struct {
 	Indicators []Indicator `json:"indicators,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=avg;max
+// +kubebuilder:validation:Enum=avg;max;sum
 
 type Aggregator string
 
 const (
 	Avg Aggregator = "avg"
 	Max Aggregator = "max"
+	Sum Aggregator = "sum"
 )
 
 // ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec with Name
@@ -274,6 +278,9 @@ type AggPodMetrics struct {
 	// Aggregator indicates how the metrics data in Items are calculated, i.e.
 	// defines the aggregation functions.
 	Aggregator Aggregator `json:"aggregator"`
+
+	// +optional
+	Scope string `json:"scope,omitempty"`
 
 	// +optional
 	Items []metrics.PodMetrics `json:"items,omitempty"`

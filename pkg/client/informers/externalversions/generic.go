@@ -66,8 +66,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().VerticalPodAutoscalerRecommendations().Informer()}, nil
 
 		// Group=autoscaling.katalyst.kubewharf.io, Version=v1alpha2
+	case v1alpha2.SchemeGroupVersion.WithResource("intelligenthorizontalpodautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().IntelligentHorizontalPodAutoscalers().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("katalystverticalpodautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().KatalystVerticalPodAutoscalers().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("virtualworkloads"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().VirtualWorkloads().Informer()}, nil
 
 		// Group=config.katalyst.kubewharf.io, Version=v1alpha1
 	case configv1alpha1.SchemeGroupVersion.WithResource("customnodeconfigs"):
@@ -78,6 +82,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=node.katalyst.kubewharf.io, Version=v1alpha1
 	case nodev1alpha1.SchemeGroupVersion.WithResource("customnoderesources"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Node().V1alpha1().CustomNodeResources().Informer()}, nil
+	case nodev1alpha1.SchemeGroupVersion.WithResource("nodeprofiledescriptors"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Node().V1alpha1().NodeProfileDescriptors().Informer()}, nil
 
 		// Group=overcommit.katalyst.kubewharf.io, Version=v1alpha1
 	case overcommitv1alpha1.SchemeGroupVersion.WithResource("nodeovercommitconfigs"):
