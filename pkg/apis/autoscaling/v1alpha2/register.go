@@ -32,7 +32,9 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 
 // ResourceName const is used to construct standard gvr
 const (
-	ResourceNameKatalystVPA = "katalystverticalpodautoscalers"
+	ResourceNameKatalystVPA     = "katalystverticalpodautoscalers"
+	ResourceNameIHPA            = "intelligenthorizontalpodautoscalers"
+	ResourceNameVirtualWorkload = "virtualworkloads"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -52,6 +54,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&KatalystVerticalPodAutoscaler{},
 		&KatalystVerticalPodAutoscalerList{},
+		&IntelligentHorizontalPodAutoscaler{},
+		&IntelligentHorizontalPodAutoscalerList{},
+		&VirtualWorkload{},
+		&VirtualWorkloadList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)

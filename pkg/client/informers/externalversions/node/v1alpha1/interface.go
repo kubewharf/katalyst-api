@@ -26,6 +26,8 @@ import (
 type Interface interface {
 	// CustomNodeResources returns a CustomNodeResourceInformer.
 	CustomNodeResources() CustomNodeResourceInformer
+	// NodeProfileDescriptors returns a NodeProfileDescriptorInformer.
+	NodeProfileDescriptors() NodeProfileDescriptorInformer
 }
 
 type version struct {
@@ -42,4 +44,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // CustomNodeResources returns a CustomNodeResourceInformer.
 func (v *version) CustomNodeResources() CustomNodeResourceInformer {
 	return &customNodeResourceInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// NodeProfileDescriptors returns a NodeProfileDescriptorInformer.
+func (v *version) NodeProfileDescriptors() NodeProfileDescriptorInformer {
+	return &nodeProfileDescriptorInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

@@ -20,7 +20,8 @@ limitations under the License.
 package node
 
 const (
-	CustomMetricNodeCPULoad1Min = "node_cpu_load_system_1min"
+	CustomMetricNodeCPUUsageRatio = "node_cpu_usage_ratio"
+	CustomMetricNodeCPULoad1Min   = "node_cpu_load_system_1min"
 )
 
 // real-time memory related metric

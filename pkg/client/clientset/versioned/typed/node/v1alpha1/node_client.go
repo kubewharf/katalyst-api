@@ -27,6 +27,7 @@ import (
 type NodeV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CustomNodeResourcesGetter
+	NodeProfileDescriptorsGetter
 }
 
 // NodeV1alpha1Client is used to interact with features provided by the node.katalyst.kubewharf.io group.
@@ -36,6 +37,10 @@ type NodeV1alpha1Client struct {
 
 func (c *NodeV1alpha1Client) CustomNodeResources() CustomNodeResourceInterface {
 	return newCustomNodeResources(c)
+}
+
+func (c *NodeV1alpha1Client) NodeProfileDescriptors() NodeProfileDescriptorInterface {
+	return newNodeProfileDescriptors(c)
 }
 
 // NewForConfig creates a new NodeV1alpha1Client for the given config.

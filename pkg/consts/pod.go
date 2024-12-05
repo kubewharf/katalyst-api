@@ -22,6 +22,9 @@ const (
 
 	PodAnnotationInplaceUpdateResizePolicyKey     = "pod.kubernetes.io/resizePolicy"
 	PodAnnotationInplaceUpdateResizePolicyRestart = "Restart"
+
+	PodAnnotationInplaceUpdateResizingKey = "pod.kubernetes.io/inplace-update-resizing"
+	PodAnnotationAggregatedRequestsKey    = "pod.kubernetes.io/pod-aggregated-requests"
 )
 
 // PodAnnotationNetClassKey is a const variable for pod annotation about net class.
