@@ -20,6 +20,8 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
 // +genclient
@@ -49,33 +51,21 @@ type CustomNodeResourceSpec struct {
 	// +optional
 	NodeResourceProperties []*Property `json:"nodeResourceProperties,omitempty"`
 
-	// customized taint for katalyst, which may affect partial tasks
+	// Taints customized taint for katalyst, which affect pod scheduling
+	// based on their QoS levels and the specified taint's QoS level.
 	// +optional
-	Taints []*Taint `json:"taints,omitempty"`
+	Taints []Taint `json:"taints,omitempty"`
 }
 
+// Taint wraps standard Kubernetes Taint with QoSLevel.
 type Taint struct {
-	// Required. The taint key to be applied to a node.
-	Key string `json:"key,omitempty"`
-	// Required. The taint value corresponding to the taint key.
-	// +optional
-	Value string `json:"value,omitempty"`
-	// Required. The effect of the taint on pods
-	// that do not tolerate the taint.
-	// Valid effects are NoScheduleForReclaimedTasks.
-	Effect TaintEffect `json:"effect,omitempty"`
+	// Taint is standard Kubernetes Taint
+	v1.Taint `json:",inline"`
+
+	// QoSLevel specifies the QoS level of pods that this taint applies to.
+	// +kubebuilder:validation:Enum=reclaimed_cores;shared_cores;dedicated_cores;system_cores
+	QoSLevel consts.QoSLevel `json:"qosLevel"`
 }
-
-type TaintEffect string
-
-const (
-	// TaintEffectNoScheduleForReclaimedTasks
-	// Do not allow new pods using reclaimed resources to schedule onto the node unless they tolerate the taint,
-	// but allow all pods submitted to Kubelet without going through the scheduler
-	// to start, and allow all already-running pods to continue running.
-	// Enforced by the scheduler.
-	TaintEffectNoScheduleForReclaimedTasks TaintEffect = "NoScheduleForReclaimedTasks"
-)
 
 type Property struct {
 	// property name
