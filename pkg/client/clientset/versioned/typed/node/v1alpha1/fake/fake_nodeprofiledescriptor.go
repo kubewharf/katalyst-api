@@ -110,7 +110,7 @@ func (c *FakeNodeProfileDescriptors) UpdateStatus(ctx context.Context, nodeProfi
 // Delete takes name of the nodeProfileDescriptor and deletes it. Returns an error if one occurs.
 func (c *FakeNodeProfileDescriptors) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(nodeprofiledescriptorsResource, name, opts), &v1alpha1.NodeProfileDescriptor{})
+		Invokes(testing.NewRootDeleteAction(nodeprofiledescriptorsResource, name), &v1alpha1.NodeProfileDescriptor{})
 	return err
 }
 
