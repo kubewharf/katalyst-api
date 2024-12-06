@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	autoscalingv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/autoscaling/v1alpha1"
-	autoscalingv1alpha2 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/autoscaling/v1alpha2"
 	configv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/config/v1alpha1"
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/node/v1alpha1"
 	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/client/clientset/versioned/typed/overcommit/v1alpha1"
@@ -37,7 +36,6 @@ import (
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
 	AutoscalingV1alpha1() autoscalingv1alpha1.AutoscalingV1alpha1Interface
-	AutoscalingV1alpha2() autoscalingv1alpha2.AutoscalingV1alpha2Interface
 	ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface
 	NodeV1alpha1() nodev1alpha1.NodeV1alpha1Interface
 	OvercommitV1alpha1() overcommitv1alpha1.OvercommitV1alpha1Interface
@@ -51,7 +49,6 @@ type Interface interface {
 type Clientset struct {
 	*discovery.DiscoveryClient
 	autoscalingV1alpha1    *autoscalingv1alpha1.AutoscalingV1alpha1Client
-	autoscalingV1alpha2    *autoscalingv1alpha2.AutoscalingV1alpha2Client
 	configV1alpha1         *configv1alpha1.ConfigV1alpha1Client
 	nodeV1alpha1           *nodev1alpha1.NodeV1alpha1Client
 	overcommitV1alpha1     *overcommitv1alpha1.OvercommitV1alpha1Client
@@ -63,11 +60,6 @@ type Clientset struct {
 // AutoscalingV1alpha1 retrieves the AutoscalingV1alpha1Client
 func (c *Clientset) AutoscalingV1alpha1() autoscalingv1alpha1.AutoscalingV1alpha1Interface {
 	return c.autoscalingV1alpha1
-}
-
-// AutoscalingV1alpha2 retrieves the AutoscalingV1alpha2Client
-func (c *Clientset) AutoscalingV1alpha2() autoscalingv1alpha2.AutoscalingV1alpha2Interface {
-	return c.autoscalingV1alpha2
 }
 
 // ConfigV1alpha1 retrieves the ConfigV1alpha1Client
@@ -125,10 +117,6 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	if err != nil {
 		return nil, err
 	}
-	cs.autoscalingV1alpha2, err = autoscalingv1alpha2.NewForConfig(&configShallowCopy)
-	if err != nil {
-		return nil, err
-	}
 	cs.configV1alpha1, err = configv1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
@@ -166,7 +154,6 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	var cs Clientset
 	cs.autoscalingV1alpha1 = autoscalingv1alpha1.NewForConfigOrDie(c)
-	cs.autoscalingV1alpha2 = autoscalingv1alpha2.NewForConfigOrDie(c)
 	cs.configV1alpha1 = configv1alpha1.NewForConfigOrDie(c)
 	cs.nodeV1alpha1 = nodev1alpha1.NewForConfigOrDie(c)
 	cs.overcommitV1alpha1 = overcommitv1alpha1.NewForConfigOrDie(c)
@@ -182,7 +169,6 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
 	cs.autoscalingV1alpha1 = autoscalingv1alpha1.New(c)
-	cs.autoscalingV1alpha2 = autoscalingv1alpha2.New(c)
 	cs.configV1alpha1 = configv1alpha1.New(c)
 	cs.nodeV1alpha1 = nodev1alpha1.New(c)
 	cs.overcommitV1alpha1 = overcommitv1alpha1.New(c)

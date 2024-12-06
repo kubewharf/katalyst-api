@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	v1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/autoscaling/v1alpha1"
-	v1alpha2 "github.com/kubewharf/katalyst-api/pkg/apis/autoscaling/v1alpha2"
 	configv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/config/v1alpha1"
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/node/v1alpha1"
 	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/overcommit/v1alpha1"
@@ -64,14 +63,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().KatalystVerticalPodAutoscalers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("verticalpodautoscalerrecommendations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().VerticalPodAutoscalerRecommendations().Informer()}, nil
-
-		// Group=autoscaling.katalyst.kubewharf.io, Version=v1alpha2
-	case v1alpha2.SchemeGroupVersion.WithResource("intelligenthorizontalpodautoscalers"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().IntelligentHorizontalPodAutoscalers().Informer()}, nil
-	case v1alpha2.SchemeGroupVersion.WithResource("katalystverticalpodautoscalers"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().KatalystVerticalPodAutoscalers().Informer()}, nil
-	case v1alpha2.SchemeGroupVersion.WithResource("virtualworkloads"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha2().VirtualWorkloads().Informer()}, nil
 
 		// Group=config.katalyst.kubewharf.io, Version=v1alpha1
 	case configv1alpha1.SchemeGroupVersion.WithResource("customnodeconfigs"):
