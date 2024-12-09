@@ -28,16 +28,8 @@ type FakeAutoscalingV1alpha2 struct {
 	*testing.Fake
 }
 
-func (c *FakeAutoscalingV1alpha2) IntelligentHorizontalPodAutoscalers(namespace string) v1alpha2.IntelligentHorizontalPodAutoscalerInterface {
-	return &FakeIntelligentHorizontalPodAutoscalers{c, namespace}
-}
-
 func (c *FakeAutoscalingV1alpha2) KatalystVerticalPodAutoscalers(namespace string) v1alpha2.KatalystVerticalPodAutoscalerInterface {
 	return &FakeKatalystVerticalPodAutoscalers{c, namespace}
-}
-
-func (c *FakeAutoscalingV1alpha2) VirtualWorkloads(namespace string) v1alpha2.VirtualWorkloadInterface {
-	return &FakeVirtualWorkloads{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

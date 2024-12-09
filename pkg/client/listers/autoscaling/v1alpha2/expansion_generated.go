@@ -18,14 +18,6 @@ limitations under the License.
 
 package v1alpha2
 
-// IntelligentHorizontalPodAutoscalerListerExpansion allows custom methods to be added to
-// IntelligentHorizontalPodAutoscalerLister.
-type IntelligentHorizontalPodAutoscalerListerExpansion interface{}
-
-// IntelligentHorizontalPodAutoscalerNamespaceListerExpansion allows custom methods to be added to
-// IntelligentHorizontalPodAutoscalerNamespaceLister.
-type IntelligentHorizontalPodAutoscalerNamespaceListerExpansion interface{}
-
 // KatalystVerticalPodAutoscalerListerExpansion allows custom methods to be added to
 // KatalystVerticalPodAutoscalerLister.
 type KatalystVerticalPodAutoscalerListerExpansion interface{}
@@ -33,11 +25,3 @@ type KatalystVerticalPodAutoscalerListerExpansion interface{}
 // KatalystVerticalPodAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // KatalystVerticalPodAutoscalerNamespaceLister.
 type KatalystVerticalPodAutoscalerNamespaceListerExpansion interface{}
-
-// VirtualWorkloadListerExpansion allows custom methods to be added to
-// VirtualWorkloadLister.
-type VirtualWorkloadListerExpansion interface{}
-
-// VirtualWorkloadNamespaceListerExpansion allows custom methods to be added to
-// VirtualWorkloadNamespaceLister.
-type VirtualWorkloadNamespaceListerExpansion interface{}
