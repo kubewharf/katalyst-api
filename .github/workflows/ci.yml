@@ -25,3 +25,6 @@ jobs:
         run: |
           make fmt && git add pkg &&
           git diff --cached --exit-code || (echo 'Please run "make fmt" to verify gofmt' && exit 1);
+      - name: Check inline fields
+        run: |
+          go run cmd/inlinecheck/main.go
