@@ -194,8 +194,8 @@ type RestrictConstraints struct {
 }
 
 type ControlKnobConstraints struct {
-	Name                ControlKnobName     `json:"name"`
-	RestrictConstraints RestrictConstraints `json:",inline"`
+	Name                ControlKnobName `json:"name"`
+	RestrictConstraints `json:",inline"`
 }
 
 type CPUProvisionConfig struct {
