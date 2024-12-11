@@ -27,9 +27,12 @@ const (
 	CustomMetricPodCPUCPI        = "pod_cpu_cpi"
 )
 
+// real-time memory related metric
 const (
-	CustomMetricPodMemoryRSS   = "pod_memory_rss"
-	CustomMetricPodMemoryUsage = "pod_memory_usage"
+	CustomMetricPodMemoryRSS            = "pod_memory_rss"
+	CustomMetricPodMemoryUsage          = "pod_memory_usage"
+	CustomMetricPodMemoryReadBandwidth  = "pod_memory_read_bandwidth"
+	CustomMetricPodMemoryWriteBandwidth = "pod_memory_write_bandwidth"
 )
 
 const (

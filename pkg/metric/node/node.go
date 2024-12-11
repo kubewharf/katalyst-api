@@ -30,6 +30,12 @@ const (
 	CustomMetricNodeMemoryAvailable = "node_system_memory_available"
 )
 
+// real-time memory numa related metric
+const (
+	CustomMetricNUMAMemoryBandwidthRead  = "numa_memory_bandwidth_read"
+	CustomMetricNUMAMemoryBandwidthWrite = "numa_memory_bandwidth_write"
+)
+
 // real-time advisor-related metric
 const (
 	CustomMetricNodeAdvisorPoolLoad1Min = "node_advisor_pool_load_1min"
