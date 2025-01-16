@@ -36,3 +36,8 @@ const (
 const (
 	PodAnnotationNUMABindResultKey = "katalyst.kubewharf.io/numa_bind_result"
 )
+
+// PodAnnotationNICSelectionResultKey is a const variable for pod annotation about a nic selection result.
+const (
+	PodAnnotationNICSelectionResultKey = "katalyst.kubewharf.io/nic_selection_result"
+)
