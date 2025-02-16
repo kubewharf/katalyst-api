@@ -174,13 +174,20 @@ type ControlKnobName string
 
 const (
 	// ControlKnobNonReclaimedCPURequirement refers to cpu requirement of non-reclaimed workloads, like shared_cores and dedicated_cores
+	// deprecated, will be removed later
 	ControlKnobNonReclaimedCPURequirement ControlKnobName = "non-reclaimed-cpu-requirement"
 
-	// ControlKnobNonReclaimedCPURequirementUpper refers to the upper cpu size, for isolated pods now
-	ControlKnobNonReclaimedCPURequirementUpper ControlKnobName = "non-reclaimed-cpu-requirement-upper"
+	// ControlKnobNonIsolatedUpperCPUSize refers to the upper cpu size, for isolated pods now
+	ControlKnobNonIsolatedUpperCPUSize ControlKnobName = "isolated-upper-cpu-size"
 
-	// ControlKnobNonReclaimedCPURequirementLower refers to the lower cpu size, for isolated pods now
-	ControlKnobNonReclaimedCPURequirementLower ControlKnobName = "non-reclaimed-cpu-requirement-lower"
+	// ControlKnobNonIsolatedLowerCPUSize refers to the lower cpu size, for isolated pods now
+	ControlKnobNonIsolatedLowerCPUSize ControlKnobName = "isolated-lower-cpu-size"
+
+	// ControlKnobReclaimedCoresCPUQuota is cpu limit for reclaimed-cores root cgroup
+	ControlKnobReclaimedCoresCPUQuota ControlKnobName = "reclaimed-cores-cpu-quota"
+
+	// ControlKnobReclaimedCoresCPUSize is the length of cpuset.cpus for reclaimed-cores
+	ControlKnobReclaimedCoresCPUSize ControlKnobName = "reclaimed-cores-cpu-size"
 )
 
 type RegionIndicators struct {
