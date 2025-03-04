@@ -62,7 +62,7 @@ spec:
                   type: object
                 type: array
               taints:
-                description: Taints customized taints for katalyst, which affect pod
+                description: Taints customized taint for katalyst, which affect pod
                   scheduling based on their QoS levels and the specified taint's QoS
                   level.
                 items:

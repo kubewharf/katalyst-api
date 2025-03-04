@@ -91,23 +91,34 @@ type ReclaimedResourceConfig struct {
 
 	// ReservedResourceForReport is a reserved resource for report to custom node resource, which is used to
 	// prevent reclaim resource from being requested by reclaimed_cores pods.
+	// For example, {"cpu": 0, "memory": 0Gi}.
 	// +optional
 	ReservedResourceForReport *v1.ResourceList `json:"reservedResourceForReport,omitempty"`
 
 	// MinReclaimedResourceForReport is a minimum reclaimed resource for report to custom node resource, which means
 	// if reclaimed resource is less than MinReclaimedResourceForReport, then reclaimed resource will be reported as
 	// MinReclaimedResourceForReport.
+	// For example, {"cpu": 4, "memory": 5Gi}.
 	// +optional
 	MinReclaimedResourceForReport *v1.ResourceList `json:"minReclaimedResourceForReport,omitempty"`
+
+	// MinIgnoredReclaimedResourceForReport defines per-resource minimum thresholds. If ANY resource's current reclaimed amount
+	// falls below its respective threshold, ALL reclaimed resources will be ignored and reported as zero. This prevents resource
+	// fragmentation in quota calculations by avoiding reporting insignificant reclaimed quantities.
+	// For example, {"cpu": 0.1, "memory": 100Mi}.
+	// +optional
+	MinIgnoredReclaimedResourceForReport *v1.ResourceList `json:"minIgnoredReclaimedResourceForReport,omitempty"`
 
 	// ReservedResourceForAllocate is a resource reserved for non-reclaimed_cores pods that are not allocated to
 	// reclaimed_cores pods. It is used to set aside some buffer resources to avoid sudden increase in resource
 	// requirements.
+	// For example, {"cpu": 4, "memory": 5Gi}.
 	// +optional
 	ReservedResourceForAllocate *v1.ResourceList `json:"reservedResourceForAllocate,omitempty"`
 
 	// MinReclaimedResourceForAllocate is a resource reserved for reclaimed_cores pods，these resources will not be used
 	// by shared_cores pods.
+	// For example, {"cpu": 4, "memory": 0Gi}.
 	// +optional
 	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
