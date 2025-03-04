@@ -1449,6 +1449,17 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			}
 		}
 	}
+	if in.MinIgnoredReclaimedResourceForReport != nil {
+		in, out := &in.MinIgnoredReclaimedResourceForReport, &out.MinIgnoredReclaimedResourceForReport
+		*out = new(corev1.ResourceList)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[corev1.ResourceName]resource.Quantity, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val.DeepCopy()
+			}
+		}
+	}
 	if in.ReservedResourceForAllocate != nil {
 		in, out := &in.ReservedResourceForAllocate, &out.ReservedResourceForAllocate
 		*out = new(corev1.ResourceList)
