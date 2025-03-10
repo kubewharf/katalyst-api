@@ -21,3 +21,7 @@ package v1alpha1
 type CustomNodeConfigExpansion interface{}
 
 type KatalystCustomConfigExpansion interface{}
+
+type StrategyGroupExpansion interface{}
+
+type StrategyGroupConfigurationExpansion interface{}
