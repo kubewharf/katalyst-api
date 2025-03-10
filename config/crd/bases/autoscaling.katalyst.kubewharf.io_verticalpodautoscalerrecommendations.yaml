@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.15.0
   name: verticalpodautoscalerrecommendations.autoscaling.katalyst.kubewharf.io
 spec:
   group: autoscaling.katalyst.kubewharf.io
@@ -24,14 +23,19 @@ spec:
           a VPA Recommendation
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -39,14 +43,16 @@ spec:
             description: Spec defines the behavior of a VerticalPodAutoscalerRecommendation.
             properties:
               containerRecommendations:
-                description: default container resources recommended by the autoscaler
-                  for the controlled containers. It will be overwritten by PodRecommendations
+                description: |-
+                  default container resources recommended by the
+                  autoscaler for the controlled containers.
+                  It will be overwritten by PodRecommendations
                 items:
-                  description: RecommendedContainerResources is the recommendation
-                    of resources computed by autoscaler for a specific container.
-                    Respects the container resource policy if present in the spec.
-                    In particular the recommendation is not produced for containers
-                    with `ContainerScalingMode` set to 'Off'.
+                  description: |-
+                    RecommendedContainerResources is the recommendation of resources computed by
+                    autoscaler for a specific container. Respects the container resource policy
+                    if present in the spec. In particular the recommendation is not produced for
+                    containers with `ContainerScalingMode` set to 'Off'.
                   properties:
                     containerName:
                       description: Name of the container.
@@ -86,18 +92,19 @@ spec:
                   type: object
                 type: array
               podRecommendations:
-                description: The most recently computed amount of resources recommended
-                  by the autoscaler for the controlled pods.
+                description: |-
+                  The most recently computed amount of resources recommended by the
+                  autoscaler for the controlled pods.
                 items:
                   properties:
                     containerRecommendations:
                       description: Resources recommended by the autoscaler for each
                         container.
                       items:
-                        description: RecommendedContainerResources is the recommendation
-                          of resources computed by autoscaler for a specific container.
-                          Respects the container resource policy if present in the
-                          spec. In particular the recommendation is not produced for
+                        description: |-
+                          RecommendedContainerResources is the recommendation of resources computed by
+                          autoscaler for a specific container. Respects the container resource policy
+                          if present in the spec. In particular the recommendation is not produced for
                           containers with `ContainerScalingMode` set to 'Off'.
                         properties:
                           containerName:
@@ -149,22 +156,24 @@ spec:
             description: Status represents the current information about a VerticalPodAutoscalerRecommendation.
             properties:
               conditions:
-                description: Conditions is the set of conditions required for this
-                  vparec to scale its target, and indicates whether those conditions
-                  are met.
+                description: |-
+                  Conditions is the set of conditions required for this vparec to scale its target,
+                  and indicates whether those conditions are met.
                 items:
-                  description: VerticalPodAutoscalerRecommendationCondition describes
-                    the state of a VerticalPodAutoscalerRecommendation at a certain
-                    point.
+                  description: |-
+                    VerticalPodAutoscalerRecommendationCondition describes the state of
+                    a VerticalPodAutoscalerRecommendation at a certain point.
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from
+                        one status to another
                       format: date-time
                       type: string
                     message:
-                      description: message is a human-readable explanation containing
-                        details about the transition
+                      description: |-
+                        message is a human-readable explanation containing details about
+                        the transition
                       type: string
                     reason:
                       description: reason is the reason for the condition's last transition.
@@ -185,11 +194,11 @@ spec:
                 description: ContainerRecommendations is the most recently defaultRecommendation
                   handled by the controller
                 items:
-                  description: RecommendedContainerResources is the recommendation
-                    of resources computed by autoscaler for a specific container.
-                    Respects the container resource policy if present in the spec.
-                    In particular the recommendation is not produced for containers
-                    with `ContainerScalingMode` set to 'Off'.
+                  description: |-
+                    RecommendedContainerResources is the recommendation of resources computed by
+                    autoscaler for a specific container. Respects the container resource policy
+                    if present in the spec. In particular the recommendation is not produced for
+                    containers with `ContainerScalingMode` set to 'Off'.
                   properties:
                     containerName:
                       description: Name of the container.
@@ -237,10 +246,10 @@ spec:
                       description: Resources recommended by the autoscaler for each
                         container.
                       items:
-                        description: RecommendedContainerResources is the recommendation
-                          of resources computed by autoscaler for a specific container.
-                          Respects the container resource policy if present in the
-                          spec. In particular the recommendation is not produced for
+                        description: |-
+                          RecommendedContainerResources is the recommendation of resources computed by
+                          autoscaler for a specific container. Respects the container resource policy
+                          if present in the spec. In particular the recommendation is not produced for
                           containers with `ContainerScalingMode` set to 'Off'.
                         properties:
                           containerName:
