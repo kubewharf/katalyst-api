@@ -311,6 +311,10 @@ type EvictionConfig struct {
 	// ReclaimedResourcesEvictionConfig is the config for reclaimed resources' eviction
 	// +optional
 	ReclaimedResourcesEvictionConfig *ReclaimedResourcesEvictionConfig `json:"reclaimedResourcesEvictionConfig,omitempty"`
+
+	// NetworkEvictionConfig is the config for network eviction
+	// +optional
+	NetworkEvictionConfig *NetworkEvictionConfig `json:"networkEvictionConfig,omitempty"`
 }
 
 type ReclaimedResourcesEvictionConfig struct {
@@ -547,6 +551,22 @@ type RootfsPressureEvictionConfig struct {
 	// GracePeriod is the grace period of pod deletion
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+}
+
+type NetworkEvictionConfig struct {
+	// EnableNICHealthEviction is whether to enable NIC health eviction.
+	// +optional
+	EnableNICHealthEviction *bool `json:"enableNICNetworkEviction,omitempty"`
+
+	// GracePeriod is the grace period of nic health eviction
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// NICUnhealthyToleranceDuration is the default duration a pod can tolerate nic
+	// unhealthy
+	// +optional
+	NICUnhealthyToleranceDuration *metav1.Duration `json:"nicUnhealthyToleranceDuration,omitempty"`
 }
 
 type CPUSystemPressureEvictionConfig struct {
