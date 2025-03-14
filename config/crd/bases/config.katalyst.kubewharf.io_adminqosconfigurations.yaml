@@ -404,6 +404,26 @@ spec:
                             minimum: 0
                             type: integer
                         type: object
+                      networkEvictionConfig:
+                        description: NetworkEvictionConfig is the config for network
+                          eviction
+                        properties:
+                          enableNICNetworkEviction:
+                            description: EnableNICHealthEviction is whether to enable
+                              NIC health eviction.
+                            type: boolean
+                          gracePeriod:
+                            description: GracePeriod is the grace period of nic health
+                              eviction
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          nicUnhealthyToleranceDuration:
+                            description: |-
+                              NICUnhealthyToleranceDuration is the default duration a pod can tolerate nic
+                              unhealthy
+                            type: string
+                        type: object
                       reclaimedResourcesEvictionConfig:
                         description: ReclaimedResourcesEvictionConfig is the config
                           for reclaimed resources' eviction
