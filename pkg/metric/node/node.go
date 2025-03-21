@@ -20,6 +20,8 @@ limitations under the License.
 package node
 
 const (
+	CustomMetricNodeCPUTotal      = "node_cpu_total"
+	CustomMetricNodeCPUUsage      = "node_cpu_usage"
 	CustomMetricNodeCPUUsageRatio = "node_cpu_usage_ratio"
 	CustomMetricNodeCPULoad1Min   = "node_cpu_load_system_1min"
 )
