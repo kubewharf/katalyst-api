@@ -36,6 +36,14 @@ func (c *FakeConfigV1alpha1) KatalystCustomConfigs(namespace string) v1alpha1.Ka
 	return &FakeKatalystCustomConfigs{c, namespace}
 }
 
+func (c *FakeConfigV1alpha1) StrategyGroups() v1alpha1.StrategyGroupInterface {
+	return &FakeStrategyGroups{c}
+}
+
+func (c *FakeConfigV1alpha1) StrategyGroupConfigurations() v1alpha1.StrategyGroupConfigurationInterface {
+	return &FakeStrategyGroupConfigurations{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeConfigV1alpha1) RESTClient() rest.Interface {
