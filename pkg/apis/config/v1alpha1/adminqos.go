@@ -256,6 +256,12 @@ type MemoryHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	CacheBasedRatio *float64 `json:"cacheBasedRatio,omitempty"`
+
+	// MaxOversoldRate is the max oversold rate of memory headroom to the memory limit of
+	// reclaimed_cores cgroup
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	MaxOversoldRate *float64 `json:"maxOversoldRate,omitempty"`
 }
 
 type CPUHeadroomConfig struct {
