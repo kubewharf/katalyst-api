@@ -1245,6 +1245,11 @@ func (in *MemoryHeadroomUtilBasedConfig) DeepCopyInto(out *MemoryHeadroomUtilBas
 		*out = new(float64)
 		**out = **in
 	}
+	if in.MaxOversoldRate != nil {
+		in, out := &in.MaxOversoldRate, &out.MaxOversoldRate
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
