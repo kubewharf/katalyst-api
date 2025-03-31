@@ -98,6 +98,11 @@ spec:
                               description: EnableSwap is whether to enable swap to
                                 offloading anon pages
                               type: boolean
+                            enableSwapOnProactiveEnabled:
+                              description: EnableSwapOnProactiveEnable is whether
+                                to enable swap to offloading anon pages only when
+                                host swappiness_proactive is enabled
+                              type: boolean
                             enableTMO:
                               description: EnableTMO is whether to enable TMO on target
                                 objective
@@ -230,6 +235,11 @@ spec:
                             enableSwap:
                               description: EnableSwap is whether to enable swap to
                                 offloading anon pages
+                              type: boolean
+                            enableSwapOnProactiveEnabled:
+                              description: EnableSwapOnProactiveEnable is whether
+                                to enable swap to offloading anon pages only when
+                                host swappiness_proactive is enabled
                               type: boolean
                             enableTMO:
                               description: EnableTMO is whether to enable TMO on target

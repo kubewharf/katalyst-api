@@ -109,6 +109,11 @@ type TMOConfigDetail struct {
 	// +optional
 	EnableSwap *bool `json:"enableSwap,omitempty"`
 
+	// EnableSwapOnProactiveEnable is whether to enable swap to offloading anon pages only when
+	// host swappiness_proactive is enabled
+	// +optional
+	EnableSwapOnProactiveEnabled *bool `json:"enableSwapOnProactiveEnabled,omitempty"`
+
 	// Interval is the minimum duration the objectives got memory reclaimed by TMO
 	// +optional
 	Interval *metav1.Duration `json:"interval,omitempty"`
