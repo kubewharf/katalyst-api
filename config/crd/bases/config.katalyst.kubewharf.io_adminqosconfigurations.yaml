@@ -622,6 +622,12 @@ spec:
                                 maximum: 1
                                 minimum: 0
                                 type: number
+                              maxOversoldRate:
+                                description: |-
+                                  MaxOversoldRate is the max oversold rate of memory headroom to the memory limit of
+                                  reclaimed_cores cgroup
+                                minimum: 0
+                                type: number
                               staticBasedCapacity:
                                 description: StaticBasedCapacity is the static oversold
                                   memory size by bytes
