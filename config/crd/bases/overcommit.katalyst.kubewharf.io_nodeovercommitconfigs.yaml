@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.15.0
   name: nodeovercommitconfigs.overcommit.katalyst.kubewharf.io
 spec:
   group: overcommit.katalyst.kubewharf.io
@@ -31,14 +30,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -46,16 +50,16 @@ spec:
             description: NodeOvercommitConfigSpec is a description of a NodeOvercommitConfig
             properties:
               nodeOvercommitSelectorVal:
-                description: NodeOvercommitSelectorVal is the value of node label
-                  selector with key consts.NodeOvercommitSelectorKey, it decides whether
-                  to update Nodes if the Node matches the selector 'consts.NodeOvercommitSelectorKey=NodeOvercommitSelectorVal'
+                description: |-
+                  NodeOvercommitSelectorVal is the value of node label selector with key consts.NodeOvercommitSelectorKey,
+                  it decides whether to update Nodes if the Node matches the selector 'consts.NodeOvercommitSelectorKey=NodeOvercommitSelectorVal'
                 type: string
               resourceOvercommitRatio:
                 additionalProperties:
                   type: string
-                description: ResourceOvercommitRatio describes the resource overcommit
-                  ratio that needs to inject into Node.Annotations cpu,memory are
-                  supported.
+                description: |-
+                  ResourceOvercommitRatio describes the resource overcommit ratio that needs to inject into Node.Annotations
+                  cpu,memory are supported.
                 type: object
             type: object
           status:

@@ -29,3 +29,11 @@ type KatalystCustomConfigListerExpansion interface{}
 // KatalystCustomConfigNamespaceListerExpansion allows custom methods to be added to
 // KatalystCustomConfigNamespaceLister.
 type KatalystCustomConfigNamespaceListerExpansion interface{}
+
+// StrategyGroupListerExpansion allows custom methods to be added to
+// StrategyGroupLister.
+type StrategyGroupListerExpansion interface{}
+
+// StrategyGroupConfigurationListerExpansion allows custom methods to be added to
+// StrategyGroupConfigurationLister.
+type StrategyGroupConfigurationListerExpansion interface{}

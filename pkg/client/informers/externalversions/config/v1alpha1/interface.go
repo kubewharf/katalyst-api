@@ -28,6 +28,10 @@ type Interface interface {
 	CustomNodeConfigs() CustomNodeConfigInformer
 	// KatalystCustomConfigs returns a KatalystCustomConfigInformer.
 	KatalystCustomConfigs() KatalystCustomConfigInformer
+	// StrategyGroups returns a StrategyGroupInformer.
+	StrategyGroups() StrategyGroupInformer
+	// StrategyGroupConfigurations returns a StrategyGroupConfigurationInformer.
+	StrategyGroupConfigurations() StrategyGroupConfigurationInformer
 }
 
 type version struct {
@@ -49,4 +53,14 @@ func (v *version) CustomNodeConfigs() CustomNodeConfigInformer {
 // KatalystCustomConfigs returns a KatalystCustomConfigInformer.
 func (v *version) KatalystCustomConfigs() KatalystCustomConfigInformer {
 	return &katalystCustomConfigInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// StrategyGroups returns a StrategyGroupInformer.
+func (v *version) StrategyGroups() StrategyGroupInformer {
+	return &strategyGroupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// StrategyGroupConfigurations returns a StrategyGroupConfigurationInformer.
+func (v *version) StrategyGroupConfigurations() StrategyGroupConfigurationInformer {
+	return &strategyGroupConfigurationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
