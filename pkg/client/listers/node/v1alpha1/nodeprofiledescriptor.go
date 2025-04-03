@@ -26,13 +26,10 @@ import (
 )
 
 // NodeProfileDescriptorLister helps list NodeProfileDescriptors.
-// All objects returned here must be treated as read-only.
 type NodeProfileDescriptorLister interface {
 	// List lists all NodeProfileDescriptors in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1alpha1.NodeProfileDescriptor, err error)
 	// Get retrieves the NodeProfileDescriptor from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v1alpha1.NodeProfileDescriptor, error)
 	NodeProfileDescriptorListerExpansion
 }

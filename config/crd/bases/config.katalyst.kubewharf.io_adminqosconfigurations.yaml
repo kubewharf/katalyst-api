@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.15.0
   name: adminqosconfigurations.config.katalyst.kubewharf.io
 spec:
   group: config.katalyst.kubewharf.io
@@ -64,14 +63,19 @@ spec:
           used by admin QoS policy
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -86,10 +90,9 @@ spec:
                       cpuAdvisorConfig:
                         properties:
                           allowSharedCoresOverlapReclaimedCores:
-                            description: AllowSharedCoresOverlapReclaimedCores is
-                              a flag, when enabled, we will rely on kernel features
-                              to ensure that shared_cores pods can suppress and preempt
-                              reclaimed_cores pods.
+                            description: |-
+                              AllowSharedCoresOverlapReclaimedCores is a flag, when enabled,
+                              we will rely on kernel features to ensure that shared_cores pods can suppress and preempt reclaimed_cores pods.
                             type: boolean
                           cpuProvisionConfig:
                             description: optional
@@ -152,10 +155,9 @@ spec:
                       memoryAdvisorConfig:
                         properties:
                           memoryGuardConfig:
-                            description: MemoryGuardConfig is a config for memory
-                              guard plugin, which is used to avoid high priority workload
-                              from being affected by memory bursting caused by low
-                              priority workload.
+                            description: |-
+                              MemoryGuardConfig is a config for memory guard plugin, which is used to avoid high priority workload from being
+                              affected by memory bursting caused by low priority workload.
                             properties:
                               enable:
                                 description: Enable is a flag to enable memory guard
@@ -186,56 +188,53 @@ spec:
                             minimum: 0
                             type: integer
                           loadEvictionCoolDownTime:
-                            description: LoadEvictionCoolDownTime is the cool-down
-                              time of cpu load eviction, if the cpu load eviction
-                              is triggered, the cpu load eviction will be disabled
-                              for the cool-down time
+                            description: |-
+                              LoadEvictionCoolDownTime is the cool-down time of cpu load eviction,
+                              if the cpu load eviction is triggered, the cpu load eviction will be
+                              disabled for the cool-down time
                             type: string
                           loadLowerBoundRatio:
-                            description: LoadLowerBoundRatio is the lower bound ratio
-                              of cpuset pool load, if the load of the target cpuset
-                              pool is greater than the load lower bound repeatedly,
-                              the node taint will be triggered
+                            description: |-
+                              LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
+                              of the target cpuset pool is greater than the load lower bound repeatedly, the
+                              node taint will be triggered
                             minimum: 0
                             type: number
                           loadMetricRingSize:
-                            description: LoadMetricRingSize is the size of the load
-                              metric ring, which is used to calculate the load of
-                              the target cpuset pool
+                            description: |-
+                              LoadMetricRingSize is the size of the load metric ring, which is used to calculate the
+                              load of the target cpuset pool
                             minimum: 1
                             type: integer
                           loadThresholdMetPercentage:
-                            description: LoadThresholdMetPercentage is the percentage
-                              of the number of times the load over the upper bound
-                              to the total number of times the load is measured, if
-                              the percentage is greater than the load threshold met
-                              percentage, the eviction or node tainted will be triggered
+                            description: |-
+                              LoadThresholdMetPercentage is the percentage of the number of times the load
+                              over the upper bound to the total number of times the load is measured, if the
+                              percentage is greater than the load threshold met percentage, the eviction or
+                              node tainted will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
                           loadUpperBoundRatio:
-                            description: LoadUpperBoundRatio is the upper bound ratio
-                              of cpuset pool load, if the load of the target cpuset
-                              pool is greater than the load upper bound repeatedly,
-                              the eviction will be triggered
+                            description: |-
+                              LoadUpperBoundRatio is the upper bound ratio of cpuset pool load, if the load
+                              of the target cpuset pool is greater than the load upper bound repeatedly, the
+                              eviction will be triggered
                             minimum: 1
                             type: number
                           maxSuppressionToleranceRate:
-                            description: MaxSuppressionToleranceRate is the maximum
-                              cpu suppression tolerance rate that can be set by the
-                              pod, if the cpu suppression tolerance rate of the pod
-                              is greater than the maximum cpu suppression tolerance
-                              rate, the cpu suppression tolerance rate of the pod
-                              will be set to the maximum cpu suppression tolerance
-                              rate
+                            description: |-
+                              MaxSuppressionToleranceRate is the maximum cpu suppression tolerance rate that
+                              can be set by the pod, if the cpu suppression tolerance rate of the pod is greater
+                              than the maximum cpu suppression tolerance rate, the cpu suppression tolerance rate
+                              of the pod will be set to the maximum cpu suppression tolerance rate
                             minimum: 0
                             type: number
                           minSuppressionToleranceDuration:
-                            description: MinSuppressionToleranceDuration is the minimum
-                              duration a pod can tolerate cpu suppression, only if
-                              the cpu suppression duration of the pod is greater than
-                              the minimum cpu suppression duration, the eviction will
-                              be triggered
+                            description: |-
+                              MinSuppressionToleranceDuration is the minimum duration a pod can tolerate cpu
+                              suppression, only if the cpu suppression duration of the pod is greater than the
+                              minimum cpu suppression duration, the eviction will be triggered
                             type: string
                         type: object
                       cpuSystemPressureEvictionConfig:
@@ -266,16 +265,18 @@ spec:
                             format: int64
                             type: integer
                           loadLowerBoundRatio:
-                            description: LoadLowerBoundRatio is the lower bound ratio
-                              of node, if the load of the node is greater than the
-                              load lower bound repeatedly, the cordon will be triggered
+                            description: |-
+                              LoadLowerBoundRatio is the lower bound ratio of node, if the load
+                              of the node is greater than the load lower bound repeatedly, the
+                              cordon will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
                           loadUpperBoundRatio:
-                            description: LoadUpperBoundRatio is the upper bound ratio
-                              of node, if the load of the node is greater than the
-                              load upper bound repeatedly, the eviction will be triggered
+                            description: |-
+                              LoadUpperBoundRatio is the upper bound ratio of node, if the load
+                              of the node is greater than the load upper bound repeatedly, the
+                              eviction will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
@@ -285,35 +286,37 @@ spec:
                             minimum: 1
                             type: integer
                           thresholdMetPercentage:
-                            description: ThresholdMetPercentage is the percentage
-                              of the number of times the metric over the upper bound
-                              to the total number of times the metric is measured,
-                              if the percentage is greater than the threshold met
-                              percentage, the eviction or node tainted will be triggered
+                            description: |-
+                              ThresholdMetPercentage is the percentage of the number of times the metric
+                              over the upper bound to the total number of times the metric is measured, if the
+                              percentage is greater than the threshold met percentage, the eviction or
+                              node tainted will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
                           usageLowerBoundRatio:
-                            description: UsageLowerBoundRatio is the lower bound ratio
-                              of node, if the cpu usage of the node is greater than
-                              the usage lower bound repeatedly, the cordon will be
-                              triggered
+                            description: |-
+                              UsageLowerBoundRatio is the lower bound ratio of node, if the cpu usage
+                              of the node is greater than the usage lower bound repeatedly, the
+                              cordon will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
                           usageUpperBoundRatio:
-                            description: UsageUpperBoundRatio is the upper bound ratio
-                              of node, if the cpu usage of the node is greater than
-                              the usage upper bound repeatedly, the eviction will
-                              be triggered
+                            description: |-
+                              UsageUpperBoundRatio is the upper bound ratio of node, if the cpu usage
+                              of the node is greater than the usage upper bound repeatedly, the
+                              eviction will be triggered
                             maximum: 1
                             minimum: 0
                             type: number
                         type: object
                       dryRun:
-                        description: DryRun is the list of eviction plugins to dryRun
-                          '*' means "all dry-run by default" 'foo' means "dry-run
-                          'foo'" first item for a particular name wins
+                        description: |-
+                          DryRun is the list of eviction plugins to dryRun
+                          '*' means "all dry-run by default"
+                          'foo' means "dry-run 'foo'"
+                          first item for a particular name wins
                         items:
                           type: string
                         type: array
@@ -340,11 +343,13 @@ spec:
                             minimum: 0
                             type: integer
                           numaEvictionRankingMetrics:
-                            description: NumaEvictionRankingMetrics is the metrics
-                              used to rank pods for eviction at the NUMA level
+                            description: |-
+                              NumaEvictionRankingMetrics is the metrics used to rank pods for eviction
+                              at the NUMA level
                             items:
-                              description: NumaEvictionRankingMetric is the metrics
-                                used to rank pods for eviction at the NUMA level
+                              description: |-
+                                NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
+                                NUMA level
                               enum:
                               - qos.pod
                               - priority.pod
@@ -353,16 +358,15 @@ spec:
                             minItems: 1
                             type: array
                           numaFreeBelowWatermarkTimesThreshold:
-                            description: NumaFreeBelowWatermarkTimesThreshold is the
-                              threshold for the number of times NUMA's free memory
-                              falls below the watermark
+                            description: |-
+                              NumaFreeBelowWatermarkTimesThreshold is the threshold for the number of
+                              times NUMA's free memory falls below the watermark
                             minimum: 0
                             type: integer
                           numaVictimMinimumUtilizationThreshold:
-                            description: NumaVictimMinimumUtilizationThreshold is
-                              the victim's minimum memory usage on a NUMA node, if
-                              a pod uses less memory on a NUMA node than this threshold,it
-                              won't be evicted by this NUMA's memory pressure.
+                            description: |-
+                              NumaVictimMinimumUtilizationThreshold is the victim's minimum memory usage on a NUMA node, if a pod
+                              uses less memory on a NUMA node than this threshold,it won't be evicted by this NUMA's memory pressure.
                             type: number
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
@@ -370,11 +374,13 @@ spec:
                             minimum: 0
                             type: number
                           systemEvictionRankingMetrics:
-                            description: SystemEvictionRankingMetrics is the metrics
-                              used to rank pods for eviction at the system level
+                            description: |-
+                              SystemEvictionRankingMetrics is the metrics used to rank pods for eviction
+                              at the system level
                             items:
-                              description: SystemEvictionRankingMetric is the metrics
-                                used to rank pods for eviction at the system level
+                              description: |-
+                                SystemEvictionRankingMetric is the metrics used to rank pods for eviction at the
+                                system level
                               enum:
                               - qos.pod
                               - priority.pod
@@ -393,14 +399,15 @@ spec:
                             pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                             x-kubernetes-int-or-string: true
                           systemKswapdRateExceedDurationThreshold:
-                            description: SystemKswapdRateExceedDurationThreshold is
-                              the threshold for the duration the kswapd reclaiming
-                              rate exceeds the threshold
+                            description: |-
+                              SystemKswapdRateExceedDurationThreshold is the threshold for the duration the kswapd reclaiming rate
+                              exceeds the threshold
                             minimum: 0
                             type: integer
                           systemKswapdRateThreshold:
-                            description: NumaFreeBelowWatermarkTimesThreshold is the
-                              threshold for the rate of kswapd reclaiming rate
+                            description: |-
+                              NumaFreeBelowWatermarkTimesThreshold is the threshold for the rate of
+                              kswapd reclaiming rate
                             minimum: 0
                             type: integer
                         type: object
@@ -443,61 +450,61 @@ spec:
                             anyOf:
                             - type: integer
                             - type: string
-                            description: 'MinimumImageFsDiskCapacityThreshold is a
-                              threshold for all nodes. The eviction manager will ignore
-                              those nodes whose image fs disk capacity is less than
-                              this threshold. Fox example: "100Gi".'
+                            description: |-
+                              MinimumImageFsDiskCapacityThreshold is a threshold for all nodes.
+                              The eviction manager will ignore those nodes whose image fs disk capacity is less than this threshold.
+                              Fox example: "100Gi".
                             pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                             x-kubernetes-int-or-string: true
                           minimumImageFsFreeThreshold:
-                            description: 'MinimumImageFsFreeThreshold is a threshold
-                              for a node. Once the image rootfs free space of current
-                              node is lower than this threshold, the eviction manager
-                              will try to evict some pods. For example: "200Gi", "10%".'
+                            description: |-
+                              MinimumImageFsFreeThreshold is a threshold for a node.
+                              Once the image rootfs free space of current node is lower than this threshold, the eviction manager will try to evict some pods.
+                              For example: "200Gi", "10%".
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
                           minimumImageFsInodesFreeThreshold:
-                            description: 'MinimumImageFsInodesFreeThreshold is a threshold
-                              for a node. Once the image rootfs free inodes of current
-                              node is lower than this threshold, the eviction manager
-                              will try to evict some pods. For example: "100000",
-                              "10%".'
+                            description: |-
+                              MinimumImageFsInodesFreeThreshold is a threshold for a node.
+                              Once the image rootfs free inodes of current node is lower than this threshold, the eviction manager will try to evict some pods.
+                              For example: "100000", "10%".
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
                           podMinimumInodesUsedThreshold:
-                            description: 'PodMinimumInodesUsedThreshold is a threshold
-                              for all pods. The eviction manager will ignore this
-                              pod if its rootfs inodes used is lower than this threshold.
-                              For example: "1000", "1%".'
+                            description: |-
+                              PodMinimumInodesUsedThreshold is a threshold for all pods.
+                              The eviction manager will ignore this pod if its rootfs inodes used is lower than this threshold.
+                              For example: "1000", "1%".
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
                           podMinimumUsedThreshold:
-                            description: 'PodMinimumUsedThreshold is a threshold for
-                              all pods. The eviction manager will ignore this pod
-                              if its rootfs used in bytes is lower than this threshold.
-                              For example: "200Gi", "1%".'
+                            description: |-
+                              PodMinimumUsedThreshold is a threshold for all pods.
+                              The eviction manager will ignore this pod if its rootfs used in bytes is lower than this threshold.
+                              For example: "200Gi", "1%".
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
                           reclaimedQoSPodInodesUsedPriorityThreshold:
-                            description: 'ReclaimedQoSPodInodesUsedPriorityThreshold
-                              is a threshold for all offline pods. The eviction manager
-                              will prioritize the eviction of reclaimed pods that
-                              reach this threshold. For example: "500", "1%".'
+                            description: |-
+                              ReclaimedQoSPodInodesUsedPriorityThreshold is a threshold for all offline pods.
+                              The eviction manager will prioritize the eviction of reclaimed pods that reach this threshold.
+                              For example: "500", "1%".
                             pattern: ^(0|[1-9]\d*)(\.\d+)?%?$|^\d+$
                             type: string
                           reclaimedQoSPodUsedPriorityThreshold:
-                            description: 'ReclaimedQoSPodUsedPriorityThreshold is
-                              a threshold for all offline pods. The eviction manager
-                              will prioritize the eviction of offline pods that reach
-                              this threshold. For example: "100Gi", "1%".'
+                            description: |-
+                              ReclaimedQoSPodUsedPriorityThreshold is a threshold for all offline pods.
+                              The eviction manager will prioritize the eviction of offline pods that reach this threshold.
+                              For example: "100Gi", "1%".
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
-                        description: "SystemLoadPressureEvictionConfig is the config
-                          for system load eviction \n Deprecated: Please use CPUSystemPressureEvictionConfig
-                          instead to configure params for CPU eviction plugin at node
-                          level"
+                        description: |-
+                          SystemLoadPressureEvictionConfig is the config for system load eviction
+
+
+                          Deprecated: Please use CPUSystemPressureEvictionConfig instead to configure params for CPU eviction plugin at node level
                         properties:
                           coolDownTime:
                             description: CoolDownTime is the cool-down time of the
@@ -510,10 +517,9 @@ spec:
                             format: int64
                             type: integer
                           hardThreshold:
-                            description: HardThreshold is the hard threshold of system
-                              load pressure, it should be an integral multiple of
-                              100, which means the real threshold is (SoftThreshold
-                              / 100) * CoreNumber
+                            description: |-
+                              HardThreshold is the hard threshold of system load pressure, it should be an integral multiple of 100, which means
+                              the real threshold is (SoftThreshold / 100) * CoreNumber
                             format: int64
                             type: integer
                           historySize:
@@ -523,10 +529,9 @@ spec:
                             minimum: 1
                             type: integer
                           softThreshold:
-                            description: SoftThreshold is the soft threshold of system
-                              load pressure, it should be an integral multiple of
-                              100, which means the real threshold is (SoftThreshold
-                              / 100) * CoreNumber
+                            description: |-
+                              SoftThreshold is the soft threshold of system load pressure, it should be an integral multiple of 100, which means
+                              the real threshold is (SoftThreshold / 100) * CoreNumber
                             format: int64
                             type: integer
                           syncPeriod:
@@ -536,9 +541,9 @@ spec:
                             minimum: 1
                             type: integer
                           thresholdMetPercentage:
-                            description: the plugin considers the node is facing load
-                              pressure only when the ratio of load history which is
-                              greater than threshold is greater than this percentage
+                            description: |-
+                              the plugin considers the node is facing load pressure only when the ratio of load history which is greater than
+                              threshold is greater than this percentage
                             type: number
                         type: object
                     type: object
@@ -559,28 +564,27 @@ spec:
                                   based cpu headroom policy
                                 type: boolean
                               maxHeadroomCapacityRate:
-                                description: MaxHeadroomCapacityRate is the max headroom
-                                  capacity rate of cpu headroom to the total cpu capacity
-                                  of node
+                                description: |-
+                                  MaxHeadroomCapacityRate is the max headroom capacity rate of cpu headroom to the total
+                                  cpu capacity of node
                                 minimum: 0
                                 type: number
                               maxOversoldRate:
-                                description: MaxOversoldRate is the max oversold rate
-                                  of cpu headroom to the actual size of reclaimed_cores
-                                  pool
+                                description: |-
+                                  MaxOversoldRate is the max oversold rate of cpu headroom to the actual size of
+                                  reclaimed_cores pool
                                 minimum: 0
                                 type: number
                               maxReclaimedCoreUtilization:
-                                description: MaxReclaimedCoreUtilization is the max
-                                  reclaimed core utilization of reclaimed_cores pool,
-                                  which is used to calculate the oversold cpu headroom,
-                                  if zero means no limit
+                                description: |-
+                                  MaxReclaimedCoreUtilization is the max reclaimed core utilization of reclaimed_cores pool,
+                                  which is used to calculate the oversold cpu headroom, if zero means no limit
                                 maximum: 1
                                 minimum: 0
                                 type: number
                               targetReclaimedCoreUtilization:
-                                description: TargetReclaimedCoreUtilization is the
-                                  target reclaimed core utilization to be used for
+                                description: |-
+                                  TargetReclaimedCoreUtilization is the target reclaimed core utilization to be used for
                                   calculating the oversold cpu headroom
                                 maximum: 1
                                 minimum: 0
@@ -588,11 +592,10 @@ spec:
                             type: object
                         type: object
                       enableReclaim:
-                        description: EnableReclaim is a flag to enable reclaim resource,
-                          if true, reclaim resource will be enabled, which means reclaim
-                          resource will be reported to custom node resource and support
-                          colocation between reclaimed_cores pod and other pods, otherwise,
-                          reclaim resource will be disabled.
+                        description: |-
+                          EnableReclaim is a flag to enable reclaim resource, if true, reclaim resource will be enabled,
+                          which means reclaim resource will be reported to custom node resource and support colocation between
+                          reclaimed_cores pod and other pods, otherwise, reclaim resource will be disabled.
                         type: boolean
                       memoryHeadroomConfig:
                         description: MemoryHeadroomConfig is a configuration for memory
@@ -613,9 +616,9 @@ spec:
                                   based memory headroom policy
                                 type: boolean
                               freeBasedRatio:
-                                description: FreeBasedRatio is the estimation of free
-                                  memory utilization, which can be used as system
-                                  buffer to oversold memory.
+                                description: |-
+                                  FreeBasedRatio is the estimation of free memory utilization, which can
+                                  be used as system buffer to oversold memory.
                                 maximum: 1
                                 minimum: 0
                                 type: number
@@ -633,9 +636,10 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: MinReclaimedResourceForAllocate is a resource
-                          reserved for reclaimed_cores pods，these resources will not
-                          be used by shared_cores pods.
+                        description: |-
+                          MinReclaimedResourceForAllocate is a resource reserved for reclaimed_cores pods，these resources will not be used
+                          by shared_cores pods.
+                          For example, {"cpu": 4, "memory": 0Gi}.
                         type: object
                       minReclaimedResourceForReport:
                         additionalProperties:
@@ -644,10 +648,11 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: MinReclaimedResourceForReport is a minimum reclaimed
-                          resource for report to custom node resource, which means
-                          if reclaimed resource is less than MinReclaimedResourceForReport,
-                          then reclaimed resource will be reported as MinReclaimedResourceForReport.
+                        description: |-
+                          MinReclaimedResourceForReport is a minimum reclaimed resource for report to custom node resource, which means
+                          if reclaimed resource is less than MinReclaimedResourceForReport, then reclaimed resource will be reported as
+                          MinReclaimedResourceForReport.
+                          For example, {"cpu": 4, "memory": 5Gi}.
                         type: object
                       reservedResourceForAllocate:
                         additionalProperties:
@@ -656,10 +661,11 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: ReservedResourceForAllocate is a resource reserved
-                          for non-reclaimed_cores pods that are not allocated to reclaimed_cores
-                          pods. It is used to set aside some buffer resources to avoid
-                          sudden increase in resource requirements.
+                        description: |-
+                          ReservedResourceForAllocate is a resource reserved for non-reclaimed_cores pods that are not allocated to
+                          reclaimed_cores pods. It is used to set aside some buffer resources to avoid sudden increase in resource
+                          requirements.
+                          For example, {"cpu": 4, "memory": 5Gi}.
                         type: object
                       reservedResourceForReport:
                         additionalProperties:
@@ -668,10 +674,10 @@ spec:
                           - type: string
                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                           x-kubernetes-int-or-string: true
-                        description: ReservedResourceForReport is a reserved resource
-                          for report to custom node resource, which is used to prevent
-                          reclaim resource from being requested by reclaimed_cores
-                          pods.
+                        description: |-
+                          ReservedResourceForReport is a reserved resource for report to custom node resource, which is used to
+                          prevent reclaim resource from being requested by reclaimed_cores pods.
+                          For example, {"cpu": 0, "memory": 0Gi}.
                         type: object
                     type: object
                 type: object
@@ -679,9 +685,9 @@ spec:
                 description: EphemeralSelector is a selector for temporary use only
                 properties:
                   lastDuration:
-                    description: define the duration this configuration will last
-                      from creationTimestamp. must and only set when NodeNames already
-                      set
+                    description: |-
+                      define the duration this configuration will last from creationTimestamp.
+                      must and only set when NodeNames already set
                     type: string
                   nodeNames:
                     description: Specific nodes' name the configurations will be effected.
@@ -690,27 +696,29 @@ spec:
                     type: array
                 type: object
               nodeLabelSelector:
-                description: NodeLabelSelector select nodes to apply these configurations,
-                  the priority and node label selector must be matched according to
-                  KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList, otherwise
-                  it will not be synced.
+                description: |-
+                  NodeLabelSelector select nodes to apply these configurations,
+                  the priority and node label selector must be matched according
+                  to KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList,
+                  otherwise it will not be synced.
                 type: string
               paused:
                 description: Indicates that the config is paused.
                 type: boolean
               priority:
-                description: Priority is used by one node matched by NodeLabelSelector
-                  of more than one configuration, and the higher priority will be
-                  considered. The priority only be supported when NodeLabelSelector
-                  set
+                description: |-
+                  Priority is used by one node matched by NodeLabelSelector of more
+                  than one configuration, and the higher priority will be considered.
+                  The priority only be supported when NodeLabelSelector set
                 format: int32
                 type: integer
               revisionHistoryLimit:
                 default: 3
-                description: RevisionHistoryLimit is the maximum number of revisions
-                  that will be maintained in the resource's revision history. The
-                  revision history consists of all revisions not represented by a
-                  currently applied Spec version. The default value is 3.
+                description: |-
+                  RevisionHistoryLimit is the maximum number of revisions that will
+                  be maintained in the resource's revision history. The revision history
+                  consists of all revisions not represented by a currently applied
+                  Spec version. The default value is 3.
                 format: int64
                 type: integer
               updateStrategy:
@@ -718,18 +726,20 @@ spec:
                   configurations with new ones.
                 properties:
                   rollingUpdate:
-                    description: 'Rolling update config params. Present only if type
-                      = "RollingUpdate". --- TODO: Update this to follow our convention
-                      for oneOf, whatever we decide it to be. Same as Deployment `strategy.rollingUpdate`.
-                      See https://github.com/kubernetes/kubernetes/issues/35345'
+                    description: |-
+                      Rolling update config params. Present only if type = "RollingUpdate".
+                      ---
+                      TODO: Update this to follow our convention for oneOf, whatever we decide it
+                      to be. Same as Deployment `strategy.rollingUpdate`.
+                      See https://github.com/kubernetes/kubernetes/issues/35345
                     properties:
                       canary:
                         anyOf:
                         - type: integer
                         - type: string
-                        description: 'The number or percentage of target CustomNodeConfigs
-                          to update to the current configuration. For example: `100``
-                          and `20%` are valid values.'
+                        description: |-
+                          The number or percentage of target CustomNodeConfigs to update to the current configuration.
+                          For example: `100`` and `20%` are valid values.
                         pattern: ^(100|[1-9][0-9]?|0)%$
                         x-kubernetes-int-or-string: true
                     type: object
@@ -750,9 +760,10 @@ spec:
                 format: int32
                 type: integer
               collisionCount:
-                description: Count of hash collisions for this cr. The kcc controller
-                  uses this field as a collision avoidance mechanism when it needs
-                  to create the name for the newest ControllerRevision.
+                description: |-
+                  Count of hash collisions for this cr. The kcc controller
+                  uses this field as a collision avoidance mechanism when it needs to
+                  create the name for the newest ControllerRevision.
                 format: int32
                 type: integer
               conditions:

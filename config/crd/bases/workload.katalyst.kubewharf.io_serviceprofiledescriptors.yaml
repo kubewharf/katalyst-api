@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.15.0
   name: serviceprofiledescriptors.workload.katalyst.kubewharf.io
 spec:
   group: workload.katalyst.kubewharf.io
@@ -24,14 +23,19 @@ spec:
           workload
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -39,37 +43,38 @@ spec:
             description: Spec defines the behavior of a ServiceProfileDescriptor.
             properties:
               baselinePercent:
-                description: BaselinePercent marks off a bunch of instances, and skip
-                  adjusting Knobs for them; those instances are defined as baselines,
-                  and can be compared with other (experimental/production) instances
-                  to demonstrate the benefits. If BaselinePercent is not set, we should
-                  take all instances as production instances.
+                description: |-
+                  BaselinePercent marks off a bunch of instances, and skip adjusting Knobs
+                  for them; those instances are defined as baselines, and can be compared
+                  with other (experimental/production) instances to demonstrate the benefits.
+                  If BaselinePercent is not set, we should take all instances as production instances.
                 format: int32
                 maximum: 100
                 minimum: 0
                 type: integer
               businessIndicator:
-                description: if multiple BusinessIndicator are defined, it means that
-                  we should try to satisfy all of those indicator targets
+                description: |-
+                  if multiple BusinessIndicator are defined, it means that we should
+                  try to satisfy all of those indicator targets
                 items:
-                  description: "ServiceBusinessIndicatorSpec defines workload profiling
-                    in business level, such as rpc-latency, success-rate, service-health-score
-                    and so on, and general control-flow works as below \n - according
-                    to workload states, user defines several key indicates - user-system
-                    calculate and update observed values in status - sysadvisor (in-tree
-                    katalyst) decides system-indicator offset according to business-indicator
-                    - sysadvisor (along with reporter and qrm) to perform resources
-                    and controlKnob actions"
+                  description: |-
+                    ServiceBusinessIndicatorSpec defines workload profiling in business level, such as rpc-latency,
+                    success-rate, service-health-score and so on, and general control-flow works as below
+
+
+                    - according to workload states, user defines several key indicates
+                    - user-system calculate and update observed values in status
+                    - sysadvisor (in-tree katalyst) decides system-indicator offset according to business-indicator
+                    - sysadvisor (along with reporter and qrm) to perform resources and controlKnob actions
                   properties:
                     indicators:
                       items:
                         properties:
                           indicatorLevel:
-                            description: IndicatorLevelName defines several levels
-                              for each indicator, and we will always try to keep the
-                              actual indicator in acceptable intervals instead of
-                              as an accurate value. Those intervals are marked by
-                              IndicatorLevelName.
+                            description: |-
+                              IndicatorLevelName defines several levels for each indicator, and we will
+                              always try to keep the actual indicator in acceptable intervals instead of
+                              as an accurate value. Those intervals are marked by IndicatorLevelName.
                             type: string
                           value:
                             type: number
@@ -79,10 +84,10 @@ spec:
                         type: object
                       type: array
                     name:
-                      description: Name is used to define the business-related profiling
-                        indicator for the workload, e.g. rpc-latency, success-rate,
-                        service-health-score and so on. Users can use it as an expended
-                        way, and customize sysadvisor to adapter with it.
+                      description: |-
+                        Name is used to define the business-related profiling indicator for the workload,
+                        e.g. rpc-latency, success-rate, service-health-score and so on.
+                        Users can use it as an expended way, and customize sysadvisor to adapter with it.
                       type: string
                   required:
                   - name
@@ -92,29 +97,29 @@ spec:
                 - name
                 x-kubernetes-list-type: map
               extendedIndicator:
-                description: if multiple ExtendedIndicator are defined, it means that
-                  the service should satisfy all the strategies in those extended
-                  indicators
+                description: |-
+                  if multiple ExtendedIndicator are defined, it means that the service should
+                  satisfy all the strategies in those extended indicators
                 items:
-                  description: ServiceExtendedIndicatorSpec specifies extended workload
-                    characteristics and can serve as an extension to indicators beyond
-                    business and system scopes. Examples include policies for custom
-                    memory reclamation and I/O limitations specific to a service.
+                  description: |-
+                    ServiceExtendedIndicatorSpec specifies extended workload characteristics and can serve as
+                    an extension to indicators beyond business and system scopes. Examples include policies for
+                    custom memory reclamation and I/O limitations specific to a service.
                   properties:
                     baselinePercent:
-                      description: BaselinePercent marks off a bunch of instances,
-                        and skip applying extended indicator for them; those instances
-                        are defined as baselines, and can be compared with other (experimental/production)
-                        instances to demonstrate the benefits. If BaselinePercent
-                        is not set, we should take all instances as production instances.
+                      description: |-
+                        BaselinePercent marks off a bunch of instances, and skip applying extended indicator
+                        for them; those instances are defined as baselines, and can be compared
+                        with other (experimental/production) instances to demonstrate the benefits.
+                        If BaselinePercent is not set, we should take all instances as production instances.
                       format: int32
                       maximum: 100
                       minimum: 0
                       type: integer
                     indicators:
-                      description: Indicators defines extend workload characteristics,
-                        Indicators can have arbitrary structure. Each kind of Indicator
-                        must be named using Name, followed by the suffix 'Indicators'.
+                      description: |-
+                        Indicators defines extend workload characteristics, Indicators can have arbitrary structure.
+                        Each kind of Indicator must be named using Name, followed by the suffix 'Indicators'.
                       type: object
                       x-kubernetes-preserve-unknown-fields: true
                     name:
@@ -128,27 +133,29 @@ spec:
                 - name
                 x-kubernetes-list-type: map
               systemIndicator:
-                description: if multiple SystemIndicator are defined, it means that
-                  we should try to satisfy all of those indicator targets
+                description: |-
+                  if multiple SystemIndicator are defined, it means that we should
+                  try to satisfy all of those indicator targets
                 items:
-                  description: "ServiceSystemIndicatorSpec defines workload profiling
-                    in system level, such as cpu_sched_wait、cpi、mbw ... and so on,
-                    and sysadvisor (along with reporter and qrm) will try to perform
-                    resources and controlKnob actions \n System-target indicator (along
-                    with its values in each level) could be difficult to pre-define,
-                    and it may have strong correlations with both workload characters
-                    and node environments, so we suggest users to run offline analysis
-                    pipelines to get those stats."
+                  description: |-
+                    ServiceSystemIndicatorSpec defines workload profiling in system level, such as
+                    cpu_sched_wait、cpi、mbw ... and so on, and sysadvisor (along with reporter and qrm)
+                    will try to perform resources and controlKnob actions
+
+
+                    System-target indicator (along with its values in each level) could be difficult
+                    to pre-define, and it may have strong correlations with both workload characters
+                    and node environments, so we suggest users to run offline analysis pipelines to
+                    get those stats.
                   properties:
                     indicators:
                       items:
                         properties:
                           indicatorLevel:
-                            description: IndicatorLevelName defines several levels
-                              for each indicator, and we will always try to keep the
-                              actual indicator in acceptable intervals instead of
-                              as an accurate value. Those intervals are marked by
-                              IndicatorLevelName.
+                            description: |-
+                              IndicatorLevelName defines several levels for each indicator, and we will
+                              always try to keep the actual indicator in acceptable intervals instead of
+                              as an accurate value. Those intervals are marked by IndicatorLevelName.
                             type: string
                           value:
                             type: number
@@ -158,10 +165,10 @@ spec:
                         type: object
                       type: array
                     name:
-                      description: Name is used to define the system-related profiling
-                        indicator for the workload, e.g. cpu_sched_wait、cpi、mbw ...
-                        and so on. Users can use it as an expended way, and customize
-                        sysadvisor to adapter with it.
+                      description: |-
+                        Name is used to define the system-related profiling indicator for the workload,
+                        e.g. cpu_sched_wait、cpi、mbw ... and so on.
+                        Users can use it as an expended way, and customize sysadvisor to adapter with it.
                       type: string
                   required:
                   - name
@@ -171,8 +178,9 @@ spec:
                 - name
                 x-kubernetes-list-type: map
               targetRef:
-                description: TargetRef points to the controller managing the set of
-                  pods for the spd-controller to control - e.g. Deployment, StatefulSet.
+                description: |-
+                  TargetRef points to the controller managing the set of pods for the
+                  spd-controller to control - e.g. Deployment, StatefulSet.
                   SPD should have one-to-one mapping relationships with workload.
                 properties:
                   apiVersion:
@@ -188,6 +196,7 @@ spec:
                 - kind
                 - name
                 type: object
+                x-kubernetes-map-type: atomic
             required:
             - targetRef
             type: object
@@ -200,8 +209,9 @@ spec:
                   description: AggPodMetrics records the aggregated metrics based.
                   properties:
                     aggregator:
-                      description: Aggregator indicates how the metrics data in Items
-                        are calculated, i.e. defines the aggregation functions.
+                      description: |-
+                        Aggregator indicates how the metrics data in Items are calculated, i.e.
+                        defines the aggregation functions.
                       enum:
                       - avg
                       - max
@@ -212,10 +222,11 @@ spec:
                         description: PodMetrics sets resource usage metrics of a pod.
                         properties:
                           apiVersion:
-                            description: 'APIVersion defines the versioned schema
-                              of this representation of an object. Servers should
-                              convert recognized schemas to the latest internal value,
-                              and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                            description: |-
+                              APIVersion defines the versioned schema of this representation of an object.
+                              Servers should convert recognized schemas to the latest internal value, and
+                              may reject unrecognized values.
+                              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
                             type: string
                           containers:
                             description: Metrics for all containers are collected
@@ -244,17 +255,22 @@ spec:
                               type: object
                             type: array
                           kind:
-                            description: 'Kind is a string value representing the
-                              REST resource this object represents. Servers may infer
-                              this from the endpoint the client submits requests to.
-                              Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                            description: |-
+                              Kind is a string value representing the REST resource this object represents.
+                              Servers may infer this from the endpoint the client submits requests to.
+                              Cannot be updated.
+                              In CamelCase.
+                              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
                             type: string
                           metadata:
+                            description: |-
+                              Standard object's metadata.
+                              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
                             type: object
                           timestamp:
-                            description: The following fields define time interval
-                              from which metrics were collected from the interval
-                              [Timestamp-Window, Timestamp].
+                            description: |-
+                              The following fields define time interval from which metrics were
+                              collected from the interval [Timestamp-Window, Timestamp].
                             format: date-time
                             type: string
                           window:
@@ -273,9 +289,9 @@ spec:
                 type: array
               businessStatus:
                 items:
-                  description: ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec
-                    with Name to indicate the observed info for this workload (as
-                    for this indicator).
+                  description: |-
+                    ServiceBusinessIndicatorStatus is connected with ServiceBusinessIndicatorSpec with Name
+                    to indicate the observed info for this workload (as for this indicator).
                   properties:
                     current:
                       description: Current indicates the current observed value for

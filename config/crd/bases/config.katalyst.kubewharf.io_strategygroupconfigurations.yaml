@@ -4,17 +4,17 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.15.0
-  name: authconfigurations.config.katalyst.kubewharf.io
+  name: strategygroupconfigurations.config.katalyst.kubewharf.io
 spec:
   group: config.katalyst.kubewharf.io
   names:
-    kind: AuthConfiguration
-    listKind: AuthConfigurationList
-    plural: authconfigurations
+    kind: StrategyGroupConfiguration
+    listKind: StrategyGroupConfigurationList
+    plural: strategygroupconfigurations
     shortNames:
-    - ac
-    singular: authconfiguration
-  scope: Namespaced
+    - sgc
+    singular: strategygroupconfiguration
+  scope: Cluster
   versions:
   - additionalPrinterColumns:
     - jsonPath: .metadata.creationTimestamp
@@ -59,8 +59,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: AuthConfiguration is the Schema for the configuration API used
-          by authentication and authorization
+        description: StrategyGroupConfiguration is the Schema for the configuration
+          API used to group nodes by enabled policies
         properties:
           apiVersion:
             description: |-
@@ -80,45 +80,45 @@ spec:
           metadata:
             type: object
           spec:
-            description: AuthConfigurationSpec defines the desired state of AuthConfiguration
+            description: StrategyGroupConfigurationSpec defines the desired state
+              of StrategyGroupConfiguration
             properties:
               config:
+                description: Config is custom field for StrategyGroupConfiguration
                 properties:
-                  accessControlConfig:
-                    description: BasicAuthConfig is configuration about access control
-                    properties:
-                      accessControlPolicies:
-                        items:
-                          properties:
-                            policyRule:
-                              properties:
-                                resources:
-                                  items:
-                                    type: string
-                                  type: array
-                              type: object
-                            username:
-                              type: string
-                          type: object
-                        type: array
-                    type: object
-                  basicAuthConfig:
-                    description: BasicAuthConfig is configuration related to basic
-                      access authentication
-                    properties:
-                      userPasswordPairs:
-                        description: UserPasswordPairs is the list of valid username
-                          and corresponding password
-                        items:
-                          properties:
-                            password:
-                              description: base64 encoded password
-                              type: string
-                            username:
-                              type: string
-                          type: object
-                        type: array
-                    type: object
+                  groupConfigs:
+                    description: |-
+                      GroupConfigs contains configs for every group,
+                      ratios of all group should sum up to 1.0.
+                    items:
+                      properties:
+                        enabledStrategies:
+                          description: EnabledStrategies are strategies enabled in
+                            this group
+                          items:
+                            properties:
+                              name:
+                                description: Name is the name of the strategy
+                                type: string
+                              parameters:
+                                additionalProperties:
+                                  type: string
+                                description: Parameters are the parameters of the
+                                  strategy
+                                type: object
+                            required:
+                            - name
+                            type: object
+                          type: array
+                        ratio:
+                          description: Ratio indicates ratio of nodes belongs to this
+                            group
+                          type: number
+                      required:
+                      - enabledStrategies
+                      - ratio
+                      type: object
+                    type: array
                 type: object
               ephemeralSelector:
                 description: EphemeralSelector is a selector for temporary use only
@@ -188,6 +188,8 @@ spec:
                     - RollingUpdate
                     type: string
                 type: object
+            required:
+            - config
             type: object
           status:
             properties:
