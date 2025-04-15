@@ -181,6 +181,8 @@ const (
 
 	// ControlKnobNonReclaimedCPURequirementLower refers to the lower cpu size, for isolated pods now
 	ControlKnobNonReclaimedCPURequirementLower ControlKnobName = "non-reclaimed-cpu-requirement-lower"
+
+	ControlKnobReclaimedCPUQuota ControlKnobName = "reclaimed-cpu-quota"
 )
 
 type RegionIndicators struct {
