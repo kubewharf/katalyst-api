@@ -451,6 +451,10 @@ spec:
                         description: RootfsPressureEvictionConfig is the config for
                           rootfs pressure eviction
                         properties:
+                          enableRootfsOveruseEviction:
+                            description: EnableRootfsOveruseEviction is whether to
+                              enable rootfs overuse eviction.
+                            type: boolean
                           enableRootfsPressureEviction:
                             description: EnableRootfsPressureEviction is whether to
                               enable rootfs pressure eviction.
@@ -511,6 +515,22 @@ spec:
                               will prioritize the eviction of offline pods that reach
                               this threshold. For example: "100Gi", "1%".'
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
+                            type: string
+                          reclaimedQoSRootfsOveruseThreshold:
+                            description: |-
+                              ReclaimedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+                              For example: "100Gi", "10%".
+                            type: string
+                          rootfsOveruseEvictionSupportedQoSLevels:
+                            description: RootfsOveruseEvictionSupportedQoSLevels is
+                              the supported qos levels for rootfs overuse eviction.
+                            items:
+                              type: string
+                            type: array
+                          sharedQoSRootfsOveruseThreshold:
+                            description: |-
+                              SharedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+                              For example: "100Gi", "10%".
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
