@@ -568,6 +568,24 @@ type RootfsPressureEvictionConfig struct {
 	// GracePeriod is the grace period of pod deletion
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// EnableRootfsOveruseEviction is whether to enable rootfs overuse eviction.
+	// +optional
+	EnableRootfsOveruseEviction *bool `json:"enableRootfsOveruseEviction,omitempty"`
+
+	// RootfsOveruseEvictionSupportedQoSLevels is the supported qos levels for rootfs overuse eviction.
+	// +optional
+	RootfsOveruseEvictionSupportedQoSLevels []string `json:"rootfsOveruseEvictionSupportedQoSLevels,omitempty"`
+
+	// SharedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+	// For example: "100Gi", "10%".
+	// +optional
+	SharedQoSRootfsOveruseThreshold *string `json:"sharedQoSRootfsOveruseThreshold,omitempty"`
+
+	// ReclaimedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+	// For example: "100Gi", "10%".
+	// +optional
+	ReclaimedQoSRootfsOveruseThreshold *string `json:"reclaimedQoSRootfsOveruseThreshold,omitempty"`
 }
 
 type NetworkEvictionConfig struct {
