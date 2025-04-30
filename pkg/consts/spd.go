@@ -28,6 +28,9 @@ const (
 	// if it's set as false, we should not maintain spd CR or calculate service profiling automatically.
 	WorkloadAnnotationSPDEnableKey = "spd.katalyst.kubewharf.io/enable"
 	WorkloadAnnotationSPDEnabled   = "true"
+
+	// WorkloadAnnotationSPDNameList is used to maintain spdName list in workload
+	WorkloadAnnotationSPDNameList = "spd.katalyst.kubewharf.io/nameList"
 )
 
 // const variables for spd.
