@@ -41,3 +41,8 @@ const (
 const (
 	PodAnnotationNICSelectionResultKey = "katalyst.kubewharf.io/nic_selection_result"
 )
+
+const (
+	// PodAnnotationResourcePoolKey is a const variable for pod annotation about resource pool name
+	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
+)
