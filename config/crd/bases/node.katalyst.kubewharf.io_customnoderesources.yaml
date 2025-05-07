@@ -292,6 +292,40 @@ spec:
                     description: ResourceList is a set of (resource name, quantity)
                       pairs.
                     type: object
+                  resourcePools:
+                    description: ResourcePools defines the quantities of resources
+                      for each pool.
+                    items:
+                      properties:
+                        maxAllocatable:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: ResourceList is a set of (resource name, quantity)
+                            pairs.
+                          type: object
+                        minAllocatable:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: ResourceList is a set of (resource name, quantity)
+                            pairs.
+                          type: object
+                        poolName:
+                          type: string
+                      required:
+                      - poolName
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - poolName
+                    x-kubernetes-list-type: map
                 type: object
               topologyPolicy:
                 default: none
@@ -380,6 +414,40 @@ spec:
                           description: ResourceList is a set of (resource name, quantity)
                             pairs.
                           type: object
+                        resourcePools:
+                          description: ResourcePools defines the quantities of resources
+                            for each pool.
+                          items:
+                            properties:
+                              maxAllocatable:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: ResourceList is a set of (resource name,
+                                  quantity) pairs.
+                                type: object
+                              minAllocatable:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: ResourceList is a set of (resource name,
+                                  quantity) pairs.
+                                type: object
+                              poolName:
+                                type: string
+                            required:
+                            - poolName
+                            type: object
+                          type: array
+                          x-kubernetes-list-map-keys:
+                          - poolName
+                          x-kubernetes-list-type: map
                       type: object
                     siblings:
                       description: |-
