@@ -1841,6 +1841,26 @@ func (in *RootfsPressureEvictionConfig) DeepCopyInto(out *RootfsPressureEviction
 		*out = new(int64)
 		**out = **in
 	}
+	if in.EnableRootfsOveruseEviction != nil {
+		in, out := &in.EnableRootfsOveruseEviction, &out.EnableRootfsOveruseEviction
+		*out = new(bool)
+		**out = **in
+	}
+	if in.RootfsOveruseEvictionSupportedQoSLevels != nil {
+		in, out := &in.RootfsOveruseEvictionSupportedQoSLevels, &out.RootfsOveruseEvictionSupportedQoSLevels
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.SharedQoSRootfsOveruseThreshold != nil {
+		in, out := &in.SharedQoSRootfsOveruseThreshold, &out.SharedQoSRootfsOveruseThreshold
+		*out = new(string)
+		**out = **in
+	}
+	if in.ReclaimedQoSRootfsOveruseThreshold != nil {
+		in, out := &in.ReclaimedQoSRootfsOveruseThreshold, &out.ReclaimedQoSRootfsOveruseThreshold
+		*out = new(string)
+		**out = **in
+	}
 	return
 }
 
