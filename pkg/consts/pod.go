@@ -31,3 +31,8 @@ const (
 const (
 	PodAnnotationNetClassKey = "katalyst.kubewharf.io/net_class_id"
 )
+
+const (
+	// PodAnnotationResourcePoolKey is a const variable for pod annotation about resource pool name
+	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
+)

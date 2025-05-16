@@ -228,6 +228,12 @@ type Resources struct {
 
 	// +optional
 	Capacity *v1.ResourceList `json:"capacity,omitempty"`
+
+	// ResourcePools defines the quantities of resources for each pool.
+	// +optional
+	// +listMapKey=poolName
+	// +listType=map
+	ResourcePools []ResourcePool `json:"resourcePools,omitempty"`
 }
 
 // Attribute records the resource-specified info with name-value pairs
@@ -315,6 +321,12 @@ type NUMAMetricInfo struct {
 	NUMAId int `json:"numaId"`
 	// Usage contains the real-time resource usage for this NUMA node
 	Usage *ResourceMetric `json:"usage"`
+}
+
+type ResourcePool struct {
+	PoolName       string           `json:"poolName"`
+	MinAllocatable *v1.ResourceList `json:"minAllocatable,omitempty"`
+	MaxAllocatable *v1.ResourceList `json:"maxAllocatable,omitempty"`
 }
 
 // +genclient
