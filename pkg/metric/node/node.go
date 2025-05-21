@@ -37,3 +37,10 @@ const (
 	CustomMetricNodeAdvisorPoolLoad1Min = "node_advisor_pool_load_1min"
 	CustomMetricNodeAdvisorKnobStatus   = "node_advisor_knob_status"
 )
+
+// real-time numa level memory bandwidth related metric
+const (
+	CustomMetricNUMAMemoryBandwidthTotal  = "numa_mbm_total"
+	CustomMetricNUMAMemoryBandwidthLocal  = "numa_mbm_local"
+	CustomMetricNUMAMemoryBandwidthVictim = "numa_mbm_victim"
+)
