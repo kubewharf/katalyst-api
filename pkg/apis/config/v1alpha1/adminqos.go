@@ -419,6 +419,40 @@ type CPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// NumaCPUPressureEvictionConfig holds configurations for NUMA-level CPU pressure eviction.
+	NumaCPUPressureEvictionConfig NumaCPUPressureEvictionConfig `json:"numaCPUPressureEvictionConfig,omitempty"`
+}
+
+// NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
+type NumaCPUPressureEvictionConfig struct {
+	// EnableEviction indicates whether to enable NUMA-level CPU pressure eviction.
+	// +optional
+	EnableEviction *bool `json:"enableEviction,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of time the NUMA's CPU pressure
+	// must be above the threshold for an eviction to be triggered.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+
+	// MetricRingSize is the size of the metric ring buffer for calculating NUMA CPU pressure.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+	// due to NUMA CPU pressure. 0 means no grace period.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
+	// E.g., 1.1 means a 10% increase.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ThresholdExpandFactor *float64 `json:"thresholdExpandFactor,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {
