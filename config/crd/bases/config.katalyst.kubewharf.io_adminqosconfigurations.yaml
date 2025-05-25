@@ -236,6 +236,40 @@ spec:
                               suppression, only if the cpu suppression duration of the pod is greater than the
                               minimum cpu suppression duration, the eviction will be triggered
                             type: string
+                          numaCPUPressureEvictionConfig:
+                            description: NumaCPUPressureEvictionConfig holds configurations
+                              for NUMA-level CPU pressure eviction.
+                            properties:
+                              enableEviction:
+                                description: EnableEviction indicates whether to enable
+                                  NUMA-level CPU pressure eviction.
+                                type: boolean
+                              gracePeriod:
+                                description: |-
+                                  GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+                                  due to NUMA CPU pressure. 0 means no grace period.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                              metricRingSize:
+                                description: MetricRingSize is the size of the metric
+                                  ring buffer for calculating NUMA CPU pressure.
+                                minimum: 1
+                                type: integer
+                              thresholdExpandFactor:
+                                description: |-
+                                  ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
+                                  E.g., 1.1 means a 10% increase.
+                                minimum: 0
+                                type: number
+                              thresholdMetPercentage:
+                                description: |-
+                                  ThresholdMetPercentage is the percentage of time the NUMA's CPU pressure
+                                  must be above the threshold for an eviction to be triggered.
+                                maximum: 1
+                                minimum: 0
+                                type: number
+                            type: object
                         type: object
                       cpuSystemPressureEvictionConfig:
                         description: CPUSystemPressureEvictionConfig is the config
