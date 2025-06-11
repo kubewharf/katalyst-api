@@ -240,6 +240,11 @@ spec:
                             description: NumaCPUPressureEvictionConfig holds configurations
                               for NUMA-level CPU pressure eviction.
                             properties:
+                              candidateCount:
+                                description: CandidateCount is the candidate pod count
+                                  when selecting pods to be evicted.
+                                minimum: 0
+                                type: integer
                               enableEviction:
                                 description: EnableEviction indicates whether to enable
                                   NUMA-level CPU pressure eviction.

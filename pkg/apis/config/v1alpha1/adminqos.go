@@ -453,6 +453,11 @@ type NumaCPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ThresholdExpandFactor *float64 `json:"thresholdExpandFactor,omitempty"`
+
+	// CandidateCount is the candidate pod count when selecting pods to be evicted.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	CandidateCount *int `json:"candidateCount,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {
