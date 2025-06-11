@@ -1376,6 +1376,11 @@ func (in *NumaCPUPressureEvictionConfig) DeepCopyInto(out *NumaCPUPressureEvicti
 		*out = new(float64)
 		**out = **in
 	}
+	if in.CandidateCount != nil {
+		in, out := &in.CandidateCount, &out.CandidateCount
+		*out = new(int)
+		**out = **in
+	}
 	return
 }
 
