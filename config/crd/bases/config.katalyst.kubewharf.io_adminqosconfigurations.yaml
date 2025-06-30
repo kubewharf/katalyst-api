@@ -261,6 +261,12 @@ spec:
                                   ring buffer for calculating NUMA CPU pressure.
                                 minimum: 1
                                 type: integer
+                              skippedPodKinds:
+                                description: SkippedPodKinds is the pod kind that
+                                  will be skipped when selecting pods to be evicted.
+                                items:
+                                  type: string
+                                type: array
                               thresholdExpandFactor:
                                 description: |-
                                   ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
