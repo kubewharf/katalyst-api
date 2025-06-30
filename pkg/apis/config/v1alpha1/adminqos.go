@@ -458,6 +458,10 @@ type NumaCPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	CandidateCount *int `json:"candidateCount,omitempty"`
+
+	// SkippedPodKinds is the pod kind that will be skipped when selecting pods to be evicted.
+	// +optional
+	SkippedPodKinds []string `json:"skippedPodKinds,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {

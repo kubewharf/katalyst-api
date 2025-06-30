@@ -1409,6 +1409,11 @@ func (in *NumaCPUPressureEvictionConfig) DeepCopyInto(out *NumaCPUPressureEvicti
 		*out = new(int)
 		**out = **in
 	}
+	if in.SkippedPodKinds != nil {
+		in, out := &in.SkippedPodKinds, &out.SkippedPodKinds
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
