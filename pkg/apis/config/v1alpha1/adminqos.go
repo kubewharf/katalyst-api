@@ -525,6 +525,11 @@ type MemoryPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// ReclaimedGracePeriod is the grace period of memory pressure reclaimed eviction
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ReclaimedGracePeriod *int64 `json:"reclaimedGracePeriod,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {
