@@ -1194,6 +1194,11 @@ func (in *MemoryGuardConfig) DeepCopyInto(out *MemoryGuardConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.CriticalWatermarkScaleFactor != nil {
+		in, out := &in.CriticalWatermarkScaleFactor, &out.CriticalWatermarkScaleFactor
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
@@ -1329,6 +1334,11 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 	}
 	if in.GracePeriod != nil {
 		in, out := &in.GracePeriod, &out.GracePeriod
+		*out = new(int64)
+		**out = **in
+	}
+	if in.ReclaimedGracePeriod != nil {
+		in, out := &in.ReclaimedGracePeriod, &out.ReclaimedGracePeriod
 		*out = new(int64)
 		**out = **in
 	}
