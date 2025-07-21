@@ -36,6 +36,6 @@ const (
 	// (to replace with the default name)
 	ResourceAnnotationKeyResourceIdentifier = "katalyst.kubewharf.io/resource_identifier"
 
-	// ResourceAnnotationKeyResourceIdentifier nominated the key indicating net namespace name of the NIC
+	// ResourceAnnotationKeyNICNetNSName nominated the key indicating net namespace name of the NIC
 	ResourceAnnotationKeyNICNetNSName = "katalyst.kubewharf.io/netns_name"
 )
