@@ -232,6 +232,10 @@ type MemoryGuardConfig struct {
 	// Enable is a flag to enable memory guard plugin
 	// +optional
 	Enable *bool `json:"enable,omitempty"`
+
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	CriticalWatermarkScaleFactor *float64 `json:"criticalWatermarkScaleFactor,omitempty"`
 }
 
 type MemoryHeadroomUtilBasedConfig struct {
