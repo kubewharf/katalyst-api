@@ -157,6 +157,9 @@ spec:
                               from being affected by memory bursting caused by low
                               priority workload.
                             properties:
+                              criticalWatermarkScaleFactor:
+                                minimum: 0
+                                type: number
                               enable:
                                 description: Enable is a flag to enable memory guard
                                   plugin
@@ -409,6 +412,12 @@ spec:
                               a pod uses less memory on a NUMA node than this threshold,it
                               won't be evicted by this NUMA's memory pressure.
                             type: number
+                          reclaimedGracePeriod:
+                            description: ReclaimedGracePeriod is the grace period
+                              of memory pressure reclaimed eviction
+                            format: int64
+                            minimum: 0
+                            type: integer
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
                               for the rate of rss
