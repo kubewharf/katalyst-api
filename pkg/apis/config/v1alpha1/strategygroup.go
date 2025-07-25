@@ -63,7 +63,8 @@ type StrategyGroupStatus struct {
 	GenericConfigStatus `json:",inline"`
 
 	// EnabledStrategies are strategies enabled in this group
-	EnabledStrategies []Strategy `json:"enabledStrategies"`
+	// +optional
+	EnabledStrategies []Strategy `json:"enabledStrategies,omitempty"`
 }
 
 type Strategy struct {
