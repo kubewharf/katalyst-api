@@ -228,8 +228,6 @@ spec:
                   this config.
                 format: int32
                 type: integer
-            required:
-            - enabledStrategies
             type: object
         type: object
     served: true
