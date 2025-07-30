@@ -1,0 +1,510 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.15.0
+  name: irqtuningconfigurations.config.katalyst.kubewharf.io
+spec:
+  group: config.katalyst.kubewharf.io
+  names:
+    kind: IRQTuningConfiguration
+    listKind: IRQTuningConfigurationList
+    plural: irqtuningconfigurations
+    shortNames:
+    - irtc
+    singular: irqtuningconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    - jsonPath: .spec.paused
+      name: PAUSED
+      type: boolean
+    - jsonPath: .spec.nodeLabelSelector
+      name: SELECTOR
+      type: string
+    - jsonPath: .spec.priority
+      name: PRIORITY
+      type: string
+    - jsonPath: .spec.ephemeralSelector.nodeNames
+      name: NODES
+      type: string
+    - jsonPath: .spec.ephemeralSelector.lastDuration
+      name: DURATION
+      type: string
+    - jsonPath: .status.targetNodes
+      name: TARGET
+      type: integer
+    - jsonPath: .status.canaryNodes
+      name: CANARY
+      type: integer
+    - jsonPath: .status.updatedTargetNodes
+      name: UPDATED-TARGET
+      type: integer
+    - jsonPath: .status.currentHash
+      name: HASH
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].status
+      name: VALID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].reason
+      name: REASON
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].message
+      name: MESSAGE
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: IRQTuningConfiguration is the Schema for the configuration API
+          used by IRQ Tuning
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              config:
+                description: Config is custom field for irq tuning configuration
+                properties:
+                  coreNetOverLoadThresh:
+                    description: Threshold description for interrupting core network
+                      overLoad.
+                    properties:
+                      softNetTimeSqueezeRatio:
+                        description: Ratio of softnet_stat 3rd col time_squeeze packets
+                          / softnet_stat 1st col processed packets
+                        type: number
+                    required:
+                    - softNetTimeSqueezeRatio
+                    type: object
+                  coresAdjust:
+                    description: Configuration that requires interrupt core adjustment.
+                    properties:
+                      decConf:
+                        properties:
+                          decCoresMaxEachTime:
+                            type: integer
+                          pingPongAdjustInterval:
+                            type: integer
+                          sinceLastBalanceInterval:
+                            type: integer
+                          successiveDecInterval:
+                            description: Interval of two successive irq cores decrease
+                              MUST greater-equal this interval
+                            type: integer
+                          thresholds:
+                            description: |-
+                              IRQCoresDecThresholds represents the threshold of decreasing irq cores.
+                              when irq cores average cpu util less-equal IrqCoresAvgCpuUtilThresh, then decrease irq cores.
+                            properties:
+                              avgCPUUtilThresh:
+                                description: Threshold of decreasing irq cores, generally
+                                  this thresh should be less-than IrqCoresExpectedCpuUtil
+                                type: integer
+                            required:
+                            - avgCPUUtilThresh
+                            type: object
+                        required:
+                        - decCoresMaxEachTime
+                        - pingPongAdjustInterval
+                        - sinceLastBalanceInterval
+                        - successiveDecInterval
+                        - thresholds
+                        type: object
+                      incConf:
+                        description: |-
+                          IRQCoresIncConfig represents the configuration of increasing irq cores.
+                          When irq cores cpu util nearly full(e.g., greater-equal 85%), in order to reduce the impact time on the applications, it is necessary to immediately
+                          fall back to the balance-fair policy first, and later irq tuning manager will auto switch back to IrqCoresExclusive policy based on policies and conditions.
+                        properties:
+                          fullThresh:
+                            description: When irq cores cpu util hit this thresh,
+                              then fallback to balance-fair policy
+                            type: integer
+                          successiveIncInterval:
+                            description: Interval of two successive irq cores increase
+                              MUST greater-equal this interval
+                            minimum: 1
+                            type: integer
+                          thresholds:
+                            description: |-
+                              IRQCoresIncThresholds represents the threshold of increasing irq cores.
+                              When irq cores average cpu util greater-equal IrqCoresAvgCpuUtilThresh, then increase irq cores,
+                              when there are one or more irq core's net load greater-equal IrqCoreNetOverloadThresholds, and failed to tune to irq load balance,
+                              then increase irq cores.
+                            properties:
+                              avgCPUUtilThresh:
+                                description: Threshold of increasing irq cores, generally
+                                  this thresh equal to or a litter greater-than IrqCoresExpectedCpuUtil
+                                type: integer
+                            required:
+                            - avgCPUUtilThresh
+                            type: object
+                        required:
+                        - fullThresh
+                        - successiveIncInterval
+                        - thresholds
+                        type: object
+                      percentMax:
+                        description: Maximum percent of (100 * irq cores/total(or
+                          socket) cores), valid value [0,100], default 30
+                        maximum: 100
+                        minimum: 0
+                        type: integer
+                      percentMin:
+                        description: Minimum percent of (100 * irq cores/total(or
+                          socket) cores), valid value [0,100], default 2
+                        maximum: 100
+                        minimum: 0
+                        type: integer
+                    required:
+                    - decConf
+                    - incConf
+                    - percentMax
+                    - percentMin
+                    type: object
+                  coresExclusion:
+                    description: Need to adjust to interrupt exclusive core requirements.
+                    properties:
+                      successiveSwitchInterval:
+                        description: Interval of successive enable/disable irq cores
+                          exclusion MUST >= SuccessiveSwitchInterval
+                        type: number
+                      thresholds:
+                        properties:
+                          disableThresholds:
+                            description: |-
+                              DisableIRQCoresExclusionThresholds represents the threshold of disabling irq cores exclusion.
+                              When successive count of nic's total PPS <= RxPPSThresh is greater-equal SuccessiveCount, then disable exclusion of this nic's irq cores.
+                            properties:
+                              rxPPSThresh:
+                                format: uint64
+                                minimum: 0
+                                type: integer
+                              successiveCount:
+                                type: integer
+                            required:
+                            - rxPPSThresh
+                            - successiveCount
+                            type: object
+                          enableThresholds:
+                            description: |-
+                              EnableIRQCoresExclusionThresholds represents the threshold of enabling irq cores exclusion.
+                              When successive count of nic's total PPS >= RxPPSThresh is greater-equal SuccessiveCount, then enable exclusion of this nic's irq cores.
+                            properties:
+                              rxPPSThresh:
+                                format: uint64
+                                minimum: 0
+                                type: integer
+                              successiveCount:
+                                type: integer
+                            required:
+                            - rxPPSThresh
+                            - successiveCount
+                            type: object
+                        required:
+                        - disableThresholds
+                        - enableThresholds
+                        type: object
+                    required:
+                    - successiveSwitchInterval
+                    - thresholds
+                    type: object
+                  coresExpectedCPUUtil:
+                    description: CoresExpectedCPUUtil is the expected CPU utilization
+                      of cores.
+                    maximum: 100
+                    minimum: 0
+                    type: integer
+                  enableRPS:
+                    description: |-
+                      EnableRPS indicates whether to enable the RPS function.
+                      Only balance policy support enable rps.
+                    type: boolean
+                  enableRPSCPUVSNicsQueue:
+                    description: EnableRPSCPUVSNicsQueue enable rps when (cpus count)/(nics
+                      queue count) greater than this config.
+                    type: number
+                  enableTuner:
+                    description: EnableTuner indicates whether to enable the interrupt
+                      tuning function.
+                    type: boolean
+                  ksoftirqdNice:
+                    description: KsoftirqdNice is the nice value of ksoftirqd process.
+                    type: integer
+                  loadBalance:
+                    description: Describes the constraints of the balanced configuration.
+                    properties:
+                      irqCoresTunedNumMaxEachTime:
+                        description: Max number of irq cores whose affinitied irqs
+                          are permitted to tuned to other cores in each time, allowed
+                          value {1,2}
+                        enum:
+                        - 1
+                        - 2
+                        type: integer
+                      irqTunedNumMaxEachTime:
+                        description: Max number of irqs are permitted to be tuned
+                          from some irq cores to other cores in each time, allowed
+                          value {1, 2}
+                        enum:
+                        - 1
+                        - 2
+                        type: integer
+                      pingPongCountThresh:
+                        description: Ping pong count greater-equal this threshold
+                          will trigger increasing irq cores
+                        type: integer
+                      pingPongIntervalThresh:
+                        description: Two successive tunes whose interval is less-equal
+                          this threshold will be considered as pingpong tunings
+                        type: integer
+                      successiveTuningInterval:
+                        description: Interval of two successive irq load balance MUST
+                          greater-equal this interval
+                        type: integer
+                      thresholds:
+                        properties:
+                          cpuUtilGapThresh:
+                            description: Threshold of cpu util gap between source
+                              core and dest core of irq affinity changing
+                            type: integer
+                          cpuUtilThresh:
+                            description: IRQ core cpu util threshold, which will trigger
+                              irq cores load balance, generally this value should
+                              greater-equal IRQCoresExpectedCpuUtil
+                            type: integer
+                        required:
+                        - cpuUtilGapThresh
+                        - cpuUtilThresh
+                        type: object
+                    required:
+                    - irqCoresTunedNumMaxEachTime
+                    - irqTunedNumMaxEachTime
+                    - pingPongCountThresh
+                    - pingPongIntervalThresh
+                    - successiveTuningInterval
+                    - thresholds
+                    type: object
+                  nicAffinityPolicy:
+                    description: |-
+                      NICAffinityPolicy represents the NICs's irqs affinity sockets policy.
+                      One of CompleteMap, OverallBalance, PhysicalTopo.
+                    type: string
+                  reniceKsoftirqd:
+                    description: ReniceKsoftirqd indicates whether to renice ksoftirqd
+                      process.
+                    type: boolean
+                  throughputClassSwitch:
+                    description: ThrouputClassSwitch describes the switch configuration
+                      for a throughput class.
+                    properties:
+                      lowThroughputThresholds:
+                        properties:
+                          rxPPSThresh:
+                            format: int64
+                            type: integer
+                          successiveCount:
+                            type: integer
+                        required:
+                        - rxPPSThresh
+                        - successiveCount
+                        type: object
+                      normalThroughputThresholds:
+                        properties:
+                          rxPPSThresh:
+                            format: int64
+                            type: integer
+                          successiveCount:
+                            type: integer
+                        required:
+                        - rxPPSThresh
+                        - successiveCount
+                        type: object
+                    required:
+                    - lowThroughputThresholds
+                    - normalThroughputThresholds
+                    type: object
+                  tuningInterval:
+                    default: 5
+                    description: TuningInterval is the interval of interrupt tuning.
+                    type: integer
+                  tuningPolicy:
+                    default: balance
+                    description: TuningPolicy represents the interrupt tuning strategy.
+                      One of Balance, Exclusive, Auto.
+                    type: string
+                required:
+                - coreNetOverLoadThresh
+                - coresAdjust
+                - coresExclusion
+                - coresExpectedCPUUtil
+                - enableRPS
+                - enableRPSCPUVSNicsQueue
+                - enableTuner
+                - ksoftirqdNice
+                - loadBalance
+                - nicAffinityPolicy
+                - reniceKsoftirqd
+                - throughputClassSwitch
+                - tuningInterval
+                - tuningPolicy
+                type: object
+              ephemeralSelector:
+                description: EphemeralSelector is a selector for temporary use only
+                properties:
+                  lastDuration:
+                    description: |-
+                      define the duration this configuration will last from creationTimestamp.
+                      must and only set when NodeNames already set
+                    type: string
+                  nodeNames:
+                    description: Specific nodes' name the configurations will be effected.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              nodeLabelSelector:
+                description: |-
+                  NodeLabelSelector select nodes to apply these configurations,
+                  the priority and node label selector must be matched according
+                  to KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList,
+                  otherwise it will not be synced.
+                type: string
+              paused:
+                description: Indicates that the config is paused.
+                type: boolean
+              priority:
+                description: |-
+                  Priority is used by one node matched by NodeLabelSelector of more
+                  than one configuration, and the higher priority will be considered.
+                  The priority only be supported when NodeLabelSelector set
+                format: int32
+                type: integer
+              revisionHistoryLimit:
+                default: 3
+                description: |-
+                  RevisionHistoryLimit is the maximum number of revisions that will
+                  be maintained in the resource's revision history. The revision history
+                  consists of all revisions not represented by a currently applied
+                  Spec version. The default value is 3.
+                format: int64
+                type: integer
+              updateStrategy:
+                description: An update strategy to replace existing CustomNodeConfig
+                  configurations with new ones.
+                properties:
+                  rollingUpdate:
+                    description: |-
+                      Rolling update config params. Present only if type = "RollingUpdate".
+                      ---
+                      TODO: Update this to follow our convention for oneOf, whatever we decide it
+                      to be. Same as Deployment `strategy.rollingUpdate`.
+                      See https://github.com/kubernetes/kubernetes/issues/35345
+                    properties:
+                      canary:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: |-
+                          The number or percentage of target CustomNodeConfigs to update to the current configuration.
+                          For example: `100`` and `20%` are valid values.
+                        pattern: ^(100|[1-9][0-9]?|0)%$
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  type:
+                    description: Type of config update. Only `RollingUpdate` is supported.
+                    enum:
+                    - RollingUpdate
+                    type: string
+                type: object
+            required:
+            - config
+            type: object
+          status:
+            properties:
+              canaryNodes:
+                description: The number of nodes that this config is targeting and
+                  should be updated given the current strategy.
+                format: int32
+                type: integer
+              collisionCount:
+                description: |-
+                  Count of hash collisions for this cr. The kcc controller
+                  uses this field as a collision avoidance mechanism when it needs to
+                  create the name for the newest ControllerRevision.
+                format: int32
+                type: integer
+              conditions:
+                description: Represents the latest available observations of a config's
+                  current state.
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transit from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of config condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              currentHash:
+                description: The hash of the current config observed by the kcc controller.
+                type: string
+              observedGeneration:
+                description: The most recent generation observed by the kcc controller.
+                format: int64
+                type: integer
+              targetNodes:
+                description: The number of nodes that this config is targeting.
+                format: int32
+                type: integer
+              updatedNodes:
+                description: The number of nodes (including non-target nodes) that
+                  have been updated by this config.
+                format: int32
+                type: integer
+              updatedTargetNodes:
+                description: The number of target nodes that have been updated by
+                  this config.
+                format: int32
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
