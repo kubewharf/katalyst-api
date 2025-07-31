@@ -48,6 +48,7 @@ const (
 	ResourceNameTMOConfigurations           = "transparentmemoryoffloadingconfigurations"
 	ResourceNameStrategyGroupConfigurations = "strategygroupconfigurations"
 	ResourceNameStrategyGroups              = "strategygroups"
+	ResourceNameIRQTuningConfigurations     = "irqtuningconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -88,6 +89,9 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StrategyGroupConfigurationList{},
 		&StrategyGroup{},
 		&StrategyGroupList{},
+		&IRQTuningConfiguration{},
+		&IRQTuningConfigurationList{},
+
 		// global resource portrait configuration
 		&GlobalResourcePortraitConfiguration{},
 	)
