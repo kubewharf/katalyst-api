@@ -57,6 +57,10 @@ message Condition {
     bool met_condition = 4;
 }
 
+message GetThresholdMetRequest {
+    repeated k8s.io.api.core.v1.Pod active_pods = 1;
+}
+
 message ThresholdMetResponse {
     double threshold_value = 1;
     double observed_value = 2;
@@ -127,7 +131,7 @@ message Bucket {
 
 service EvictionPlugin {
     rpc GetToken(Empty) returns (GetTokenResponse) {}
-    rpc ThresholdMet(Empty) returns (ThresholdMetResponse) {}
+    rpc ThresholdMet(GetThresholdMetRequest) returns (ThresholdMetResponse) {}
     rpc GetTopEvictionPods(GetTopEvictionPodsRequest) returns (GetTopEvictionPodsResponse) {}
     rpc GetEvictPods(GetEvictPodsRequest) returns (GetEvictPodsResponse) {}
 }
