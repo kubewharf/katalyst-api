@@ -89,6 +89,11 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	EnableReclaim *bool `json:"enableReclaim,omitempty"`
 
+	// DisableReclaimSharePools is a list of share cpuset_pool that reclaim resource will be disabled.
+	// default is empty, which means all share cpuset_pool will be enabled.
+	// +optional
+	DisableReclaimSharePools []string `json:"disableReclaimSharePools,omitempty"`
+
 	// ReservedResourceForReport is a reserved resource for report to custom node resource, which is used to
 	// prevent reclaim resource from being requested by reclaimed_cores pods.
 	// For example, {"cpu": 0, "memory": 0Gi}.
