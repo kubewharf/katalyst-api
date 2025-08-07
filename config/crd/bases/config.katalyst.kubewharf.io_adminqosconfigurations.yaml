@@ -685,6 +685,13 @@ spec:
                                 type: number
                             type: object
                         type: object
+                      disableReclaimSharePools:
+                        description: |-
+                          DisableReclaimSharePools is a list of share cpuset_pool that reclaim resource will be disabled.
+                          default is empty, which means all share cpuset_pool will be enabled.
+                        items:
+                          type: string
+                        type: array
                       enableReclaim:
                         description: |-
                           EnableReclaim is a flag to enable reclaim resource, if true, reclaim resource will be enabled,
