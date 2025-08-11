@@ -46,3 +46,13 @@ const (
 	// PodAnnotationResourcePoolKey is a const variable for pod annotation about resource pool name
 	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
 )
+
+const (
+	// PodAnnotationSoftEvictNotificationKey is a const variable for pod annotation about pod ecivtion notify
+	PodAnnotationSoftEvictNotificationKey = "katalyst.kubewharf.io/pod_soft_evict_notify"
+)
+
+const (
+	// PodAnnotationPodEvictScoreKey is a const variable for pod annotation about pod ecivtion score
+	PodAnnotationPodEvictScoreKey = "katalyst.kubewharf.io/pod_evict_score"
+)
