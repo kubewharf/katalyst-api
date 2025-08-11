@@ -379,6 +379,10 @@ type ReclaimedResourcesEvictionConfig struct {
 	// +optional
 	EvictionThreshold map[v1.ResourceName]float64 `json:"evictionThreshold"`
 
+	// SoftEvictionThreshold soft eviction threshold rate for reclaimed resources
+	// +optional
+	SoftEvictionThreshold map[v1.ResourceName]float64 `json:"softEvictionThreshold"`
+
 	// GracePeriod is the grace period of reclaimed resources' eviction
 	// +kubebuilder:validation:Minimum=0
 	// +optional
