@@ -566,6 +566,12 @@ spec:
                             format: int64
                             minimum: 0
                             type: integer
+                          softEvictionThreshold:
+                            additionalProperties:
+                              type: number
+                            description: SoftEvictionThreshold soft eviction threshold
+                              rate for reclaimed resources
+                            type: object
                           thresholdMetToleranceDuration:
                             description: ThresholdMetToleranceDuration is the tolerance
                               duration before eviction.
