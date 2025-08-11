@@ -41,3 +41,13 @@ const (
 const (
 	PodAnnotationResourcePackageKey = "katalyst.kubewharf.io/resource_package"
 )
+
+const (
+	// PodAnnotationSoftEvictNotificationKey is a const variable for pod annotation about enable eviction notification
+	PodAnnotationSoftEvictNotificationKey = "katalyst.kubewharf.io/pod_soft_evict_notify"
+)
+
+const (
+	// PodAnnotationPodEvictScoreKey is a const variable for pod annotation about enable get eviction score from pod
+	PodAnnotationPodEvictScoreKey = "katalyst.kubewharf.io/pod_evict_score"
+)
