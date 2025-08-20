@@ -36,3 +36,8 @@ const (
 	// PodAnnotationResourcePoolKey is a const variable for pod annotation about resource pool name
 	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
 )
+
+// PodAnnotationResourcePackageKey is a const variable for pod annotation about resource package name
+const (
+	PodAnnotationResourcePackageKey = "katalyst.kubewharf.io/resource_package"
+)
