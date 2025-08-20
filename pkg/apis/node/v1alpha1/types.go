@@ -229,7 +229,35 @@ type Resources struct {
 	// +optional
 	Capacity *v1.ResourceList `json:"capacity,omitempty"`
 
-	// ResourcePools defines the quantities of resources for each pool.
+	// ResourcePackages defines compute packages available on the node/numa.
+	// Concept:
+	//   - ResourcePackages are node/numa-oriented.
+	//   - A ResourcePackage represents a subdivision of the total node/numa resources into
+	//     standardized units. Each unit may define one or more resource dimensions
+	//     (e.g., CPU, memory, disk, network).
+	//   - Pods associated with a package must consume resources following the
+	//     same ratio. If a Pod is not bound to a package, it falls back to
+	//     the "default" package (or its variants: "default-1", "default-2").
+	// Difference vs ResourcePools:
+	//   - ResourcePackages: split all node/numa resources into standard shapes (abstracting
+	//     physical resources into units).
+	//   - ResourcePools: reserve/limit resources for a particular workload type.
+	// +optional
+	// +listMapKey=packageName
+	// +listType=map
+	ResourcePackages []ResourcePackage `json:"resourcePackages,omitempty"`
+
+	// ResourcePools defines pools of resources reserved for specific workloads.
+	// Concept:
+	//   - ResourcePools are workload-oriented.
+	//   - They allow a workload type (e.g. GPU jobs, latency-sensitive tasks) to
+	//     reserve a guaranteed amount of resources (via MinAllocatable) while
+	//     also optionally borrowing up to a maximum limit (via MaxAllocatable).
+	// Difference vs ResourcePackages:
+	//   - ResourcePools are for *workload reservations* (claiming resources for
+	//     certain job types).
+	//   - ResourcePackages are for *node subdivisions* (splitting all node resources into
+	//     standard allocation units).
 	// +optional
 	// +listMapKey=poolName
 	// +listType=map
@@ -323,9 +351,68 @@ type NUMAMetricInfo struct {
 	Usage *ResourceMetric `json:"usage"`
 }
 
+// ResourcePackage represents a single compute package definition.
+// Concept:
+//   - A ResourcePackage subdivides the node/numa’s total resources into standardized units.
+//   - The most common naming convention is based on CPU:Memory ratio.
+//   - Example: "x2" means 1 core : 2 GiB memory, "x8" means 1 core : 8 GiB memory
+//   - In the future, packages may also define additional resource dimensions
+//     (e.g., local SSDs, network bandwidth, GPUs).
+//
+// Behavior:
+//   - Pods associated with this package must consume resources following the
+//     shape defined in Allocatable.
+//   - A special "default" resource package (or "default-N" variants) represents all
+//     remaining resources not explicitly assigned to a named resource package.
+//
+// Data source:
+//   - ResourcePackages are derived from metrics reported in a NodeProfileDescriptor CRD.
+//   - These metrics are aggregated (e.g., across NUMA nodes) to compute the
+//     Allocatable resources for each package.
+type ResourcePackage struct {
+	// PackageName is the identifier for this package, e.g. "x2", "x8".
+	// Rules:
+	// - Names like "default" or "default-N" (N = integer) are reserved identifiers
+	//   for the default package(s), which represent resources not explicitly
+	//   subdivided into other named packages.
+	// - Other names are user-defined and may follow any convention
+	//   (e.g., "x2", "x8").
+	PackageName string `json:"packageName"`
+
+	// Allocatable defines the total resources available for this package.
+	// Keys usually include "cpu" and "memory" (e.g. cpu: "64", memory: "128Gi").
+	Allocatable *v1.ResourceList `json:"allocatable,omitempty"`
+}
+
+// ResourcePool represents a pool of resources reserved for a specific workload type.
+// Concept:
+//   - A ResourcePool is workload-oriented. It defines a reserved or guaranteed
+//     set of resources and the possible upper bound for a workload (e.g., GPU workloads, latency-sensitive services).
+//   - Unlike ResourcePackages (which divide total node/numa resources into fixed CPU:Memory bundles),
+//     ResourcePools allow flexible reservation and borrowing of resources.
+//
+// Data source:
+//   - ResourcePools are derived from metrics reported in a NodeProfileDescriptor CRD.
+//   - These metrics are mapped into MinAllocatable/MaxAllocatable values.
 type ResourcePool struct {
-	PoolName       string           `json:"poolName"`
+	// PoolName is the unique identifier of the resource pool.
+	PoolName string `json:"poolName"`
+
+	// MinAllocatable defines the minimum amount of resources *guaranteed* or reserved
+	// for this pool. This is the lower bound that the pool can always access.
+	// Interpretation:
+	//   - Acts like a reservation or guaranteed quota.
+	//   - Ensures workloads in this pool always get at least these resources.
 	MinAllocatable *v1.ResourceList `json:"minAllocatable,omitempty"`
+
+	// MaxAllocatable defines the maximum amount of resources this pool
+	// can consume, including any resources it may opportunistically
+	// borrowed from other pools.
+	// Interpretation:
+	//   - Acts like an upper bound / quota ceiling.
+	//   - Workloads in this pool cannot exceed this allocation, even if more
+	//     resources are available on the node.
+	//   - Supports resource sharing between pools, but with clear limits.
 	MaxAllocatable *v1.ResourceList `json:"maxAllocatable,omitempty"`
 }
 
