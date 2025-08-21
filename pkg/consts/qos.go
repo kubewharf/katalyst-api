@@ -98,6 +98,15 @@ const (
 	// - all pods will be settled in `default` pool if not specified
 	PodAnnotationCPUEnhancementCPUSet = "cpuset_pool"
 
+	// PodAnnotationCPUEnhancementNUMAShare enables NUMA sharing for pods.
+	// It supports different cpuset_pool or qos_level pods that require NUMA binding
+	// to share or not share NUMA resources.
+	//
+	// - This enhancement is supported for shared-cores and dedicated-cores.
+	// - By default, all pods can share the same NUMA if not specified.
+	PodAnnotationCPUEnhancementNUMAShare        = "numa_share"
+	PodAnnotationCPUEnhancementNUMAShareDisable = "false"
+
 	// PodAnnotationCPUEnhancementSuppressionToleranceRate provides a mechanism to ensure
 	// the quality for reclaimed resources. since reclaimed resources will always change
 	// dynamically according to running states of none-reclaimed services, it may reach to
@@ -105,7 +114,7 @@ const (
 	// but the reclaimed services runs too slow and would rather be killed and rescheduled.
 	// in this case, the workload can use this enhancement to trigger eviction.
 	//
-	// - this enhancement is only supported for shared-cores, for now and foreseeable future
+	// - this enhancement is only supported for reclaimed-cores, for now and foreseeable future
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
 )
 

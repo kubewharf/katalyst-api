@@ -2084,6 +2084,11 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.DisableReclaimSharePools != nil {
+		in, out := &in.DisableReclaimSharePools, &out.DisableReclaimSharePools
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.ReservedResourceForReport != nil {
 		in, out := &in.ReservedResourceForReport, &out.ReservedResourceForReport
 		*out = new(corev1.ResourceList)
