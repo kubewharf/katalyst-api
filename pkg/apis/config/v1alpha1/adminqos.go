@@ -127,6 +127,18 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
+	// NumaMinReclaimedResourceRatioForAllocate is a resource reserved ratio at numa level for reclaimed_cores pods，these resources will not be used
+	// by shared_cores pods.
+	// For example, {"cpu": 0.1, "memory": 0.2}.
+	// +optional
+	NumaMinReclaimedResourceRatioForAllocate *v1.ResourceList `json:"numaMinReclaimedResourceRatioForAllocate,omitempty"`
+
+	// NumaMinReclaimedResourceForAllocate is a resource reserved at numa level for reclaimed_cores pods，these resources will not be used
+	// by shared_cores pods.
+	// For example, {"cpu": 2, "memory": 0Gi}.
+	// +optional
+	NumaMinReclaimedResourceForAllocate *v1.ResourceList `json:"numaMinReclaimedResourceForAllocate,omitempty"`
+
 	// CPUHeadroomConfig is a configuration for cpu headroom
 	// +optional
 	CPUHeadroomConfig *CPUHeadroomConfig `json:"cpuHeadroomConfig,omitempty"`

@@ -1572,6 +1572,28 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			}
 		}
 	}
+	if in.NumaMinReclaimedResourceRatioForAllocate != nil {
+		in, out := &in.NumaMinReclaimedResourceRatioForAllocate, &out.NumaMinReclaimedResourceRatioForAllocate
+		*out = new(corev1.ResourceList)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[corev1.ResourceName]resource.Quantity, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val.DeepCopy()
+			}
+		}
+	}
+	if in.NumaMinReclaimedResourceForAllocate != nil {
+		in, out := &in.NumaMinReclaimedResourceForAllocate, &out.NumaMinReclaimedResourceForAllocate
+		*out = new(corev1.ResourceList)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[corev1.ResourceName]resource.Quantity, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val.DeepCopy()
+			}
+		}
+	}
 	if in.CPUHeadroomConfig != nil {
 		in, out := &in.CPUHeadroomConfig, &out.CPUHeadroomConfig
 		*out = new(CPUHeadroomConfig)
