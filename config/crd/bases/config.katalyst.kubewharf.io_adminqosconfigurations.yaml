@@ -788,6 +788,30 @@ spec:
                           MinReclaimedResourceForReport.
                           For example, {"cpu": 4, "memory": 5Gi}.
                         type: object
+                      numaMinReclaimedResourceForAllocate:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          NumaMinReclaimedResourceForAllocate is a resource reserved at numa level for reclaimed_cores pods，these resources will not be used
+                          by shared_cores pods.
+                          For example, {"cpu": 2, "memory": 0Gi}.
+                        type: object
+                      numaMinReclaimedResourceRatioForAllocate:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          NumaMinReclaimedResourceRatioForAllocate is a resource reserved ratio at numa level for reclaimed_cores pods，these resources will not be used
+                          by shared_cores pods.
+                          For example, {"cpu": 0.1, "memory": 0.2}.
+                        type: object
                       reservedResourceForAllocate:
                         additionalProperties:
                           anyOf:
