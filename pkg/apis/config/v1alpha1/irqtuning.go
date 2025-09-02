@@ -100,6 +100,12 @@ type IRQTuningConfig struct {
 	// +optional
 	CoresExpectedCPUUtil *int `json:"coresExpectedCPUUtil,omitempty"`
 
+	// RPSExcludeIRQCoresThreshold determines if excluding irq-cores in rx queue's rps_cpus,
+	// if rps qualified cores count versus irq cores count of rps qualified cores is greater-equal RPSCoresVSIrqCoresRatio,
+	// then rps_cpus excludes irq cores.
+	// +optional
+	RPSExcludeIRQCoresThreshold *RPSExcludeIRQCoresThreshold `json:"rpsExcludeIRQCoresThreshold,omitempty"`
+
 	// ThroughputClassSwitch describes the switch configuration for a throughput class.
 	// +optional
 	ThroughputClassSwitch *ThroughputClassSwitchConfig `json:"throughputClassSwitch,omitempty"`
@@ -138,6 +144,12 @@ const (
 	// NICAffinityPolicyPhysicalTopo nic's irqs affitnied socket strictly follow whose physical topology bound socket.
 	NICAffinityPolicyPhysicalTopo NICAffinityPolicy = "PhysicalTopo"
 )
+
+type RPSExcludeIRQCoresThreshold struct {
+	// RPSCoresVSIRQCoresRatio is the ratio of rps qualified cores count versus irq cores count of rps qualified cores.
+	// +optional
+	RPSCoresVSIRQCoresRatio *float64 `json:"rpsCoresVSIRQCoresRatio,omitempty"`
+}
 
 type ThroughputClassSwitchConfig struct {
 	// +optional
