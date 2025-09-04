@@ -80,6 +80,10 @@ type AdminQoSConfig struct {
 
 	// +optional
 	AdvisorConfig *AdvisorConfig `json:"advisorConfig,omitempty"`
+
+	// FineGrainedResourceConfig stores configurations related to fine-grained resource management
+	// +optional
+	FineGrainedResourceConfig *FineGrainedResourceConfig `json:"fineGrainedResourceConfig,omitempty"`
 }
 
 type ReclaimedResourceConfig struct {
@@ -147,6 +151,12 @@ type AdvisorConfig struct {
 	CPUAdvisorConfig *CPUAdvisorConfig `json:"cpuAdvisorConfig,omitempty"`
 	// +optional
 	MemoryAdvisorConfig *MemoryAdvisorConfig `json:"memoryAdvisorConfig,omitempty"`
+}
+
+type FineGrainedResourceConfig struct {
+	// CPUBurstConfig stores cpu burst related configurations
+	// +optional
+	CPUBurstConfig *CPUBurstConfig `json:"cpuBurstConfig,omitempty"`
 }
 
 type CPUAdvisorConfig struct {
@@ -745,3 +755,16 @@ type NumaEvictionRankingMetric string
 // system level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string
+
+type CPUBurstConfig struct {
+	// CPUBurstPolicy indicates which policy to enable the cpu burst feature.
+	// Optional values: none/static/dynamic
+	// Default value: none
+	// optional
+	CPUBurstPolicy string `json:"cpuBurstPolicy,omitempty"`
+
+	// CPUBurstPercent identifies the upper limit of the allowed burst percent
+	// +kubebuilder:validation:Minimum=0
+	// optional
+	CPUBurstPercent *int64 `json:"cpuBurstPercent,omitempty"`
+}
