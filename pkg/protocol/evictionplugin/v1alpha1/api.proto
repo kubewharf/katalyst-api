@@ -57,6 +57,10 @@ message Condition {
     bool met_condition = 4;
 }
 
+message GetThresholdMetRequest {
+    repeated k8s.io.api.core.v1.Pod active_pods = 1;
+}
+
 message ThresholdMetResponse {
     double threshold_value = 1;
     double observed_value = 2;
@@ -65,12 +69,14 @@ message ThresholdMetResponse {
     string eviction_scope = 5;
     int64 grace_period_seconds = 6;
     Condition condition = 7;
+    repeated k8s.io.api.core.v1.Pod candidate_pods = 8;
 }
 
 message GetTopEvictionPodsRequest {
     repeated k8s.io.api.core.v1.Pod active_pods = 1;
     uint64 topN = 2;
     string eviction_scope = 3;
+    repeated EvictionRecord candidate_eviction_records = 4;
 }
 
 message GetTopEvictionPodsResponse {
@@ -103,9 +109,29 @@ message DeletionOptions {
     int64 grace_period_seconds = 1;
 }
 
+message EvictionRecord {
+    string uid = 1;     // Corresponding to the pod's UID to avoid repeated references to the pod
+    bool has_pdb = 2;
+    Buckets buckets = 3;
+    int32 disruptions_allowed = 4;  // The number of allowed disruptions (currentHealthy - desiredHealthy)
+    int32 current_healthy = 5;  // The number of currently healthy Pods (actually passing the health check)
+    int32 desired_healthy = 6;  // The minimum number of healthy pods that should be maintained according to the rules
+    int32 expected_pods = 7;    // Total number of matched Pods
+}
+
+message Buckets {
+    repeated Bucket list = 1;
+}
+
+message Bucket {
+    int64 time = 1;
+    int64 duration = 2;
+    int64 count = 3;
+}
+
 service EvictionPlugin {
     rpc GetToken(Empty) returns (GetTokenResponse) {}
-    rpc ThresholdMet(Empty) returns (ThresholdMetResponse) {}
+    rpc ThresholdMet(GetThresholdMetRequest) returns (ThresholdMetResponse) {}
     rpc GetTopEvictionPods(GetTopEvictionPodsRequest) returns (GetTopEvictionPodsResponse) {}
     rpc GetEvictPods(GetEvictPodsRequest) returns (GetEvictPodsResponse) {}
 }
