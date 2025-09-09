@@ -270,6 +270,17 @@ spec:
                     description: ReniceKsoftirqd indicates whether to renice ksoftirqd
                       process.
                     type: boolean
+                  rpsExcludeIRQCoresThreshold:
+                    description: |-
+                      RPSExcludeIRQCoresThreshold determines if excluding irq-cores in rx queue's rps_cpus,
+                      if rps qualified cores count versus irq cores count of rps qualified cores is greater-equal RPSCoresVSIrqCoresRatio,
+                      then rps_cpus excludes irq cores.
+                    properties:
+                      rpsCoresVSIRQCoresRatio:
+                        description: RPSCoresVSIRQCoresRatio is the ratio of rps qualified
+                          cores count versus irq cores count of rps qualified cores.
+                        type: number
+                    type: object
                   throughputClassSwitch:
                     description: ThroughputClassSwitch describes the switch configuration
                       for a throughput class.
