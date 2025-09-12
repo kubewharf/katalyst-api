@@ -66,7 +66,8 @@ var (
 func addSPDKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
 		&TransparentMemoryOffloadingIndicators{},
-		&ResourcePortraitIndicators{})
+		&ResourcePortraitIndicators{},
+		&ReclaimResourceIndicators{})
 	return nil
 }
 
