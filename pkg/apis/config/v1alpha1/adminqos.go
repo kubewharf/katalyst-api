@@ -745,3 +745,47 @@ type NumaEvictionRankingMetric string
 // system level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string
+
+// ReclaimResourceIndicators defines the configuration for reclaim resource indicators.
+// This allows administrators to specify at which granularity level the reclaim
+// of resources should be disabled when system pressure is detected.
+//
+// Example usage:
+// reclaimIndicators := &ReclaimResourceIndicators{
+//     ReclaimDegradationLevel: &ReclaimDegradationLevelPod,
+// }
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ReclaimResourceIndicators struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// ReclaimDegradationLevel specifies at which level to disable reclaim resources.
+	// When system pressure is detected, resource reclaiming can be disabled at different
+	// granularity levels (Node, Socket, NUMA, or Pod) to prevent performance degradation.
+	// If not set, the default value is ReclaimDegradationLevelPod.
+	// +optional
+	ReclaimDegradationLevel *ReclaimDegradationLevel `json:"reclaimDegradationLevel,omitempty"`
+}
+
+// ReclaimDegradationLevel defines the level at which reclaim resources are disabled.
+// +kubebuilder:validation:Enum=Node;Socket;NUMA;Pod
+type ReclaimDegradationLevel string
+
+const (
+	// ReclaimDegradationLevelNode disables reclaim resources at the node level.
+	// This is the broadest level where all reclaim activities are disabled for the entire node.
+	ReclaimDegradationLevelNode ReclaimDegradationLevel = "Node"
+
+	// ReclaimDegradationLevelSocket disables reclaim resources at the socket level.
+	// This disables reclaim activities for an entire CPU socket and all associated resources.
+	ReclaimDegradationLevelSocket ReclaimDegradationLevel = "Socket"
+
+	// ReclaimDegradationLevelNUMA disables reclaim resources at the NUMA level.
+	// This disables reclaim activities for a specific NUMA node and its associated resources.
+	ReclaimDegradationLevelNUMA ReclaimDegradationLevel = "NUMA"
+
+	// ReclaimDegradationLevelPod disables reclaim resources at the pod level.
+	// This is the finest granularity where reclaim activities are disabled only for specific pods.
+	// This is the default level if not explicitly specified.
+	ReclaimDegradationLevelPod ReclaimDegradationLevel = "Pod"
+)
