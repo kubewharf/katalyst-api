@@ -44,3 +44,9 @@ const (
 	CustomMetricNUMAMemoryBandwidthLocal  = "numa_mbm_local"
 	CustomMetricNUMAMemoryBandwidthVictim = "numa_mbm_victim"
 )
+
+// real-time numa level cpu and memory related metric
+const (
+	CustomMetricNUMACPUUsage    = "numa_cpu_usage"
+	CustomMetricNUMAMemoryUsage = "numa_memory_usage"
+)
