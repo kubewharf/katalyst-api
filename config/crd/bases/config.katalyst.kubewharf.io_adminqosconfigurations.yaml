@@ -672,6 +672,18 @@ spec:
                                 maximum: 1
                                 minimum: 0
                                 type: number
+                              nonReclaimUtilizationHigh:
+                                description: NonReclaimUtilizationHigh is the high
+                                  CPU utilization threshold
+                                maximum: 1
+                                minimum: 0
+                                type: number
+                              nonReclaimUtilizationLow:
+                                description: NonReclaimUtilizationLow is the low CPU
+                                  utilization threshold
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               targetReclaimedCoreUtilization:
                                 description: TargetReclaimedCoreUtilization is the
                                   target reclaimed core utilization to be used for
