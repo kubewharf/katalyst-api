@@ -460,6 +460,16 @@ func (in *CPUHeadroomUtilBasedConfig) DeepCopyInto(out *CPUHeadroomUtilBasedConf
 		*out = new(float64)
 		**out = **in
 	}
+	if in.NonReclaimUtilizationHigh != nil {
+		in, out := &in.NonReclaimUtilizationHigh, &out.NonReclaimUtilizationHigh
+		*out = new(float64)
+		**out = **in
+	}
+	if in.NonReclaimUtilizationLow != nil {
+		in, out := &in.NonReclaimUtilizationLow, &out.NonReclaimUtilizationLow
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 

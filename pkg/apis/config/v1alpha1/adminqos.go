@@ -309,6 +309,18 @@ type CPUHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MaxHeadroomCapacityRate *float64 `json:"maxHeadroomCapacityRate,omitempty"`
+
+	// NonReclaimUtilizationHigh is the high CPU utilization threshold
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	NonReclaimUtilizationHigh *float64 `json:"nonReclaimUtilizationHigh,omitempty"`
+
+	// NonReclaimUtilizationLow is the low CPU utilization threshold
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	NonReclaimUtilizationLow *float64 `json:"nonReclaimUtilizationLow,omitempty"`
 }
 
 type EvictionConfig struct {
