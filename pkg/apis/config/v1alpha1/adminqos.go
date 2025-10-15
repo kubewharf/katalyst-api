@@ -757,3 +757,76 @@ type NumaEvictionRankingMetric string
 // system level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string
+
+// ReclaimResourceIndicators defines the workload configuration for reclaim resource indicators.
+// It works in conjunction with the ServiceProfileDescriptor's (SPD) extendedIndicator to control
+// resource reclaim behavior at different levels of granularity. This allows fine-tuned control
+// over when and how resources are reclaimed based on system pressure and performance considerations.
+//
+// Example usage:
+//
+// To disable resource reclaiming at the NUMA level when system pressure is detected:
+//
+// ```yaml
+// apiVersion: workload.katalyst.kubewharf.io/v1alpha1
+// kind: ServiceProfileDescriptor
+// metadata:
+//
+//	name: example-spd
+//
+// spec:
+//
+//	targetRef:
+//	  apiVersion: apps/v1
+//	  kind: Deployment
+//	  name: example-deployment
+//	extendedIndicator:
+//	- name: ReclaimResource
+//	  indicators:
+//	    disableReclaimLevel: "NUMA"
+//
+// ```
+//
+// In this example, when system pressure is detected, resource reclaiming will be disabled at the NUMA level
+// for the specified workload, preventing performance degradation while still allowing reclaiming at finer
+// granularities (e.g., Pod level).
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ReclaimResourceIndicators struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// DisableReclaimLevel specifies at which level to disable reclaim resources.
+	// When system pressure is detected, resource reclaiming can be disabled at different
+	// granularity levels (Node, Socket, NUMA or Pod) to prevent performance degradation.
+	// If not set, the default value is DisableReclaimLevelPod.
+	// +optional
+	DisableReclaimLevel *DisableReclaimLevel `json:"disableReclaimLevel,omitempty"`
+}
+
+// DisableReclaimLevel defines the level at which reclaim resources are disabled.
+// The levels are ordered from broadest (Node) to finest (Pod) granularity.
+// +kubebuilder:validation:Enum=Node;Socket;NUMA;Pod
+type DisableReclaimLevel string
+
+const (
+	// DisableReclaimLevelNode disables reclaim resources at the node level.
+	// This is the broadest level where all reclaim activities are disabled for the entire node.
+	// Use this when you want to completely disable resource reclaiming across the whole node.
+	DisableReclaimLevelNode DisableReclaimLevel = "Node"
+
+	// DisableReclaimLevelSocket disables reclaim resources at the socket level.
+	// This disables reclaim activities for an entire CPU socket and all associated resources.
+	// Use this when you want to disable resource reclaiming for a specific CPU socket.
+	DisableReclaimLevelSocket DisableReclaimLevel = "Socket"
+
+	// DisableReclaimLevelNUMA disables reclaim resources at the NUMA level.
+	// This disables reclaim activities for a specific NUMA node and its associated resources.
+	// Use this when you want to disable resource reclaiming for a specific NUMA node.
+	DisableReclaimLevelNUMA DisableReclaimLevel = "NUMA"
+
+	// DisableReclaimLevelPod disables reclaim resources at the pod level.
+	// This is the finest granularity where reclaim activities are disabled only for specific pods.
+	// This is the default level if not explicitly specified.
+	// Use this when you want to disable resource reclaiming only for specific pods.
+	DisableReclaimLevelPod DisableReclaimLevel = "Pod"
+)
