@@ -28,6 +28,7 @@ const (
 
 // real-time memory related metric
 const (
+	CustomMetricNodeMemoryTotal     = "node_system_memory_total"
 	CustomMetricNodeMemoryFree      = "node_system_memory_free"
 	CustomMetricNodeMemoryAvailable = "node_system_memory_available"
 )
