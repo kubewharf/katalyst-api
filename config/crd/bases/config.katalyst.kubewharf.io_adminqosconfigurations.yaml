@@ -159,6 +159,9 @@ spec:
                               MemoryGuardConfig is a config for memory guard plugin, which is used to avoid high priority workload from being
                               affected by memory bursting caused by low priority workload.
                             properties:
+                              criticalWatermarkScaleFactor:
+                                minimum: 0
+                                type: number
                               enable:
                                 description: Enable is a flag to enable memory guard
                                   plugin
@@ -236,6 +239,51 @@ spec:
                               suppression, only if the cpu suppression duration of the pod is greater than the
                               minimum cpu suppression duration, the eviction will be triggered
                             type: string
+                          numaCPUPressureEvictionConfig:
+                            description: NumaCPUPressureEvictionConfig holds configurations
+                              for NUMA-level CPU pressure eviction.
+                            properties:
+                              candidateCount:
+                                description: CandidateCount is the candidate pod count
+                                  when selecting pods to be evicted.
+                                minimum: 0
+                                type: integer
+                              enableEviction:
+                                description: EnableEviction indicates whether to enable
+                                  NUMA-level CPU pressure eviction.
+                                type: boolean
+                              gracePeriod:
+                                description: |-
+                                  GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+                                  due to NUMA CPU pressure. 0 means no grace period.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                              metricRingSize:
+                                description: MetricRingSize is the size of the metric
+                                  ring buffer for calculating NUMA CPU pressure.
+                                minimum: 1
+                                type: integer
+                              skippedPodKinds:
+                                description: SkippedPodKinds is the pod kind that
+                                  will be skipped when selecting pods to be evicted.
+                                items:
+                                  type: string
+                                type: array
+                              thresholdExpandFactor:
+                                description: |-
+                                  ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
+                                  E.g., 1.1 means a 10% increase.
+                                minimum: 0
+                                type: number
+                              thresholdMetPercentage:
+                                description: |-
+                                  ThresholdMetPercentage is the percentage of time the NUMA's CPU pressure
+                                  must be above the threshold for an eviction to be triggered.
+                                maximum: 1
+                                minimum: 0
+                                type: number
+                            type: object
                         type: object
                       cpuSystemPressureEvictionConfig:
                         description: CPUSystemPressureEvictionConfig is the config
@@ -368,6 +416,12 @@ spec:
                               NumaVictimMinimumUtilizationThreshold is the victim's minimum memory usage on a NUMA node, if a pod
                               uses less memory on a NUMA node than this threshold,it won't be evicted by this NUMA's memory pressure.
                             type: number
+                          reclaimedGracePeriod:
+                            description: ReclaimedGracePeriod is the grace period
+                              of memory pressure reclaimed eviction
+                            format: int64
+                            minimum: 0
+                            type: integer
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
                               for the rate of rss
@@ -411,6 +465,26 @@ spec:
                             minimum: 0
                             type: integer
                         type: object
+                      networkEvictionConfig:
+                        description: NetworkEvictionConfig is the config for network
+                          eviction
+                        properties:
+                          enableNICNetworkEviction:
+                            description: EnableNICHealthEviction is whether to enable
+                              NIC health eviction.
+                            type: boolean
+                          gracePeriod:
+                            description: GracePeriod is the grace period of nic health
+                              eviction
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          nicUnhealthyToleranceDuration:
+                            description: |-
+                              NICUnhealthyToleranceDuration is the default duration a pod can tolerate nic
+                              unhealthy
+                            type: string
+                        type: object
                       reclaimedResourcesEvictionConfig:
                         description: ReclaimedResourcesEvictionConfig is the config
                           for reclaimed resources' eviction
@@ -438,6 +512,10 @@ spec:
                         description: RootfsPressureEvictionConfig is the config for
                           rootfs pressure eviction
                         properties:
+                          enableRootfsOveruseEviction:
+                            description: EnableRootfsOveruseEviction is whether to
+                              enable rootfs overuse eviction.
+                            type: boolean
                           enableRootfsPressureEviction:
                             description: EnableRootfsPressureEviction is whether to
                               enable rootfs pressure eviction.
@@ -497,6 +575,22 @@ spec:
                               The eviction manager will prioritize the eviction of offline pods that reach this threshold.
                               For example: "100Gi", "1%".
                             pattern: ^(0|[1-9][0-9]*)(\.[0-9]+)?%?$|^(0|[1-9][0-9]*)([kKmMGTPeE]i?)$
+                            type: string
+                          reclaimedQoSRootfsOveruseThreshold:
+                            description: |-
+                              ReclaimedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+                              For example: "100Gi", "10%".
+                            type: string
+                          rootfsOveruseEvictionSupportedQoSLevels:
+                            description: RootfsOveruseEvictionSupportedQoSLevels is
+                              the supported qos levels for rootfs overuse eviction.
+                            items:
+                              type: string
+                            type: array
+                          sharedQoSRootfsOveruseThreshold:
+                            description: |-
+                              SharedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+                              For example: "100Gi", "10%".
                             type: string
                         type: object
                       systemLoadPressureEvictionConfig:
@@ -591,6 +685,13 @@ spec:
                                 type: number
                             type: object
                         type: object
+                      disableReclaimSharePools:
+                        description: |-
+                          DisableReclaimSharePools is a list of share cpuset_pool that reclaim resource will be disabled.
+                          default is empty, which means all share cpuset_pool will be enabled.
+                        items:
+                          type: string
+                        type: array
                       enableReclaim:
                         description: |-
                           EnableReclaim is a flag to enable reclaim resource, if true, reclaim resource will be enabled,
@@ -622,12 +723,33 @@ spec:
                                 maximum: 1
                                 minimum: 0
                                 type: number
+                              maxOversoldRate:
+                                description: |-
+                                  MaxOversoldRate is the max oversold rate of memory headroom to the memory limit of
+                                  reclaimed_cores cgroup
+                                minimum: 0
+                                type: number
                               staticBasedCapacity:
                                 description: StaticBasedCapacity is the static oversold
                                   memory size by bytes
                                 minimum: 0
                                 type: number
                             type: object
+                        type: object
+                      minIgnoredReclaimedResourceForReport:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: 'MinIgnoredReclaimedResourceForReport defines
+                          per-resource minimum thresholds. If ANY resource''s current
+                          reclaimed amount falls below its respective threshold, ALL
+                          reclaimed resources will be ignored and reported as zero.
+                          This prevents resource fragmentation in quota calculations
+                          by avoiding reporting insignificant reclaimed quantities.
+                          For example, {"cpu": 0.1, "memory": 100Mi}.'
                         type: object
                       minReclaimedResourceForAllocate:
                         additionalProperties:
