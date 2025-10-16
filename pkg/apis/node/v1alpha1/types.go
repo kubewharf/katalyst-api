@@ -215,6 +215,9 @@ const (
 	// TopologyTypeNuma indicates numa-level topology
 	TopologyTypeNuma TopologyType = "Numa"
 
+	// TopologyTypeCacheGroup indicates cache-group-level topology
+	TopologyTypeCacheGroup TopologyType = "L3CacheGroup"
+
 	// TopologyTypeGPU indicates a zone for gpu device
 	TopologyTypeGPU TopologyType = "GPU"
 
