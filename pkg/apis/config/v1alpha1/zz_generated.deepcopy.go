@@ -2210,6 +2210,13 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			}
 		}
 	}
+	if in.MaxNodeUtilizationPercent != nil {
+		in, out := &in.MaxNodeUtilizationPercent, &out.MaxNodeUtilizationPercent
+		*out = make(map[corev1.ResourceName]int64, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	if in.CPUHeadroomConfig != nil {
 		in, out := &in.CPUHeadroomConfig, &out.CPUHeadroomConfig
 		*out = new(CPUHeadroomConfig)
