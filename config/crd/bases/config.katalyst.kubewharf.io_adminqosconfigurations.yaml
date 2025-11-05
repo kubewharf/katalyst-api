@@ -284,6 +284,58 @@ spec:
                                 minimum: 0
                                 type: number
                             type: object
+                          numaSysCPUPressureEvictionConfig:
+                            description: NumaSysCPUPressureEvictionConfig holds configurations
+                              for NUMA-level system CPU pressure eviction.
+                            properties:
+                              enableEviction:
+                                description: EnableEviction indicates whether to enable
+                                  NUMA-level system CPU pressure eviction.
+                                type: boolean
+                              gracePeriod:
+                                description: |-
+                                  GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+                                  due to NUMA system CPU pressure. 0 means no grace period.
+                                format: int64
+                                type: integer
+                              metricRingSize:
+                                description: MetricRingSize is the size of the metric
+                                  ring buffer for calculating NUMA system CPU pressure.
+                                type: integer
+                              numaCPUUsageHardThreshold:
+                                description: NumaCPUUsageHardThreshold is the hard
+                                  threshold for NUMA system CPU pressure.
+                                type: number
+                              numaCPUUsageSoftThreshold:
+                                description: NumaCPUUsageSoftThreshold is the soft
+                                  threshold for NUMA system CPU pressure.
+                                type: number
+                              numaSysOverTotalUsageEvictionThreshold:
+                                description: NUMASysOverTotalUsageEvictionThreshold
+                                  is the eviction threshold for NUMA system CPU pressure
+                                  over total system CPU pressure.
+                                type: number
+                              numaSysOverTotalUsageHardThreshold:
+                                description: NUMASysOverTotalUsageHardThreshold is
+                                  the hard threshold for NUMA system CPU pressure
+                                  over total system CPU pressure.
+                                type: number
+                              numaSysOverTotalUsageSoftThreshold:
+                                description: NUMASysOverTotalUsageSoftThreshold is
+                                  the soft threshold for NUMA system CPU pressure
+                                  over total system CPU pressure.
+                                type: number
+                              syncPeriod:
+                                description: SyncPeriod is the sync period (in seconds)
+                                  for updating NUMA system CPU pressure metrics.
+                                format: int64
+                                type: integer
+                              thresholdMetPercentage:
+                                description: |-
+                                  ThresholdMetPercentage is the percentage of time the NUMA's system CPU pressure
+                                  must be above the threshold for an eviction to be triggered.
+                                type: number
+                            type: object
                         type: object
                       cpuSystemPressureEvictionConfig:
                         description: CPUSystemPressureEvictionConfig is the config
