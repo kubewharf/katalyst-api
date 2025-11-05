@@ -455,6 +455,9 @@ type CPUPressureEvictionConfig struct {
 
 	// NumaCPUPressureEvictionConfig holds configurations for NUMA-level CPU pressure eviction.
 	NumaCPUPressureEvictionConfig NumaCPUPressureEvictionConfig `json:"numaCPUPressureEvictionConfig,omitempty"`
+
+	// NumaSysCPUPressureEvictionConfig holds configurations for NUMA-level system CPU pressure eviction.
+	NumaSysCPUPressureEvictionConfig NumaSysCPUPressureEvictionConfig `json:"numaSysCPUPressureEvictionConfig,omitempty"`
 }
 
 // NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
@@ -495,6 +498,44 @@ type NumaCPUPressureEvictionConfig struct {
 	// SkippedPodKinds is the pod kind that will be skipped when selecting pods to be evicted.
 	// +optional
 	SkippedPodKinds []string `json:"skippedPodKinds,omitempty"`
+}
+
+// NumaSysCPUPressureEvictionConfig holds the configurations for NUMA-level system CPU pressure eviction.
+type NumaSysCPUPressureEvictionConfig struct {
+	// EnableEviction indicates whether to enable NUMA-level system CPU pressure eviction.
+	// +optional
+	EnableEviction *bool `json:"enableEviction,omitempty"`
+	// MetricRingSize is the size of the metric ring buffer for calculating NUMA system CPU pressure.
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+	// due to NUMA system CPU pressure. 0 means no grace period.
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+	// SyncPeriod is the sync period (in seconds) for updating NUMA system CPU pressure metrics.
+	// +optional
+	SyncPeriod *int64 `json:"syncPeriod,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of time the NUMA's system CPU pressure
+	// must be above the threshold for an eviction to be triggered.
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+	// NumaCPUUsageSoftThreshold is the soft threshold for NUMA system CPU pressure.
+	// +optional
+	NumaCPUUsageSoftThreshold *float64 `json:"numaCPUUsageSoftThreshold,omitempty"`
+	// NumaCPUUsageHardThreshold is the hard threshold for NUMA system CPU pressure.
+	// +optional
+	NumaCPUUsageHardThreshold *float64 `json:"numaCPUUsageHardThreshold,omitempty"`
+	// NUMASysOverTotalUsageSoftThreshold is the soft threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageSoftThreshold *float64 `json:"numaSysOverTotalUsageSoftThreshold,omitempty"`
+	// NUMASysOverTotalUsageHardThreshold is the hard threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageHardThreshold *float64 `json:"numaSysOverTotalUsageHardThreshold,omitempty"`
+	// NUMASysOverTotalUsageEvictionThreshold is the eviction threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageEvictionThreshold *float64 `json:"numaSysOverTotalUsageEvictionThreshold,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {
