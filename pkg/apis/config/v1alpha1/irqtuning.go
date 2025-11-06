@@ -82,6 +82,9 @@ type IRQTuningConfig struct {
 	// EnableRPSCPUVSNicsQueue enable rps when (cpus count)/(nics queue count) greater than this config.
 	// +optional
 	EnableRPSCPUVSNicsQueue *float64 `json:"enableRPSCPUVSNicsQueue,omitempty"`
+	// DisableXPS indicates whether to disable the XPS function.
+	// +optional
+	DisableXPS *bool `json:"disableXPS,omitempty"`
 	// NICAffinityPolicy represents the NICs's irqs affinity sockets policy.
 	// One of CompleteMap, OverallBalance, PhysicalTopo.
 	// +optional

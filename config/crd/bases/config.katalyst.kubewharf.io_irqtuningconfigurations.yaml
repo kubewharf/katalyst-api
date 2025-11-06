@@ -201,6 +201,9 @@ spec:
                     maximum: 100
                     minimum: 0
                     type: integer
+                  disableXPS:
+                    description: DisableXPS indicates whether to disable the XPS function.
+                    type: boolean
                   enableRPS:
                     description: |-
                       EnableRPS indicates whether to enable the RPS function.
