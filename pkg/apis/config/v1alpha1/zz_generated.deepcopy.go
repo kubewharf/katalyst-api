@@ -1452,6 +1452,11 @@ func (in *IRQTuningConfig) DeepCopyInto(out *IRQTuningConfig) {
 		*out = new(float64)
 		**out = **in
 	}
+	if in.DisableXPS != nil {
+		in, out := &in.DisableXPS, &out.DisableXPS
+		*out = new(bool)
+		**out = **in
+	}
 	if in.ReniceKsoftirqd != nil {
 		in, out := &in.ReniceKsoftirqd, &out.ReniceKsoftirqd
 		*out = new(bool)
