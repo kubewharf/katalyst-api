@@ -89,25 +89,41 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	EnableReclaim *bool `json:"enableReclaim,omitempty"`
 
+	// DisableReclaimSharePools is a list of share cpuset_pool that reclaim resource will be disabled.
+	// default is empty, which means all share cpuset_pool will be enabled.
+	// +optional
+	DisableReclaimSharePools []string `json:"disableReclaimSharePools,omitempty"`
+
 	// ReservedResourceForReport is a reserved resource for report to custom node resource, which is used to
 	// prevent reclaim resource from being requested by reclaimed_cores pods.
+	// For example, {"cpu": 0, "memory": 0Gi}.
 	// +optional
 	ReservedResourceForReport *v1.ResourceList `json:"reservedResourceForReport,omitempty"`
 
 	// MinReclaimedResourceForReport is a minimum reclaimed resource for report to custom node resource, which means
 	// if reclaimed resource is less than MinReclaimedResourceForReport, then reclaimed resource will be reported as
 	// MinReclaimedResourceForReport.
+	// For example, {"cpu": 4, "memory": 5Gi}.
 	// +optional
 	MinReclaimedResourceForReport *v1.ResourceList `json:"minReclaimedResourceForReport,omitempty"`
+
+	// MinIgnoredReclaimedResourceForReport defines per-resource minimum thresholds. If ANY resource's current reclaimed amount
+	// falls below its respective threshold, ALL reclaimed resources will be ignored and reported as zero. This prevents resource
+	// fragmentation in quota calculations by avoiding reporting insignificant reclaimed quantities.
+	// For example, {"cpu": 0.1, "memory": 100Mi}.
+	// +optional
+	MinIgnoredReclaimedResourceForReport *v1.ResourceList `json:"minIgnoredReclaimedResourceForReport,omitempty"`
 
 	// ReservedResourceForAllocate is a resource reserved for non-reclaimed_cores pods that are not allocated to
 	// reclaimed_cores pods. It is used to set aside some buffer resources to avoid sudden increase in resource
 	// requirements.
+	// For example, {"cpu": 4, "memory": 5Gi}.
 	// +optional
 	ReservedResourceForAllocate *v1.ResourceList `json:"reservedResourceForAllocate,omitempty"`
 
 	// MinReclaimedResourceForAllocate is a resource reserved for reclaimed_cores pods，these resources will not be used
 	// by shared_cores pods.
+	// For example, {"cpu": 4, "memory": 0Gi}.
 	// +optional
 	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
@@ -163,13 +179,20 @@ type ControlKnobName string
 
 const (
 	// ControlKnobNonReclaimedCPURequirement refers to cpu requirement of non-reclaimed workloads, like shared_cores and dedicated_cores
+	// deprecated, will be removed later
 	ControlKnobNonReclaimedCPURequirement ControlKnobName = "non-reclaimed-cpu-requirement"
 
-	// ControlKnobNonReclaimedCPURequirementUpper refers to the upper cpu size, for isolated pods now
-	ControlKnobNonReclaimedCPURequirementUpper ControlKnobName = "non-reclaimed-cpu-requirement-upper"
+	// ControlKnobNonIsolatedUpperCPUSize refers to the upper cpu size, for isolated pods now
+	ControlKnobNonIsolatedUpperCPUSize ControlKnobName = "isolated-upper-cpu-size"
 
-	// ControlKnobNonReclaimedCPURequirementLower refers to the lower cpu size, for isolated pods now
-	ControlKnobNonReclaimedCPURequirementLower ControlKnobName = "non-reclaimed-cpu-requirement-lower"
+	// ControlKnobNonIsolatedLowerCPUSize refers to the lower cpu size, for isolated pods now
+	ControlKnobNonIsolatedLowerCPUSize ControlKnobName = "isolated-lower-cpu-size"
+
+	// ControlKnobReclaimedCoresCPUQuota is cpu limit for reclaimed-cores root cgroup
+	ControlKnobReclaimedCoresCPUQuota ControlKnobName = "reclaimed-cores-cpu-quota"
+
+	// ControlKnobReclaimedCoresCPUSize is the length of cpuset.cpus for reclaimed-cores
+	ControlKnobReclaimedCoresCPUSize ControlKnobName = "reclaimed-cores-cpu-size"
 )
 
 type RegionIndicators struct {
@@ -194,8 +217,8 @@ type RestrictConstraints struct {
 }
 
 type ControlKnobConstraints struct {
-	Name                ControlKnobName     `json:"name"`
-	RestrictConstraints RestrictConstraints `json:",inline"`
+	Name                ControlKnobName `json:"name"`
+	RestrictConstraints `json:",inline"`
 }
 
 type CPUProvisionConfig struct {
@@ -214,6 +237,10 @@ type MemoryGuardConfig struct {
 	// Enable is a flag to enable memory guard plugin
 	// +optional
 	Enable *bool `json:"enable,omitempty"`
+
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	CriticalWatermarkScaleFactor *float64 `json:"criticalWatermarkScaleFactor,omitempty"`
 }
 
 type MemoryHeadroomUtilBasedConfig struct {
@@ -238,6 +265,12 @@ type MemoryHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	CacheBasedRatio *float64 `json:"cacheBasedRatio,omitempty"`
+
+	// MaxOversoldRate is the max oversold rate of memory headroom to the memory limit of
+	// reclaimed_cores cgroup
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	MaxOversoldRate *float64 `json:"maxOversoldRate,omitempty"`
 }
 
 type CPUHeadroomConfig struct {
@@ -311,6 +344,10 @@ type EvictionConfig struct {
 	// ReclaimedResourcesEvictionConfig is the config for reclaimed resources' eviction
 	// +optional
 	ReclaimedResourcesEvictionConfig *ReclaimedResourcesEvictionConfig `json:"reclaimedResourcesEvictionConfig,omitempty"`
+
+	// NetworkEvictionConfig is the config for network eviction
+	// +optional
+	NetworkEvictionConfig *NetworkEvictionConfig `json:"networkEvictionConfig,omitempty"`
 }
 
 type ReclaimedResourcesEvictionConfig struct {
@@ -391,6 +428,49 @@ type CPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// NumaCPUPressureEvictionConfig holds configurations for NUMA-level CPU pressure eviction.
+	NumaCPUPressureEvictionConfig NumaCPUPressureEvictionConfig `json:"numaCPUPressureEvictionConfig,omitempty"`
+}
+
+// NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
+type NumaCPUPressureEvictionConfig struct {
+	// EnableEviction indicates whether to enable NUMA-level CPU pressure eviction.
+	// +optional
+	EnableEviction *bool `json:"enableEviction,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of time the NUMA's CPU pressure
+	// must be above the threshold for an eviction to be triggered.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+
+	// MetricRingSize is the size of the metric ring buffer for calculating NUMA CPU pressure.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+	// due to NUMA CPU pressure. 0 means no grace period.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
+	// E.g., 1.1 means a 10% increase.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ThresholdExpandFactor *float64 `json:"thresholdExpandFactor,omitempty"`
+
+	// CandidateCount is the candidate pod count when selecting pods to be evicted.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	CandidateCount *int `json:"candidateCount,omitempty"`
+
+	// SkippedPodKinds is the pod kind that will be skipped when selecting pods to be evicted.
+	// +optional
+	SkippedPodKinds []string `json:"skippedPodKinds,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {
@@ -454,6 +534,11 @@ type MemoryPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// ReclaimedGracePeriod is the grace period of memory pressure reclaimed eviction
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	ReclaimedGracePeriod *int64 `json:"reclaimedGracePeriod,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {
@@ -547,6 +632,40 @@ type RootfsPressureEvictionConfig struct {
 	// GracePeriod is the grace period of pod deletion
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// EnableRootfsOveruseEviction is whether to enable rootfs overuse eviction.
+	// +optional
+	EnableRootfsOveruseEviction *bool `json:"enableRootfsOveruseEviction,omitempty"`
+
+	// RootfsOveruseEvictionSupportedQoSLevels is the supported qos levels for rootfs overuse eviction.
+	// +optional
+	RootfsOveruseEvictionSupportedQoSLevels []string `json:"rootfsOveruseEvictionSupportedQoSLevels,omitempty"`
+
+	// SharedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+	// For example: "100Gi", "10%".
+	// +optional
+	SharedQoSRootfsOveruseThreshold *string `json:"sharedQoSRootfsOveruseThreshold,omitempty"`
+
+	// ReclaimedQoSRootfsOveruseThreshold is the threshold for rootfs overuse.
+	// For example: "100Gi", "10%".
+	// +optional
+	ReclaimedQoSRootfsOveruseThreshold *string `json:"reclaimedQoSRootfsOveruseThreshold,omitempty"`
+}
+
+type NetworkEvictionConfig struct {
+	// EnableNICHealthEviction is whether to enable NIC health eviction.
+	// +optional
+	EnableNICHealthEviction *bool `json:"enableNICNetworkEviction,omitempty"`
+
+	// NICUnhealthyToleranceDuration is the default duration a pod can tolerate nic
+	// unhealthy
+	// +optional
+	NICUnhealthyToleranceDuration *metav1.Duration `json:"nicUnhealthyToleranceDuration,omitempty"`
+
+	// GracePeriod is the grace period of nic health eviction
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
 
 type CPUSystemPressureEvictionConfig struct {
@@ -626,3 +745,76 @@ type NumaEvictionRankingMetric string
 // system level
 // +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string
+
+// ReclaimResourceIndicators defines the workload configuration for reclaim resource indicators.
+// It works in conjunction with the ServiceProfileDescriptor's (SPD) extendedIndicator to control
+// resource reclaim behavior at different levels of granularity. This allows fine-tuned control
+// over when and how resources are reclaimed based on system pressure and performance considerations.
+//
+// Example usage:
+//
+// To disable resource reclaiming at the NUMA level when system pressure is detected:
+//
+// ```yaml
+// apiVersion: workload.katalyst.kubewharf.io/v1alpha1
+// kind: ServiceProfileDescriptor
+// metadata:
+//
+//	name: example-spd
+//
+// spec:
+//
+//	targetRef:
+//	  apiVersion: apps/v1
+//	  kind: Deployment
+//	  name: example-deployment
+//	extendedIndicator:
+//	- name: ReclaimResource
+//	  indicators:
+//	    disableReclaimLevel: "NUMA"
+//
+// ```
+//
+// In this example, when system pressure is detected, resource reclaiming will be disabled at the NUMA level
+// for the specified workload, preventing performance degradation while still allowing reclaiming at finer
+// granularities (e.g., Pod level).
+//
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type ReclaimResourceIndicators struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// DisableReclaimLevel specifies at which level to disable reclaim resources.
+	// When system pressure is detected, resource reclaiming can be disabled at different
+	// granularity levels (Node, Socket, NUMA or Pod) to prevent performance degradation.
+	// If not set, the default value is DisableReclaimLevelPod.
+	// +optional
+	DisableReclaimLevel *DisableReclaimLevel `json:"disableReclaimLevel,omitempty"`
+}
+
+// DisableReclaimLevel defines the level at which reclaim resources are disabled.
+// The levels are ordered from broadest (Node) to finest (Pod) granularity.
+// +kubebuilder:validation:Enum=Node;Socket;NUMA;Pod
+type DisableReclaimLevel string
+
+const (
+	// DisableReclaimLevelNode disables reclaim resources at the node level.
+	// This is the broadest level where all reclaim activities are disabled for the entire node.
+	// Use this when you want to completely disable resource reclaiming across the whole node.
+	DisableReclaimLevelNode DisableReclaimLevel = "Node"
+
+	// DisableReclaimLevelSocket disables reclaim resources at the socket level.
+	// This disables reclaim activities for an entire CPU socket and all associated resources.
+	// Use this when you want to disable resource reclaiming for a specific CPU socket.
+	DisableReclaimLevelSocket DisableReclaimLevel = "Socket"
+
+	// DisableReclaimLevelNUMA disables reclaim resources at the NUMA level.
+	// This disables reclaim activities for a specific NUMA node and its associated resources.
+	// Use this when you want to disable resource reclaiming for a specific NUMA node.
+	DisableReclaimLevelNUMA DisableReclaimLevel = "NUMA"
+
+	// DisableReclaimLevelPod disables reclaim resources at the pod level.
+	// This is the finest granularity where reclaim activities are disabled only for specific pods.
+	// This is the default level if not explicitly specified.
+	// Use this when you want to disable resource reclaiming only for specific pods.
+	DisableReclaimLevelPod DisableReclaimLevel = "Pod"
+)

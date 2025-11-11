@@ -48,6 +48,7 @@ const (
 	ResourceNameTMOConfigurations           = "transparentmemoryoffloadingconfigurations"
 	ResourceNameStrategyGroupConfigurations = "strategygroupconfigurations"
 	ResourceNameStrategyGroups              = "strategygroups"
+	ResourceNameIRQTuningConfigurations     = "irqtuningconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -65,7 +66,8 @@ var (
 func addSPDKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(workloadapi.SchemeGroupVersion,
 		&TransparentMemoryOffloadingIndicators{},
-		&ResourcePortraitIndicators{})
+		&ResourcePortraitIndicators{},
+		&ReclaimResourceIndicators{})
 	return nil
 }
 
@@ -88,6 +90,9 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StrategyGroupConfigurationList{},
 		&StrategyGroup{},
 		&StrategyGroupList{},
+		&IRQTuningConfiguration{},
+		&IRQTuningConfigurationList{},
+
 		// global resource portrait configuration
 		&GlobalResourcePortraitConfiguration{},
 	)
