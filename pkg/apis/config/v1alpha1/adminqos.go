@@ -80,6 +80,10 @@ type AdminQoSConfig struct {
 
 	// +optional
 	AdvisorConfig *AdvisorConfig `json:"advisorConfig,omitempty"`
+
+	// FineGrainedResourceConfig is a configuration for more fine-grained resource control
+	// +optional
+	FineGrainedResourceConfig *FineGrainedResourceConfig `json:"fineGrainedResourceConfig,omitempty"`
 }
 
 type ReclaimedResourceConfig struct {
@@ -842,3 +846,21 @@ const (
 	// Use this when you want to disable resource reclaiming only for specific pods.
 	DisableReclaimLevelPod DisableReclaimLevel = "Pod"
 )
+
+type FineGrainedResourceConfig struct {
+	// CPUBurstConfig has cpu burst related configurations
+	// +optional
+	CPUBurstConfig *CPUBurstConfig `json:"cpuBurstConfig,omitempty"`
+}
+
+type CPUBurstConfig struct {
+	// EnableDedicatedCoresDefaultCPUBurst indicates whether cpu burst should be enabled by default for pods with dedicated cores.
+	// +optional
+	EnableDedicatedCoresDefaultCPUBurst *bool `json:"enableDedicatedCoresDefaultCPUBurst,omitempty"`
+
+	// DefaultCPUBurstPercent is the default cpu burst percent to be set for pods with dedicated cores.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	DefaultCPUBurstPercent *int64 `json:"defaultCPUBurstPercent,omitempty"`
+}
