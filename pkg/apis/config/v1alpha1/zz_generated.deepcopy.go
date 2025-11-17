@@ -2208,6 +2208,11 @@ func (in *ReclaimResourceIndicators) DeepCopyInto(out *ReclaimResourceIndicators
 		*out = new(DisableReclaimLevel)
 		**out = **in
 	}
+	if in.EnableShareGPU != nil {
+		in, out := &in.EnableShareGPU, &out.EnableShareGPU
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 
