@@ -138,6 +138,15 @@ const (
 	// For cgroup v1, the cpu burst value is calculated using cpu.cfs_quota_us * (cpu_burst_percent / 100)
 	// For cgroup v2, the cpu burst value is calculated using cpu.max * (cpu_burst_percent / 100)
 	PodAnnotationCPUEnhancementCPUBurstPercent = "cpu_burst_percent"
+
+	// PodAnnotationCPUEnhancementNumaAffinity provides a mechanism to enable numa-affinity
+	// for A SINGLE Pod to avoid contentions on cpu cores.
+	//
+	// - this enhancement is only supported for dedicated-cores and shared-cores, for now and foreseeable future.
+	// - shared cores with numa-affinity and dedicated cores with numa-affinity can share different cpu cores in
+	// - same numa nodes.
+	PodAnnotationCPUEnhancementNumaAffinity       = "cpu_numa_affinity"
+	PodAnnotationCPUEnhancementNumaAffinityEnable = "true"
 )
 
 // const variables for pod annotations about qos level enhancement in network
