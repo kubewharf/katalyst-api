@@ -116,6 +116,15 @@ const (
 	//
 	// - this enhancement is only supported for reclaimed-cores, for now and foreseeable future
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
+
+	// PodAnnotationCPUEnhancementNumaAffinity provides a mechanism to enable numa-affinity
+	// for A SINGLE Pod to avoid contentions on cpu cores.
+	//
+	// - this enhancement is only supported for dedicated-cores and shared-cores, for now and foreseeable future.
+	// - shared cores with numa-affinity and dedicated cores with numa-affinity can share different cpu cores in
+	// - same numa nodes.
+	PodAnnotationCPUEnhancementNumaAffinity       = "numa_affinity"
+	PodAnnotationCPUEnhancementNumaAffinityEnable = "true"
 )
 
 // const variables for pod annotations about qos level enhancement in network
