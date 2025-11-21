@@ -641,6 +641,27 @@ spec:
                             type: number
                         type: object
                     type: object
+                  fineGrainedResourceConfig:
+                    description: FineGrainedResourceConfig is a configuration for
+                      more fine-grained resource control
+                    properties:
+                      cpuBurstConfig:
+                        description: CPUBurstConfig has cpu burst related configurations
+                        properties:
+                          defaultCPUBurstPercent:
+                            description: DefaultCPUBurstPercent is the default cpu
+                              burst percent to be set for pods with dedicated cores.
+                            format: int64
+                            maximum: 100
+                            minimum: 0
+                            type: integer
+                          enableDedicatedCoresDefaultCPUBurst:
+                            description: EnableDedicatedCoresDefaultCPUBurst indicates
+                              whether cpu burst should be enabled by default for pods
+                              with dedicated cores.
+                            type: boolean
+                        type: object
+                    type: object
                   reclaimedResourceConfig:
                     description: ReclaimedResourceConfig is a configuration for reclaim
                       resource
