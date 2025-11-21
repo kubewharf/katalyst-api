@@ -922,6 +922,9 @@ type FineGrainedResourceConfig struct {
 
 type CPUBurstConfig struct {
 	// EnableDedicatedCoresDefaultCPUBurst indicates whether cpu burst should be enabled by default for pods with dedicated cores.
+	// If set to true, it means that cpu burst should be enabled by default for pods with dedicated cores (cpu burst value is calculated and set).
+	// If set to false, it means that cpu burst should be disabled for pods with dedicated cores (cpu burst value is set to 0).
+	// If set to nil, it means that no operation is done on the cpu burst value.
 	// +optional
 	EnableDedicatedCoresDefaultCPUBurst *bool `json:"enableDedicatedCoresDefaultCPUBurst,omitempty"`
 
