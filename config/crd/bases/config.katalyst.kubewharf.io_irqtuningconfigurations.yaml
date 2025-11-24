@@ -269,6 +269,12 @@ spec:
                       NICAffinityPolicy represents the NICs's irqs affinity sockets policy.
                       One of CompleteMap, OverallBalance, PhysicalTopo.
                     type: string
+                  normalThroughputNics:
+                    description: NormalThroughputNics describes static configured
+                      normal throughput Nics.
+                    items:
+                      type: string
+                    type: array
                   reniceKsoftirqd:
                     description: ReniceKsoftirqd indicates whether to renice ksoftirqd
                       process.

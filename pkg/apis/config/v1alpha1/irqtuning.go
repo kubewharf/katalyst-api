@@ -109,6 +109,9 @@ type IRQTuningConfig struct {
 	// +optional
 	RPSExcludeIRQCoresThreshold *RPSExcludeIRQCoresThreshold `json:"rpsExcludeIRQCoresThreshold,omitempty"`
 
+	// NormalThroughputNics describes static configured normal throughput Nics.
+	// +optional
+	NormalThroughputNics []string `json:"normalThroughputNics,omitempty"`
 	// ThroughputClassSwitch describes the switch configuration for a throughput class.
 	// +optional
 	ThroughputClassSwitch *ThroughputClassSwitchConfig `json:"throughputClassSwitch,omitempty"`
