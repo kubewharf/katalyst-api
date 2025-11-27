@@ -39,6 +39,9 @@ const (
 	SPDAnnotationBaselineSentinelKey         = "spd.katalyst.kubewharf.io/baselineSentinel"
 	SPDAnnotationExtendedBaselineSentinelKey = "spd.katalyst.kubewharf.io/extendedBaselineSentinel"
 
+	// SPDAnnotationKeyCustomCompareKey holds annotation for spd baseline compare key
+	SPDAnnotationKeyCustomCompareKey = "spd.katalyst.kubewharf.io/customCompareKey"
+
 	SPDBaselinePercentMax = 100
 	SPDBaselinePercentMin = 0
 )
@@ -47,9 +50,4 @@ const (
 const (
 	// SPDAggMetricNameMemoryBandwidth is per core memory bandwidth
 	SPDAggMetricNameMemoryBandwidth = "memory_bandwidth"
-)
-
-// const for stateful socket spd baseline based on shard
-const (
-	ServiceProfileDescriptorAnnotationKeyCustomCompareKey = "spd.katalyst.kubewharf.io/customCompareKey"
 )
