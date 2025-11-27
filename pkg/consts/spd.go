@@ -48,3 +48,9 @@ const (
 	// SPDAggMetricNameMemoryBandwidth is per core memory bandwidth
 	SPDAggMetricNameMemoryBandwidth = "memory_bandwidth"
 )
+
+// const for stateful socket spd baseline based on shard
+const (
+	LabelStatefulSetExtensionName                         = "statefulset_extension_name"
+	ServiceProfileDescriptorAnnotationKeyCustomCompareKey = "spd.katalyst.kubewharf.io/customCompareKey"
+)
