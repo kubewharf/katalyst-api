@@ -51,6 +51,5 @@ const (
 
 // const for stateful socket spd baseline based on shard
 const (
-	LabelStatefulSetExtensionName                         = "statefulset_extension_name"
 	ServiceProfileDescriptorAnnotationKeyCustomCompareKey = "spd.katalyst.kubewharf.io/customCompareKey"
 )
