@@ -1845,6 +1845,16 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(int)
 		**out = **in
 	}
+	if in.NumaFreeBelowWatermarkTimesReclaimedThreshold != nil {
+		in, out := &in.NumaFreeBelowWatermarkTimesReclaimedThreshold, &out.NumaFreeBelowWatermarkTimesReclaimedThreshold
+		*out = new(int)
+		**out = **in
+	}
+	if in.NumaFreeConstraintFastEvictionWaitCycle != nil {
+		in, out := &in.NumaFreeConstraintFastEvictionWaitCycle, &out.NumaFreeConstraintFastEvictionWaitCycle
+		*out = new(int)
+		**out = **in
+	}
 	if in.SystemKswapdRateThreshold != nil {
 		in, out := &in.SystemKswapdRateThreshold, &out.SystemKswapdRateThreshold
 		*out = new(int)

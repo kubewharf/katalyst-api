@@ -517,6 +517,17 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	NumaFreeBelowWatermarkTimesThreshold *int `json:"numaFreeBelowWatermarkTimesThreshold,omitempty"`
 
+	// NumaFreeBelowWatermarkTimesReclaimedThreshold is the threshold for the number of
+	// times NUMA's free memory of the reclaimed instance falls below the watermark
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	NumaFreeBelowWatermarkTimesReclaimedThreshold *int `json:"numaFreeBelowWatermarkTimesReclaimedThreshold,omitempty"`
+
+	// NumaFreeConstraintFastEvictionWaitCycle is the wait cycle for fast eviction when numa memory is extremely tight
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	NumaFreeConstraintFastEvictionWaitCycle *int `json:"numaFreeConstraintFastEvictionWaitCycle,omitempty"`
+
 	// NumaFreeBelowWatermarkTimesThreshold is the threshold for the rate of
 	// kswapd reclaiming rate
 	// +kubebuilder:validation:Minimum=0
@@ -563,6 +574,14 @@ type MemoryPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ReclaimedGracePeriod *int64 `json:"reclaimedGracePeriod,omitempty"`
+
+	// EvictAnnotationSelector is the annotation selector to filter pods for eviction
+	// +optional
+	EvictAnnotationSelector string `json:"evictAnnotationSelector,omitempty"`
+
+	// EvictAnnotationSelector is the label selector to filter pods for eviction
+	// +optional
+	EvictLabelSelector string `json:"evictLabelSelector,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {

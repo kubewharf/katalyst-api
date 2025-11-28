@@ -384,6 +384,14 @@ spec:
                             description: EnableSystemLevelEviction is whether to enable
                               system-level eviction
                             type: boolean
+                          evictAnnotationSelector:
+                            description: EvictAnnotationSelector is the annotation
+                              selector to filter pods for eviction
+                            type: string
+                          evictLabelSelector:
+                            description: EvictAnnotationSelector is the label selector
+                              to filter pods for eviction
+                            type: string
                           gracePeriod:
                             description: GracePeriod is the grace period of memory
                               pressure eviction
@@ -405,10 +413,22 @@ spec:
                               type: string
                             minItems: 1
                             type: array
+                          numaFreeBelowWatermarkTimesReclaimedThreshold:
+                            description: |-
+                              NumaFreeBelowWatermarkTimesReclaimedThreshold is the threshold for the number of
+                              times NUMA's free memory of the reclaimed instance falls below the watermark
+                            minimum: 0
+                            type: integer
                           numaFreeBelowWatermarkTimesThreshold:
                             description: |-
                               NumaFreeBelowWatermarkTimesThreshold is the threshold for the number of
                               times NUMA's free memory falls below the watermark
+                            minimum: 0
+                            type: integer
+                          numaFreeConstraintFastEvictionWaitCycle:
+                            description: NumaFreeConstraintFastEvictionWaitCycle is
+                              the wait cycle for fast eviction when numa memory is
+                              extremely tight
                             minimum: 0
                             type: integer
                           numaVictimMinimumUtilizationThreshold:
