@@ -123,6 +123,10 @@ type TMOConfigDetail struct {
 	// +optional
 	EnableSwap *bool `json:"enableSwap,omitempty"`
 
+	// ReservedInactiveFile is the reserved value of inactive file memory
+	// +optional
+	ReservedInactiveFile *uint64 `json:"reservedInactiveFile,omitempty"`
+
 	// Interval is the minimum duration the objectives got memory reclaimed by TMO
 	// +optional
 	Interval *metav1.Duration `json:"interval,omitempty"`
