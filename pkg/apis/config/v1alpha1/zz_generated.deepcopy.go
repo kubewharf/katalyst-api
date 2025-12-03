@@ -1424,6 +1424,11 @@ func (in *IRQTuningConfig) DeepCopyInto(out *IRQTuningConfig) {
 		*out = new(RPSExcludeIRQCoresThreshold)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.NormalThroughputNics != nil {
+		in, out := &in.NormalThroughputNics, &out.NormalThroughputNics
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.ThroughputClassSwitch != nil {
 		in, out := &in.ThroughputClassSwitch, &out.ThroughputClassSwitch
 		*out = new(ThroughputClassSwitchConfig)
