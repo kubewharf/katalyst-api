@@ -283,7 +283,20 @@ type AggPodMetrics struct {
 	Scope string `json:"scope,omitempty"`
 
 	// +optional
-	Items []metrics.PodMetrics `json:"items,omitempty"`
+	Items []PodMetrics `json:"items,omitempty"`
+}
+
+type PodMetrics struct {
+	// Annotations is a set of key-value pairs that are attached to the metrics.
+	// +optional
+	Annotations map[string]string `json:"annotations,omitempty" protobuf:"annotations,omitempty"`
+	// The following fields define time interval from which metrics were
+	// collected from the interval [Timestamp-Window, Timestamp].
+	Timestamp metav1.Time     `json:"timestamp" protobuf:"bytes,2,opt,name=timestamp"`
+	Window    metav1.Duration `json:"window" protobuf:"bytes,3,opt,name=window"`
+
+	// Metrics for all containers are collected within the same time window.
+	Containers []metrics.ContainerMetrics `json:"containers" protobuf:"bytes,4,rep,name=containers"`
 }
 
 // ServiceProfileDescriptorStatus describes the observed info of the spd.
