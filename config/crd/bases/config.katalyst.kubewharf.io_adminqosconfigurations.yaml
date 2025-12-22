@@ -188,7 +188,7 @@ spec:
                             description: GracePeriod is the grace period of cpu pressure
                               eviction
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                           loadEvictionCoolDownTime:
                             description: |-
@@ -257,7 +257,7 @@ spec:
                                   GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
                                   due to NUMA CPU pressure. 0 means no grace period.
                                 format: int64
-                                minimum: 0
+                                minimum: -1
                                 type: integer
                               metricRingSize:
                                 description: MetricRingSize is the size of the metric
@@ -362,7 +362,10 @@ spec:
                               type: string
                             type: array
                           gracePeriod:
+                            description: GracePeriod is the grace period of cpu system
+                              pressure eviction
                             format: int64
+                            minimum: -1
                             type: integer
                           loadLowerBoundRatio:
                             description: |-
@@ -448,7 +451,7 @@ spec:
                             description: GracePeriod is the grace period of memory
                               pressure eviction
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                           numaEvictionRankingMetrics:
                             description: |-
@@ -492,7 +495,7 @@ spec:
                             description: ReclaimedGracePeriod is the grace period
                               of memory pressure reclaimed eviction
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                           rssOveruseRateThreshold:
                             description: RSSOveruseRateThreshold is the threshold
@@ -549,7 +552,7 @@ spec:
                             description: GracePeriod is the grace period of nic health
                               eviction
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                           nicUnhealthyToleranceDuration:
                             description: |-
@@ -571,13 +574,13 @@ spec:
                             description: GracePeriod is the grace period of reclaimed
                               resources' eviction
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                           thresholdMetToleranceDuration:
                             description: ThresholdMetToleranceDuration is the tolerance
                               duration before eviction.
                             format: int64
-                            minimum: 0
+                            minimum: -1
                             type: integer
                         type: object
                       rootfsPressureEvictionConfig:
@@ -595,6 +598,7 @@ spec:
                           gracePeriod:
                             description: GracePeriod is the grace period of pod deletion
                             format: int64
+                            minimum: -1
                             type: integer
                           minimumImageFsDiskCapacityThreshold:
                             anyOf:
@@ -681,6 +685,7 @@ spec:
                           gracePeriod:
                             description: GracePeriod is the grace period of pod deletion
                             format: int64
+                            minimum: -1
                             type: integer
                           hardThreshold:
                             description: |-
