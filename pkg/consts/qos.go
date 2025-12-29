@@ -118,14 +118,14 @@ const (
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
 
 	// PodAnnotationCPUEnhancementCPUBurstPolicy is the policy for setting the cpu burst value.
-	// There are 3 possible values for this: none, static, dynamic.
+	// There are 3 possible values for this: default, static, dynamic.
 	//
-	// - None: There is no change to cpu burst value
+	// - Default: There is no change to cpu burst value
 	// - Closed: cpu burst value is always set to 0
 	// - Static: cpu burst value is set to a constant value
 	// - Dynamic: cpu burst value is only enabled when pod cpu utilisation is lower than the threshold set
 	PodAnnotationCPUEnhancementCPUBurstPolicy        = "cpu_burst_policy"
-	PodAnnotationCPUEnhancementCPUBurstPolicyNone    = "none"
+	PodAnnotationCPUEnhancementCPUBurstPolicyDefault = "default"
 	PodAnnotationCPUEnhancementCPUBurstPolicyClosed  = "closed"
 	PodAnnotationCPUEnhancementCPUBurstPolicyStatic  = "static"
 	PodAnnotationCPUEnhancementCPUBurstPolicyDynamic = "dynamic"
