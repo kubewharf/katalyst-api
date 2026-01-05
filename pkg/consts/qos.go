@@ -116,6 +116,28 @@ const (
 	//
 	// - this enhancement is only supported for reclaimed-cores, for now and foreseeable future
 	PodAnnotationCPUEnhancementSuppressionToleranceRate = "suppression_tolerance_rate"
+
+	// PodAnnotationCPUEnhancementCPUBurstPolicy is the policy for setting the cpu burst value.
+	// There are 3 possible values for this: default, static, dynamic.
+	//
+	// - Default: There is no change to cpu burst value
+	// - Closed: cpu burst value is always set to 0
+	// - Static: cpu burst value is set to a constant value
+	// - Dynamic: cpu burst value is only enabled when pod cpu utilisation is lower than the threshold set
+	PodAnnotationCPUEnhancementCPUBurstPolicy        = "cpu_burst_policy"
+	PodAnnotationCPUEnhancementCPUBurstPolicyDefault = "default"
+	PodAnnotationCPUEnhancementCPUBurstPolicyClosed  = "closed"
+	PodAnnotationCPUEnhancementCPUBurstPolicyStatic  = "static"
+	PodAnnotationCPUEnhancementCPUBurstPolicyDynamic = "dynamic"
+
+	// PodAnnotationCPUEnhancementCPUBurstThreshold is the value such that when pod cpu utilisation becomes lower than
+	// the threshold, cpu burst is dynamically enabled. Only enabled when cpu burst policy is dynamic
+	PodAnnotationCPUEnhancementCPUBurstThreshold = "cpu_burst_threshold"
+
+	// PodAnnotationCPUEnhancementCPUBurstPercent determines the cpu burst value to be set.
+	// For cgroup v1, the cpu burst value is calculated using cpu.cfs_quota_us * (cpu_burst_percent / 100)
+	// For cgroup v2, the cpu burst value is calculated using cpu.max * (cpu_burst_percent / 100)
+	PodAnnotationCPUEnhancementCPUBurstPercent = "cpu_burst_percent"
 )
 
 // const variables for pod annotations about qos level enhancement in network
