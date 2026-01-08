@@ -74,6 +74,10 @@ type AdminQoSConfig struct {
 	// +optional
 	ReclaimedResourceConfig *ReclaimedResourceConfig `json:"reclaimedResourceConfig,omitempty"`
 
+	// QRMPluginConfig is a configuration for qrm plugin
+	// +optional
+	QRMPluginConfig *QRMPluginConfig `json:"qrmPluginConfig,omitempty"`
+
 	// EvictionConfig is a configuration for eviction
 	// +optional
 	EvictionConfig *EvictionConfig `json:"evictionConfig,omitempty"`
@@ -340,6 +344,19 @@ type CPUHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	NonReclaimUtilizationLow *float64 `json:"nonReclaimUtilizationLow,omitempty"`
+}
+
+type QRMPluginConfig struct {
+	// CPUPluginConfig is the config for cpu plugin
+	// +optional
+	CPUPluginConfig *CPUPluginConfig `json:"cpuPluginConfig,omitempty"`
+}
+
+type CPUPluginConfig struct {
+	// PreferUseExistNUMAHintResult prefer to use existing numa hint results
+	// The calculation results may originate from upstream components and be recorded in the pod annotation
+	// +optional
+	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
 }
 
 type EvictionConfig struct {
