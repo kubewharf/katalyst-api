@@ -742,6 +742,19 @@ spec:
                             type: boolean
                         type: object
                     type: object
+                  qrmPluginConfig:
+                    description: QRMPluginConfig is a configuration for qrm plugin
+                    properties:
+                      cpuPluginConfig:
+                        description: CPUPluginConfig is the config for cpu plugin
+                        properties:
+                          preferUseExistNUMAHintResult:
+                            description: |-
+                              PreferUseExistNUMAHintResult prefer to use existing numa hint results
+                              The calculation results may originate from upstream components and be recorded in the pod annotation
+                            type: boolean
+                        type: object
+                    type: object
                   reclaimedResourceConfig:
                     description: ReclaimedResourceConfig is a configuration for reclaim
                       resource
