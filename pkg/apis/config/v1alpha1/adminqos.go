@@ -901,6 +901,12 @@ type ReclaimResourceIndicators struct {
 	// If not set, the default value is DisableReclaimLevelPod.
 	// +optional
 	DisableReclaimLevel *DisableReclaimLevel `json:"disableReclaimLevel,omitempty"`
+
+	// EnableShareGPU specifies whether to enable share GPU resources.
+	// If set to true, GPU resources will be shared with other reclaimed_cores pods.
+	// If not set, the default value is false.
+	// +optional
+	EnableShareGPU *bool `json:"enableShareGPU,omitempty"`
 }
 
 // DisableReclaimLevel defines the level at which reclaim resources are disabled.
