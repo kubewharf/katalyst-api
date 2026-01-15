@@ -3055,6 +3055,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableSwapOnProactiveEnabled != nil {
+		in, out := &in.EnableSwapOnProactiveEnabled, &out.EnableSwapOnProactiveEnabled
+		*out = new(bool)
+		**out = **in
+	}
 	if in.Interval != nil {
 		in, out := &in.Interval, &out.Interval
 		*out = new(v1.Duration)
