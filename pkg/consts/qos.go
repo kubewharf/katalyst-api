@@ -138,6 +138,26 @@ const (
 	// For cgroup v1, the cpu burst value is calculated using cpu.cfs_quota_us * (cpu_burst_percent / 100)
 	// For cgroup v2, the cpu burst value is calculated using cpu.max * (cpu_burst_percent / 100)
 	PodAnnotationCPUEnhancementCPUBurstPercent = "cpu_burst_percent"
+
+	// PodAnnotationCPUEnhancementAlignBySocket is a strong constraint that determines if the cpu cores allocated
+	// should be within the fewest number of sockets possible. For example, if a socket has 16 cores,
+	// and a pod requests 15 cores, it must be allocated within one socket.
+	// If a socket has 16 cores, and a pod requests 17 cores, it must be allocated within two sockets.
+	// If set to true, the above conditions must be met.
+	PodAnnotationCPUEnhancementAlignBySocket       = "align_by_socket"
+	PodAnnotationCPUEnhancementAlignBySocketEnable = "true"
+
+	// PodAnnotationCPUEnhancementDistributeEvenlyAcrossNuma determines if the cpu cores allocated should be distributed
+	// evenly across NUMA nodes. This affects the preferred label in the topology hints.
+	PodAnnotationCPUEnhancementDistributeEvenlyAcrossNuma       = "distribute_evenly_across_numa"
+	PodAnnotationCPUEnhancementDistributeEvenlyAcrossNumaEnable = "true"
+
+	// PodAnnotationCPUEnhancementFullPCPUsPairing is a strong constraint that restricts the core allocation to
+	// full physical cores only. This means the cpu cores allocated must come from different physical cores,
+	// and only one of the threads in each core is allocated, while the remaining threads are idle.
+	// If set to true, the above conditions must be met.
+	PodAnnotationCPUEnhancementFullPCPUsPairing       = "full_pcpus_pairing"
+	PodAnnotationCPUEnhancementFullPCPUsPairingEnable = "true"
 )
 
 // const variables for pod annotations about qos level enhancement in network
