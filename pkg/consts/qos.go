@@ -158,6 +158,13 @@ const (
 	// If set to true, the above conditions must be met.
 	PodAnnotationCPUEnhancementFullPCPUsPairing       = "full_pcpus_pairing"
 	PodAnnotationCPUEnhancementFullPCPUsPairingEnable = "true"
+
+	// PodAnnotationCPUEnhancementNumaNumber is a strong constraint that restricts the hints to be of a certain NUMA count.
+	PodAnnotationCPUEnhancementNumaNumber = "katalyst.kubewharf.io/numa_number"
+
+	// PodAnnotationCPUEnhancementNumaIDs is a strong constraint that restricts the hints to be within specific NUMA IDs.
+	// PodAnnotationCPUEnhancementNumaIDs is of a priority than PodAnnotationCPUEnhancementNumaNumber.
+	PodAnnotationCPUEnhancementNumaIDs = "katalyst.kubewharf.io/numa_ids"
 )
 
 // const variables for pod annotations about qos level enhancement in network
