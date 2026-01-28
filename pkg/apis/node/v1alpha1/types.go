@@ -206,6 +206,36 @@ type TopologyZone struct {
 	Siblings []Sibling `json:"siblings,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
+// Affinity is the map of socket id or numa id to the quantity of resources allocated.
+type Affinity map[uint64]v1.ResourceList
+
+type TopologyAllocation map[TopologyType]map[string]ZoneAllocation
+
+// TopologyResult specifies the struct to serialize the topology result.
+type TopologyResult struct {
+	// CPUSets indicates all the cpusets that are allocated.
+	CPUSets string `json:"cpusets,omitempty"`
+
+	// Socket indicates allocated resources that have affinity to sockets.
+	Socket Affinity `json:"socket,omitempty"`
+
+	// Numa indicates allocated resources that have affinity to numa, such as cpu.
+	Numa Affinity `json:"numa,omitempty"`
+
+	// TopologyAllocation indicates the resources allocated and topology positions,
+	// mapped by the TopologyType and the specific name of the TopologyType.
+	TopologyAllocation TopologyAllocation `json:"topologyAllocation,omitempty"`
+}
+
+// ZoneAllocation describes a specific zone allocation result.
+type ZoneAllocation struct {
+	// Allocated indicates the resources that are allocated to the pod.
+	Allocated v1.ResourceList `json:"allocated,omitempty"`
+
+	// Attributes store additional attributes specific to the device.
+	Attributes map[string]string `json:"attributes,omitempty"`
+}
+
 type TopologyType string
 
 const (
