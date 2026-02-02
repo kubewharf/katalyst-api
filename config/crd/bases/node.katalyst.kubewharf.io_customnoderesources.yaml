@@ -335,6 +335,20 @@ spec:
                             Allocatable defines the total resources available for this package.
                             Keys usually include "cpu" and "memory" (e.g. cpu: "64", memory: "128Gi").
                           type: object
+                        attributes:
+                          items:
+                            description: Attribute records the resource-specified
+                              info with name-value pairs
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         packageName:
                           description: |-
                             PackageName is the identifier for this package, e.g. "x2", "x8".
@@ -379,6 +393,20 @@ spec:
                           - ResourcePools are derived from metrics reported in a NodeProfileDescriptor CRD.
                           - These metrics are mapped into MinAllocatable/MaxAllocatable values.
                       properties:
+                        attributes:
+                          items:
+                            description: Attribute records the resource-specified
+                              info with name-value pairs
+                            properties:
+                              name:
+                                type: string
+                              value:
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         maxAllocatable:
                           additionalProperties:
                             anyOf:
@@ -559,6 +587,20 @@ spec:
                                   Allocatable defines the total resources available for this package.
                                   Keys usually include "cpu" and "memory" (e.g. cpu: "64", memory: "128Gi").
                                 type: object
+                              attributes:
+                                items:
+                                  description: Attribute records the resource-specified
+                                    info with name-value pairs
+                                  properties:
+                                    name:
+                                      type: string
+                                    value:
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                type: array
                               packageName:
                                 description: |-
                                   PackageName is the identifier for this package, e.g. "x2", "x8".
@@ -603,6 +645,20 @@ spec:
                                 - ResourcePools are derived from metrics reported in a NodeProfileDescriptor CRD.
                                 - These metrics are mapped into MinAllocatable/MaxAllocatable values.
                             properties:
+                              attributes:
+                                items:
+                                  description: Attribute records the resource-specified
+                                    info with name-value pairs
+                                  properties:
+                                    name:
+                                      type: string
+                                    value:
+                                      type: string
+                                  required:
+                                  - name
+                                  - value
+                                  type: object
+                                type: array
                               maxAllocatable:
                                 additionalProperties:
                                   anyOf:
