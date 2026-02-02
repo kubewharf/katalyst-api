@@ -543,6 +543,11 @@ func (in *ResourcePackage) DeepCopyInto(out *ResourcePackage) {
 			}
 		}
 	}
+	if in.Attributes != nil {
+		in, out := &in.Attributes, &out.Attributes
+		*out = make([]Attribute, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
@@ -580,6 +585,11 @@ func (in *ResourcePool) DeepCopyInto(out *ResourcePool) {
 				(*out)[key] = val.DeepCopy()
 			}
 		}
+	}
+	if in.Attributes != nil {
+		in, out := &in.Attributes, &out.Attributes
+		*out = make([]Attribute, len(*in))
+		copy(*out, *in)
 	}
 	return
 }
