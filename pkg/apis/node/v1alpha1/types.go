@@ -215,6 +215,9 @@ const (
 	// TopologyTypeNuma indicates numa-level topology
 	TopologyTypeNuma TopologyType = "Numa"
 
+	// TopologyTypeCacheGroup indicates cache-group-level topology
+	TopologyTypeCacheGroup TopologyType = "L3CacheGroup"
+
 	// TopologyTypeGPU indicates a zone for gpu device
 	TopologyTypeGPU TopologyType = "GPU"
 
@@ -382,6 +385,11 @@ type ResourcePackage struct {
 	// Allocatable defines the total resources available for this package.
 	// Keys usually include "cpu" and "memory" (e.g. cpu: "64", memory: "128Gi").
 	Allocatable *v1.ResourceList `json:"allocatable,omitempty"`
+
+	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	Attributes []Attribute `json:"attributes,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // ResourcePool represents a pool of resources reserved for a specific workload type.
@@ -414,6 +422,11 @@ type ResourcePool struct {
 	//     resources are available on the node.
 	//   - Supports resource sharing between pools, but with clear limits.
 	MaxAllocatable *v1.ResourceList `json:"maxAllocatable,omitempty"`
+
+	// +optional
+	// +patchMergeKey=name
+	// +patchStrategy=merge
+	Attributes []Attribute `json:"attributes,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
 // +genclient
