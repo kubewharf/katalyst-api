@@ -223,6 +223,9 @@ const (
 
 	// TopologyTypeNIC indicates a zone for network device
 	TopologyTypeNIC TopologyType = "NIC"
+
+	// TopologyTypeStorage indicates a zone for storage device
+	TopologyTypeStorage TopologyType = "Storage"
 )
 
 type Resources struct {
