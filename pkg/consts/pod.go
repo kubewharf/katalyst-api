@@ -61,3 +61,8 @@ const (
 	// PodAnnotationPodEvictScoreKey is a const variable for pod annotation about enable get eviction score from pod
 	PodAnnotationPodEvictScoreKey = "katalyst.kubewharf.io/pod_evict_score"
 )
+
+const (
+	// PodAnnotationTopologyBindResultKey is a const variable for pod annotation about the pod's topology aware allocations.
+	PodAnnotationTopologyBindResultKey = "katalyst.kubewharf.io/topology_bind_result"
+)
