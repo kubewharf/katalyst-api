@@ -20,12 +20,15 @@ limitations under the License.
 package node
 
 const (
+	CustomMetricNodeCPUTotal      = "node_cpu_total"
+	CustomMetricNodeCPUUsage      = "node_cpu_usage"
 	CustomMetricNodeCPUUsageRatio = "node_cpu_usage_ratio"
 	CustomMetricNodeCPULoad1Min   = "node_cpu_load_system_1min"
 )
 
 // real-time memory related metric
 const (
+	CustomMetricNodeMemoryTotal     = "node_system_memory_total"
 	CustomMetricNodeMemoryFree      = "node_system_memory_free"
 	CustomMetricNodeMemoryAvailable = "node_system_memory_available"
 )
@@ -34,4 +37,17 @@ const (
 const (
 	CustomMetricNodeAdvisorPoolLoad1Min = "node_advisor_pool_load_1min"
 	CustomMetricNodeAdvisorKnobStatus   = "node_advisor_knob_status"
+)
+
+// real-time numa level memory bandwidth related metric
+const (
+	CustomMetricNUMAMemoryBandwidthTotal  = "numa_mbm_total"
+	CustomMetricNUMAMemoryBandwidthLocal  = "numa_mbm_local"
+	CustomMetricNUMAMemoryBandwidthVictim = "numa_mbm_victim"
+)
+
+// real-time numa level cpu and memory related metric
+const (
+	CustomMetricNUMACPUUsage    = "numa_cpu_usage"
+	CustomMetricNUMAMemoryUsage = "numa_memory_usage"
 )

@@ -74,12 +74,20 @@ type AdminQoSConfig struct {
 	// +optional
 	ReclaimedResourceConfig *ReclaimedResourceConfig `json:"reclaimedResourceConfig,omitempty"`
 
+	// QRMPluginConfig is a configuration for qrm plugin
+	// +optional
+	QRMPluginConfig *QRMPluginConfig `json:"qrmPluginConfig,omitempty"`
+
 	// EvictionConfig is a configuration for eviction
 	// +optional
 	EvictionConfig *EvictionConfig `json:"evictionConfig,omitempty"`
 
 	// +optional
 	AdvisorConfig *AdvisorConfig `json:"advisorConfig,omitempty"`
+
+	// FineGrainedResourceConfig is a configuration for more fine-grained resource control
+	// +optional
+	FineGrainedResourceConfig *FineGrainedResourceConfig `json:"fineGrainedResourceConfig,omitempty"`
 }
 
 type ReclaimedResourceConfig struct {
@@ -127,6 +135,18 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	MinReclaimedResourceForAllocate *v1.ResourceList `json:"minReclaimedResourceForAllocate,omitempty"`
 
+	// NumaMinReclaimedResourceRatioForAllocate is a resource reserved ratio at numa level for reclaimed_cores pods，these resources will not be used
+	// by shared_cores pods.
+	// For example, {"cpu": 0.1, "memory": 0.2}.
+	// +optional
+	NumaMinReclaimedResourceRatioForAllocate *v1.ResourceList `json:"numaMinReclaimedResourceRatioForAllocate,omitempty"`
+
+	// NumaMinReclaimedResourceForAllocate is a resource reserved at numa level for reclaimed_cores pods，these resources will not be used
+	// by shared_cores pods.
+	// For example, {"cpu": 2, "memory": 0Gi}.
+	// +optional
+	NumaMinReclaimedResourceForAllocate *v1.ResourceList `json:"numaMinReclaimedResourceForAllocate,omitempty"`
+
 	// CPUHeadroomConfig is a configuration for cpu headroom
 	// +optional
 	CPUHeadroomConfig *CPUHeadroomConfig `json:"cpuHeadroomConfig,omitempty"`
@@ -166,11 +186,14 @@ const (
 	// QoSRegionTypeShare for each share pool
 	QoSRegionTypeShare QoSRegionType = "share"
 
+	QoSRegionTypeDedicated QoSRegionType = "dedicated"
+
 	// QoSRegionTypeIsolation for each isolation pool
 	QoSRegionTypeIsolation QoSRegionType = "isolation"
 
 	// QoSRegionTypeDedicatedNumaExclusive for each dedicated core with numa binding
 	// and numa exclusive container
+	// deprecated, will be removed later, use QoSRegionTypeDedicated instead
 	QoSRegionTypeDedicatedNumaExclusive QoSRegionType = "dedicated-numa-exclusive"
 )
 
@@ -309,6 +332,31 @@ type CPUHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MaxHeadroomCapacityRate *float64 `json:"maxHeadroomCapacityRate,omitempty"`
+
+	// NonReclaimUtilizationHigh is the high CPU utilization threshold
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	NonReclaimUtilizationHigh *float64 `json:"nonReclaimUtilizationHigh,omitempty"`
+
+	// NonReclaimUtilizationLow is the low CPU utilization threshold
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	NonReclaimUtilizationLow *float64 `json:"nonReclaimUtilizationLow,omitempty"`
+}
+
+type QRMPluginConfig struct {
+	// CPUPluginConfig is the config for cpu plugin
+	// +optional
+	CPUPluginConfig *CPUPluginConfig `json:"cpuPluginConfig,omitempty"`
+}
+
+type CPUPluginConfig struct {
+	// PreferUseExistNUMAHintResult prefer to use existing numa hint results
+	// The calculation results may originate from upstream components and be recorded in the pod annotation
+	// +optional
+	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
 }
 
 type EvictionConfig struct {
@@ -354,6 +402,10 @@ type ReclaimedResourcesEvictionConfig struct {
 	// EvictionThreshold eviction threshold rate for reclaimed resources
 	// +optional
 	EvictionThreshold map[v1.ResourceName]float64 `json:"evictionThreshold"`
+
+	// SoftEvictionThreshold soft eviction threshold rate for reclaimed resources
+	// +optional
+	SoftEvictionThreshold map[v1.ResourceName]float64 `json:"softEvictionThreshold"`
 
 	// GracePeriod is the grace period of reclaimed resources' eviction
 	// +kubebuilder:validation:Minimum=0
@@ -431,6 +483,9 @@ type CPUPressureEvictionConfig struct {
 
 	// NumaCPUPressureEvictionConfig holds configurations for NUMA-level CPU pressure eviction.
 	NumaCPUPressureEvictionConfig NumaCPUPressureEvictionConfig `json:"numaCPUPressureEvictionConfig,omitempty"`
+
+	// NumaSysCPUPressureEvictionConfig holds configurations for NUMA-level system CPU pressure eviction.
+	NumaSysCPUPressureEvictionConfig NumaSysCPUPressureEvictionConfig `json:"numaSysCPUPressureEvictionConfig,omitempty"`
 }
 
 // NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
@@ -473,6 +528,44 @@ type NumaCPUPressureEvictionConfig struct {
 	SkippedPodKinds []string `json:"skippedPodKinds,omitempty"`
 }
 
+// NumaSysCPUPressureEvictionConfig holds the configurations for NUMA-level system CPU pressure eviction.
+type NumaSysCPUPressureEvictionConfig struct {
+	// EnableEviction indicates whether to enable NUMA-level system CPU pressure eviction.
+	// +optional
+	EnableEviction *bool `json:"enableEviction,omitempty"`
+	// MetricRingSize is the size of the metric ring buffer for calculating NUMA system CPU pressure.
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
+	// due to NUMA system CPU pressure. 0 means no grace period.
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+	// SyncPeriod is the sync period (in seconds) for updating NUMA system CPU pressure metrics.
+	// +optional
+	SyncPeriod *int64 `json:"syncPeriod,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of time the NUMA's system CPU pressure
+	// must be above the threshold for an eviction to be triggered.
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+	// NumaCPUUsageSoftThreshold is the soft threshold for NUMA system CPU pressure.
+	// +optional
+	NumaCPUUsageSoftThreshold *float64 `json:"numaCPUUsageSoftThreshold,omitempty"`
+	// NumaCPUUsageHardThreshold is the hard threshold for NUMA system CPU pressure.
+	// +optional
+	NumaCPUUsageHardThreshold *float64 `json:"numaCPUUsageHardThreshold,omitempty"`
+	// NUMASysOverTotalUsageSoftThreshold is the soft threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageSoftThreshold *float64 `json:"numaSysOverTotalUsageSoftThreshold,omitempty"`
+	// NUMASysOverTotalUsageHardThreshold is the hard threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageHardThreshold *float64 `json:"numaSysOverTotalUsageHardThreshold,omitempty"`
+	// NUMASysOverTotalUsageEvictionThreshold is the eviction threshold for NUMA system CPU pressure over total system CPU pressure.
+	// +optional
+	NUMASysOverTotalUsageEvictionThreshold *float64 `json:"numaSysOverTotalUsageEvictionThreshold,omitempty"`
+}
+
 type MemoryPressureEvictionConfig struct {
 	// EnableNumaLevelEviction is whether to enable numa-level eviction
 	// +optional
@@ -492,6 +585,17 @@ type MemoryPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	NumaFreeBelowWatermarkTimesThreshold *int `json:"numaFreeBelowWatermarkTimesThreshold,omitempty"`
+
+	// NumaFreeBelowWatermarkTimesReclaimedThreshold is the threshold for the number of
+	// times NUMA's free memory of the reclaimed instance falls below the watermark
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	NumaFreeBelowWatermarkTimesReclaimedThreshold *int `json:"numaFreeBelowWatermarkTimesReclaimedThreshold,omitempty"`
+
+	// NumaFreeConstraintFastEvictionWaitCycle is the wait cycle for fast eviction when numa memory is extremely tight
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	NumaFreeConstraintFastEvictionWaitCycle *int `json:"numaFreeConstraintFastEvictionWaitCycle,omitempty"`
 
 	// NumaFreeBelowWatermarkTimesThreshold is the threshold for the rate of
 	// kswapd reclaiming rate
@@ -539,6 +643,14 @@ type MemoryPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ReclaimedGracePeriod *int64 `json:"reclaimedGracePeriod,omitempty"`
+
+	// EvictNonReclaimedAnnotationSelector is a non-reclaimed pod eviction anno selector
+	// +optional
+	EvictNonReclaimedAnnotationSelector string `json:"evictNonReclaimedAnnotationSelector,omitempty"`
+
+	// EvictNonReclaimedLabelSelector is a non-reclaimed pod eviction label selector
+	// +optional
+	EvictNonReclaimedLabelSelector string `json:"evictNonReclaimedLabelSelector,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {
@@ -818,3 +930,24 @@ const (
 	// Use this when you want to disable resource reclaiming only for specific pods.
 	DisableReclaimLevelPod DisableReclaimLevel = "Pod"
 )
+
+type FineGrainedResourceConfig struct {
+	// CPUBurstConfig has cpu burst related configurations
+	// +optional
+	CPUBurstConfig *CPUBurstConfig `json:"cpuBurstConfig,omitempty"`
+}
+
+type CPUBurstConfig struct {
+	// EnableDedicatedCoresDefaultCPUBurst indicates whether cpu burst should be enabled by default for pods with dedicated cores.
+	// If set to true, it means that cpu burst should be enabled by default for pods with dedicated cores (cpu burst value is calculated and set).
+	// If set to false, it means that cpu burst should be disabled for pods with dedicated cores (cpu burst value is set to 0).
+	// If set to nil, it means that no operation is done on the cpu burst value.
+	// +optional
+	EnableDedicatedCoresDefaultCPUBurst *bool `json:"enableDedicatedCoresDefaultCPUBurst,omitempty"`
+
+	// DefaultCPUBurstPercent is the default cpu burst percent to be set for pods with dedicated cores.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	DefaultCPUBurstPercent *int64 `json:"defaultCPUBurstPercent,omitempty"`
+}

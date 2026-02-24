@@ -201,6 +201,9 @@ spec:
                     maximum: 100
                     minimum: 0
                     type: integer
+                  disableXPS:
+                    description: DisableXPS indicates whether to disable the XPS function.
+                    type: boolean
                   enableRPS:
                     description: |-
                       EnableRPS indicates whether to enable the RPS function.
@@ -266,6 +269,12 @@ spec:
                       NICAffinityPolicy represents the NICs's irqs affinity sockets policy.
                       One of CompleteMap, OverallBalance, PhysicalTopo.
                     type: string
+                  normalThroughputNics:
+                    description: NormalThroughputNics describes static configured
+                      normal throughput Nics.
+                    items:
+                      type: string
+                    type: array
                   reniceKsoftirqd:
                     description: ReniceKsoftirqd indicates whether to renice ksoftirqd
                       process.

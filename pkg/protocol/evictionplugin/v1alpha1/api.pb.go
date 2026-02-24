@@ -231,6 +231,51 @@ func (m *Condition) GetMetCondition() bool {
 	return false
 }
 
+type GetThresholdMetRequest struct {
+	ActivePods           []*v1.Pod `protobuf:"bytes,1,rep,name=active_pods,json=activePods,proto3" json:"active_pods,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *GetThresholdMetRequest) Reset()      { *m = GetThresholdMetRequest{} }
+func (*GetThresholdMetRequest) ProtoMessage() {}
+func (*GetThresholdMetRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78941759e4c5eff9, []int{2}
+}
+func (m *GetThresholdMetRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *GetThresholdMetRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_GetThresholdMetRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *GetThresholdMetRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetThresholdMetRequest.Merge(m, src)
+}
+func (m *GetThresholdMetRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *GetThresholdMetRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetThresholdMetRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetThresholdMetRequest proto.InternalMessageInfo
+
+func (m *GetThresholdMetRequest) GetActivePods() []*v1.Pod {
+	if m != nil {
+		return m.ActivePods
+	}
+	return nil
+}
+
 type ThresholdMetResponse struct {
 	ThresholdValue       float64           `protobuf:"fixed64,1,opt,name=threshold_value,json=thresholdValue,proto3" json:"threshold_value,omitempty"`
 	ObservedValue        float64           `protobuf:"fixed64,2,opt,name=observed_value,json=observedValue,proto3" json:"observed_value,omitempty"`
@@ -239,6 +284,7 @@ type ThresholdMetResponse struct {
 	EvictionScope        string            `protobuf:"bytes,5,opt,name=eviction_scope,json=evictionScope,proto3" json:"eviction_scope,omitempty"`
 	GracePeriodSeconds   int64             `protobuf:"varint,6,opt,name=grace_period_seconds,json=gracePeriodSeconds,proto3" json:"grace_period_seconds,omitempty"`
 	Condition            *Condition        `protobuf:"bytes,7,opt,name=condition,proto3" json:"condition,omitempty"`
+	CandidatePods        []*v1.Pod         `protobuf:"bytes,8,rep,name=candidate_pods,json=candidatePods,proto3" json:"candidate_pods,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
 	XXX_sizecache        int32             `json:"-"`
 }
@@ -246,7 +292,7 @@ type ThresholdMetResponse struct {
 func (m *ThresholdMetResponse) Reset()      { *m = ThresholdMetResponse{} }
 func (*ThresholdMetResponse) ProtoMessage() {}
 func (*ThresholdMetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{2}
+	return fileDescriptor_78941759e4c5eff9, []int{3}
 }
 func (m *ThresholdMetResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -324,18 +370,26 @@ func (m *ThresholdMetResponse) GetCondition() *Condition {
 	return nil
 }
 
+func (m *ThresholdMetResponse) GetCandidatePods() []*v1.Pod {
+	if m != nil {
+		return m.CandidatePods
+	}
+	return nil
+}
+
 type GetTopEvictionPodsRequest struct {
-	ActivePods           []*v1.Pod `protobuf:"bytes,1,rep,name=active_pods,json=activePods,proto3" json:"active_pods,omitempty"`
-	TopN                 uint64    `protobuf:"varint,2,opt,name=topN,proto3" json:"topN,omitempty"`
-	EvictionScope        string    `protobuf:"bytes,3,opt,name=eviction_scope,json=evictionScope,proto3" json:"eviction_scope,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	ActivePods               []*v1.Pod         `protobuf:"bytes,1,rep,name=active_pods,json=activePods,proto3" json:"active_pods,omitempty"`
+	TopN                     uint64            `protobuf:"varint,2,opt,name=topN,proto3" json:"topN,omitempty"`
+	EvictionScope            string            `protobuf:"bytes,3,opt,name=eviction_scope,json=evictionScope,proto3" json:"eviction_scope,omitempty"`
+	CandidateEvictionRecords []*EvictionRecord `protobuf:"bytes,4,rep,name=candidate_eviction_records,json=candidateEvictionRecords,proto3" json:"candidate_eviction_records,omitempty"`
+	XXX_NoUnkeyedLiteral     struct{}          `json:"-"`
+	XXX_sizecache            int32             `json:"-"`
 }
 
 func (m *GetTopEvictionPodsRequest) Reset()      { *m = GetTopEvictionPodsRequest{} }
 func (*GetTopEvictionPodsRequest) ProtoMessage() {}
 func (*GetTopEvictionPodsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{3}
+	return fileDescriptor_78941759e4c5eff9, []int{4}
 }
 func (m *GetTopEvictionPodsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -385,6 +439,13 @@ func (m *GetTopEvictionPodsRequest) GetEvictionScope() string {
 	return ""
 }
 
+func (m *GetTopEvictionPodsRequest) GetCandidateEvictionRecords() []*EvictionRecord {
+	if m != nil {
+		return m.CandidateEvictionRecords
+	}
+	return nil
+}
+
 type GetTopEvictionPodsResponse struct {
 	TargetPods           []*v1.Pod        `protobuf:"bytes,1,rep,name=target_pods,json=targetPods,proto3" json:"target_pods,omitempty"`
 	DeletionOptions      *DeletionOptions `protobuf:"bytes,2,opt,name=deletion_options,json=deletionOptions,proto3" json:"deletion_options,omitempty"`
@@ -395,7 +456,7 @@ type GetTopEvictionPodsResponse struct {
 func (m *GetTopEvictionPodsResponse) Reset()      { *m = GetTopEvictionPodsResponse{} }
 func (*GetTopEvictionPodsResponse) ProtoMessage() {}
 func (*GetTopEvictionPodsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{4}
+	return fileDescriptor_78941759e4c5eff9, []int{5}
 }
 func (m *GetTopEvictionPodsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -451,7 +512,7 @@ type EvictPod struct {
 func (m *EvictPod) Reset()      { *m = EvictPod{} }
 func (*EvictPod) ProtoMessage() {}
 func (*EvictPod) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{5}
+	return fileDescriptor_78941759e4c5eff9, []int{6}
 }
 func (m *EvictPod) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -524,7 +585,7 @@ type GetEvictPodsRequest struct {
 func (m *GetEvictPodsRequest) Reset()      { *m = GetEvictPodsRequest{} }
 func (*GetEvictPodsRequest) ProtoMessage() {}
 func (*GetEvictPodsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{6}
+	return fileDescriptor_78941759e4c5eff9, []int{7}
 }
 func (m *GetEvictPodsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -570,7 +631,7 @@ type GetEvictPodsResponse struct {
 func (m *GetEvictPodsResponse) Reset()      { *m = GetEvictPodsResponse{} }
 func (*GetEvictPodsResponse) ProtoMessage() {}
 func (*GetEvictPodsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{7}
+	return fileDescriptor_78941759e4c5eff9, []int{8}
 }
 func (m *GetEvictPodsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -622,7 +683,7 @@ type GetTokenResponse struct {
 func (m *GetTokenResponse) Reset()      { *m = GetTokenResponse{} }
 func (*GetTokenResponse) ProtoMessage() {}
 func (*GetTokenResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{8}
+	return fileDescriptor_78941759e4c5eff9, []int{9}
 }
 func (m *GetTokenResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -667,7 +728,7 @@ type DeletionOptions struct {
 func (m *DeletionOptions) Reset()      { *m = DeletionOptions{} }
 func (*DeletionOptions) ProtoMessage() {}
 func (*DeletionOptions) Descriptor() ([]byte, []int) {
-	return fileDescriptor_78941759e4c5eff9, []int{9}
+	return fileDescriptor_78941759e4c5eff9, []int{10}
 }
 func (m *DeletionOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -703,12 +764,212 @@ func (m *DeletionOptions) GetGracePeriodSeconds() int64 {
 	return 0
 }
 
+type EvictionRecord struct {
+	Uid                  string   `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
+	HasPdb               bool     `protobuf:"varint,2,opt,name=has_pdb,json=hasPdb,proto3" json:"has_pdb,omitempty"`
+	Buckets              *Buckets `protobuf:"bytes,3,opt,name=buckets,proto3" json:"buckets,omitempty"`
+	DisruptionsAllowed   int32    `protobuf:"varint,4,opt,name=disruptions_allowed,json=disruptionsAllowed,proto3" json:"disruptions_allowed,omitempty"`
+	CurrentHealthy       int32    `protobuf:"varint,5,opt,name=current_healthy,json=currentHealthy,proto3" json:"current_healthy,omitempty"`
+	DesiredHealthy       int32    `protobuf:"varint,6,opt,name=desired_healthy,json=desiredHealthy,proto3" json:"desired_healthy,omitempty"`
+	ExpectedPods         int32    `protobuf:"varint,7,opt,name=expected_pods,json=expectedPods,proto3" json:"expected_pods,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *EvictionRecord) Reset()      { *m = EvictionRecord{} }
+func (*EvictionRecord) ProtoMessage() {}
+func (*EvictionRecord) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78941759e4c5eff9, []int{11}
+}
+func (m *EvictionRecord) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EvictionRecord) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EvictionRecord.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EvictionRecord) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EvictionRecord.Merge(m, src)
+}
+func (m *EvictionRecord) XXX_Size() int {
+	return m.Size()
+}
+func (m *EvictionRecord) XXX_DiscardUnknown() {
+	xxx_messageInfo_EvictionRecord.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EvictionRecord proto.InternalMessageInfo
+
+func (m *EvictionRecord) GetUid() string {
+	if m != nil {
+		return m.Uid
+	}
+	return ""
+}
+
+func (m *EvictionRecord) GetHasPdb() bool {
+	if m != nil {
+		return m.HasPdb
+	}
+	return false
+}
+
+func (m *EvictionRecord) GetBuckets() *Buckets {
+	if m != nil {
+		return m.Buckets
+	}
+	return nil
+}
+
+func (m *EvictionRecord) GetDisruptionsAllowed() int32 {
+	if m != nil {
+		return m.DisruptionsAllowed
+	}
+	return 0
+}
+
+func (m *EvictionRecord) GetCurrentHealthy() int32 {
+	if m != nil {
+		return m.CurrentHealthy
+	}
+	return 0
+}
+
+func (m *EvictionRecord) GetDesiredHealthy() int32 {
+	if m != nil {
+		return m.DesiredHealthy
+	}
+	return 0
+}
+
+func (m *EvictionRecord) GetExpectedPods() int32 {
+	if m != nil {
+		return m.ExpectedPods
+	}
+	return 0
+}
+
+type Buckets struct {
+	List                 []*Bucket `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *Buckets) Reset()      { *m = Buckets{} }
+func (*Buckets) ProtoMessage() {}
+func (*Buckets) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78941759e4c5eff9, []int{12}
+}
+func (m *Buckets) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Buckets) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Buckets.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Buckets) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Buckets.Merge(m, src)
+}
+func (m *Buckets) XXX_Size() int {
+	return m.Size()
+}
+func (m *Buckets) XXX_DiscardUnknown() {
+	xxx_messageInfo_Buckets.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Buckets proto.InternalMessageInfo
+
+func (m *Buckets) GetList() []*Bucket {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+type Bucket struct {
+	Time                 int64    `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	Duration             int64    `protobuf:"varint,2,opt,name=duration,proto3" json:"duration,omitempty"`
+	Count                int64    `protobuf:"varint,3,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Bucket) Reset()      { *m = Bucket{} }
+func (*Bucket) ProtoMessage() {}
+func (*Bucket) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78941759e4c5eff9, []int{13}
+}
+func (m *Bucket) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Bucket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Bucket.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Bucket) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Bucket.Merge(m, src)
+}
+func (m *Bucket) XXX_Size() int {
+	return m.Size()
+}
+func (m *Bucket) XXX_DiscardUnknown() {
+	xxx_messageInfo_Bucket.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Bucket proto.InternalMessageInfo
+
+func (m *Bucket) GetTime() int64 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
+}
+
+func (m *Bucket) GetDuration() int64 {
+	if m != nil {
+		return m.Duration
+	}
+	return 0
+}
+
+func (m *Bucket) GetCount() int64 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterEnum("evictionplugin.v1alpha1.ThresholdMetType", ThresholdMetType_name, ThresholdMetType_value)
 	proto.RegisterEnum("evictionplugin.v1alpha1.ThresholdOperator", ThresholdOperator_name, ThresholdOperator_value)
 	proto.RegisterEnum("evictionplugin.v1alpha1.ConditionType", ConditionType_name, ConditionType_value)
 	proto.RegisterType((*Empty)(nil), "evictionplugin.v1alpha1.Empty")
 	proto.RegisterType((*Condition)(nil), "evictionplugin.v1alpha1.Condition")
+	proto.RegisterType((*GetThresholdMetRequest)(nil), "evictionplugin.v1alpha1.GetThresholdMetRequest")
 	proto.RegisterType((*ThresholdMetResponse)(nil), "evictionplugin.v1alpha1.ThresholdMetResponse")
 	proto.RegisterType((*GetTopEvictionPodsRequest)(nil), "evictionplugin.v1alpha1.GetTopEvictionPodsRequest")
 	proto.RegisterType((*GetTopEvictionPodsResponse)(nil), "evictionplugin.v1alpha1.GetTopEvictionPodsResponse")
@@ -717,70 +978,88 @@ func init() {
 	proto.RegisterType((*GetEvictPodsResponse)(nil), "evictionplugin.v1alpha1.GetEvictPodsResponse")
 	proto.RegisterType((*GetTokenResponse)(nil), "evictionplugin.v1alpha1.GetTokenResponse")
 	proto.RegisterType((*DeletionOptions)(nil), "evictionplugin.v1alpha1.DeletionOptions")
+	proto.RegisterType((*EvictionRecord)(nil), "evictionplugin.v1alpha1.EvictionRecord")
+	proto.RegisterType((*Buckets)(nil), "evictionplugin.v1alpha1.Buckets")
+	proto.RegisterType((*Bucket)(nil), "evictionplugin.v1alpha1.Bucket")
 }
 
 func init() { proto.RegisterFile("v1alpha1/api.proto", fileDescriptor_78941759e4c5eff9) }
 
 var fileDescriptor_78941759e4c5eff9 = []byte{
-	// 918 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0x4d, 0x6f, 0x23, 0x45,
-	0x13, 0x76, 0x67, 0x92, 0xd8, 0x2e, 0x7f, 0xc4, 0xe9, 0x37, 0x7a, 0xd7, 0xf8, 0x60, 0xcc, 0x20,
-	0x60, 0x36, 0x62, 0xc7, 0xc4, 0x8b, 0x50, 0x24, 0x2e, 0x1b, 0x62, 0x93, 0x5d, 0x89, 0xd8, 0x56,
-	0xdb, 0x02, 0xc1, 0x65, 0x34, 0x99, 0xa9, 0x38, 0xa3, 0xb5, 0xdd, 0xc3, 0x4c, 0xdb, 0x52, 0x4e,
-	0xf0, 0x13, 0xf6, 0xcc, 0x91, 0x2b, 0xff, 0x80, 0x13, 0xc7, 0x3d, 0x72, 0xe4, 0xc8, 0x86, 0xdf,
-	0xc0, 0x1d, 0x75, 0xb7, 0xc7, 0xb1, 0xbd, 0x76, 0xb2, 0xb0, 0xa7, 0x4c, 0x55, 0x57, 0x3d, 0xfd,
-	0xf4, 0x53, 0x1f, 0x0e, 0xd0, 0xe9, 0x91, 0x3b, 0x0c, 0xaf, 0xdc, 0xa3, 0xba, 0x1b, 0x06, 0x76,
-	0x18, 0x71, 0xc1, 0xe9, 0x03, 0x9c, 0x06, 0x9e, 0x08, 0xf8, 0x38, 0x1c, 0x4e, 0x06, 0xc1, 0xd8,
-	0x4e, 0x42, 0x2a, 0x8f, 0x06, 0x81, 0xb8, 0x9a, 0x5c, 0xd8, 0x1e, 0x1f, 0xd5, 0x07, 0x7c, 0xc0,
-	0xeb, 0x2a, 0xfe, 0x62, 0x72, 0xa9, 0x2c, 0x65, 0xa8, 0x2f, 0x8d, 0x53, 0x31, 0x9f, 0x1f, 0xc7,
-	0x76, 0xc0, 0x25, 0x72, 0xdd, 0xe3, 0x11, 0xd6, 0xa7, 0x47, 0xf5, 0x01, 0x8e, 0x31, 0x72, 0x05,
-	0xfa, 0x3a, 0xc6, 0x4c, 0xc3, 0x4e, 0x6b, 0x14, 0x8a, 0x6b, 0xf3, 0x37, 0x02, 0xd9, 0x53, 0x3e,
-	0xf6, 0x03, 0x79, 0x31, 0x3d, 0x87, 0xa2, 0x97, 0x18, 0x8e, 0xb8, 0x0e, 0xb1, 0x4c, 0x6a, 0xc4,
-	0x2a, 0x36, 0x3e, 0xb4, 0x37, 0x70, 0xb3, 0xe7, 0xb9, 0xfd, 0xeb, 0x10, 0x59, 0xc1, 0x5b, 0x34,
-	0x69, 0x19, 0xd2, 0x78, 0x79, 0x89, 0x9e, 0x88, 0xcb, 0x5b, 0x35, 0xc3, 0xca, 0xb2, 0xc4, 0xa4,
-	0x1f, 0x2c, 0x5e, 0x34, 0x76, 0x47, 0x58, 0x36, 0x6a, 0xc4, 0xca, 0x2e, 0x00, 0xb4, 0xdd, 0x11,
-	0xd2, 0xf7, 0xa1, 0x30, 0x42, 0xe1, 0xcc, 0x9d, 0xe5, 0xed, 0x1a, 0xb1, 0x32, 0x2c, 0x3f, 0x42,
-	0x31, 0xbf, 0xd8, 0xfc, 0xd9, 0x80, 0x83, 0xfe, 0x55, 0x84, 0xf1, 0x15, 0x1f, 0xfa, 0xe7, 0x28,
-	0x18, 0xc6, 0x21, 0x1f, 0xc7, 0x48, 0x3f, 0x82, 0x3d, 0x91, 0xf8, 0x9d, 0xa9, 0x3b, 0x9c, 0xe8,
-	0xe7, 0x10, 0x56, 0x9c, 0xbb, 0xbf, 0x96, 0x5e, 0xc9, 0x86, 0x5f, 0xc4, 0x18, 0x4d, 0x31, 0x89,
-	0xdb, 0x52, 0x71, 0x85, 0xc4, 0xab, 0xc3, 0xbe, 0x05, 0x7a, 0x8b, 0xc7, 0x43, 0x29, 0x28, 0x8f,
-	0x14, 0xf1, 0x62, 0xe3, 0x70, 0xa3, 0x42, 0x73, 0x6a, 0x9d, 0x59, 0x06, 0xdb, 0x17, 0xab, 0x2e,
-	0xda, 0x84, 0x8c, 0x7c, 0xa8, 0x92, 0x7c, 0x5b, 0x01, 0x3e, 0xbc, 0x1f, 0xf0, 0x1c, 0x85, 0x52,
-	0x3d, 0x3d, 0xd2, 0x1f, 0xf2, 0x1d, 0x49, 0x92, 0x13, 0x7b, 0x3c, 0xc4, 0xf2, 0x8e, 0x56, 0x35,
-	0xf1, 0xf6, 0xa4, 0x93, 0x7e, 0x02, 0x07, 0x83, 0xc8, 0xf5, 0xd0, 0x09, 0x31, 0x0a, 0xb8, 0xef,
-	0xc4, 0x28, 0x05, 0x8e, 0xcb, 0xbb, 0x35, 0x62, 0x19, 0x8c, 0xaa, 0xb3, 0xae, 0x3a, 0xea, 0xe9,
-	0x13, 0xfa, 0x04, 0xb2, 0xb7, 0x35, 0x48, 0xd7, 0x88, 0x95, 0x6b, 0x98, 0xf7, 0xb7, 0x04, 0xbb,
-	0x4d, 0x32, 0x5f, 0x10, 0x78, 0xe7, 0x0c, 0x45, 0x9f, 0x87, 0xad, 0x59, 0x5a, 0x97, 0xfb, 0x31,
-	0xc3, 0xef, 0x27, 0x18, 0x0b, 0x7a, 0x0c, 0x39, 0xd7, 0x13, 0xc1, 0x14, 0x9d, 0x90, 0xfb, 0x71,
-	0x99, 0xd4, 0x0c, 0x2b, 0xd7, 0x78, 0x60, 0xeb, 0x46, 0xb6, 0xe5, 0x88, 0xc8, 0x46, 0xb6, 0xa7,
-	0x47, 0x76, 0x97, 0xfb, 0x0c, 0x74, 0xac, 0x04, 0xa0, 0x14, 0xb6, 0x05, 0x0f, 0xdb, 0xaa, 0x60,
-	0xdb, 0x4c, 0x7d, 0xaf, 0x91, 0xc1, 0x58, 0x23, 0x83, 0xf9, 0x0b, 0x81, 0xca, 0x3a, 0x4a, 0xb3,
-	0xee, 0x39, 0x86, 0x9c, 0x70, 0xa3, 0x01, 0x8a, 0x37, 0xe3, 0xa4, 0x63, 0x15, 0xa7, 0x1e, 0x94,
-	0x7c, 0x1c, 0xa2, 0xba, 0x9f, 0x87, 0xf2, 0x4f, 0xac, 0xf8, 0xe5, 0x1a, 0xd6, 0x46, 0xd1, 0x9a,
-	0xb3, 0x84, 0x8e, 0x8e, 0x67, 0x7b, 0xfe, 0xb2, 0xc3, 0xfc, 0x9b, 0x40, 0x46, 0xf1, 0xec, 0x72,
-	0x9f, 0x3e, 0x04, 0x23, 0xe4, 0xbe, 0xea, 0xe6, 0x3b, 0x38, 0xc9, 0x18, 0xfa, 0x7f, 0xd8, 0x8d,
-	0xd0, 0x8d, 0xf9, 0x58, 0x51, 0xc8, 0xb2, 0x99, 0xb5, 0x96, 0xa4, 0xf1, 0x96, 0x24, 0xe9, 0xbb,
-	0x90, 0xbb, 0xe4, 0x91, 0x87, 0x8e, 0x42, 0x98, 0x4d, 0x2b, 0x28, 0x97, 0xe2, 0x2e, 0x5b, 0x6f,
-	0x5e, 0x1a, 0x8d, 0xae, 0xa7, 0x5f, 0xf7, 0x29, 0x4d, 0xce, 0xba, 0xea, 0x48, 0xae, 0x00, 0xb3,
-	0x03, 0xff, 0x3b, 0x43, 0x91, 0xbc, 0xfc, 0xed, 0x3b, 0xc6, 0xfc, 0x89, 0xc0, 0xc1, 0x32, 0xe2,
-	0xac, 0xe0, 0x4f, 0x00, 0xd4, 0xfd, 0x8b, 0x88, 0xef, 0x6d, 0xd4, 0x22, 0xc9, 0x67, 0x59, 0x4c,
-	0x90, 0x96, 0xc7, 0x64, 0xeb, 0xbf, 0x8c, 0x89, 0x05, 0x25, 0xd5, 0x92, 0xcf, 0x71, 0x3c, 0xe7,
-	0x75, 0x00, 0x3b, 0x42, 0x3a, 0x54, 0xb9, 0xb3, 0x4c, 0x1b, 0xe6, 0x29, 0xec, 0xad, 0x94, 0x63,
-	0xe3, 0x5c, 0x93, 0x4d, 0x73, 0x7d, 0xf8, 0x39, 0x94, 0x56, 0xb7, 0x09, 0xcd, 0x41, 0xba, 0xdd,
-	0xe9, 0x3b, 0xe7, 0xad, 0x7e, 0x29, 0x45, 0xf3, 0x90, 0xe9, 0x75, 0xbe, 0xd4, 0x16, 0x91, 0xd6,
-	0xd3, 0x13, 0xd6, 0x54, 0xd6, 0xd6, 0xe1, 0xa7, 0xb0, 0xff, 0xda, 0x6e, 0xa3, 0x05, 0xc8, 0x7e,
-	0xd5, 0xea, 0xf5, 0x9c, 0xfe, 0xd3, 0x93, 0x76, 0x29, 0x45, 0x4b, 0x90, 0x3f, 0x63, 0xad, 0x93,
-	0x7e, 0x8b, 0x69, 0x0f, 0x39, 0xfc, 0x0c, 0x0a, 0x4b, 0xbf, 0x19, 0x94, 0x42, 0xb1, 0xdd, 0x69,
-	0xb6, 0x9c, 0xd3, 0x4e, 0xbb, 0xf9, 0xac, 0xff, 0xac, 0x23, 0xd3, 0xf6, 0xa1, 0x70, 0xda, 0x66,
-	0x0b, 0x2e, 0xd2, 0xf8, 0xd5, 0x80, 0x62, 0x6b, 0xa9, 0x3d, 0xe8, 0x37, 0x90, 0x49, 0xc4, 0xa2,
-	0xd5, 0xcd, 0x85, 0x92, 0xbf, 0x73, 0x95, 0xcd, 0xeb, 0x74, 0x55, 0x6f, 0x33, 0x45, 0x1d, 0xc8,
-	0x2f, 0xca, 0x72, 0x2f, 0xf8, 0xa3, 0x37, 0xda, 0xd5, 0x0b, 0x17, 0xfc, 0x00, 0xf4, 0xf5, 0xcd,
-	0x43, 0x1b, 0x77, 0x73, 0x5c, 0xb7, 0x39, 0x2b, 0x8f, 0xff, 0x55, 0xce, 0x9c, 0xc0, 0x08, 0xf2,
-	0x8b, 0x33, 0x40, 0x3f, 0xbe, 0x0b, 0x66, 0x75, 0xf8, 0xee, 0x78, 0xef, 0xba, 0xc1, 0x32, 0x53,
-	0x5f, 0x58, 0x2f, 0x5f, 0x55, 0xc9, 0x1f, 0xaf, 0xaa, 0xa9, 0x1f, 0x6f, 0xaa, 0xe4, 0xe5, 0x4d,
-	0x95, 0xfc, 0x7e, 0x53, 0x25, 0x7f, 0xde, 0x54, 0xc9, 0x8b, 0xbf, 0xaa, 0xa9, 0xef, 0xc0, 0xae,
-	0x27, 0x00, 0x17, 0xbb, 0xea, 0xff, 0x93, 0xc7, 0xff, 0x04, 0x00, 0x00, 0xff, 0xff, 0xfc, 0x3a,
-	0xc5, 0xad, 0x21, 0x09, 0x00, 0x00,
+	// 1168 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0xcd, 0x6e, 0x23, 0x45,
+	0x10, 0xf6, 0x64, 0x1c, 0xff, 0x94, 0x7f, 0xd6, 0xdb, 0x1b, 0x6d, 0x8c, 0x0f, 0x5e, 0x33, 0x2b,
+	0x58, 0x6f, 0xc4, 0xda, 0xc4, 0x41, 0x28, 0x02, 0x69, 0xb5, 0xd9, 0xc4, 0x24, 0x2b, 0x11, 0xdb,
+	0x6a, 0x5b, 0x20, 0xb8, 0x8c, 0xc6, 0xd3, 0x1d, 0x7b, 0x14, 0xdb, 0x3d, 0xcc, 0xb4, 0x0d, 0x39,
+	0xc1, 0x23, 0x70, 0xe6, 0xc2, 0x03, 0xf0, 0x12, 0x1c, 0x57, 0xe2, 0xc2, 0x91, 0x23, 0x1b, 0x9e,
+	0x01, 0x71, 0x45, 0xdd, 0x3d, 0x33, 0xb1, 0x13, 0xdb, 0x59, 0xc8, 0x69, 0xa6, 0xaa, 0xbf, 0xaa,
+	0xae, 0xaa, 0xaf, 0xba, 0xba, 0x01, 0xcd, 0x76, 0xad, 0x91, 0x3b, 0xb4, 0x76, 0xeb, 0x96, 0xeb,
+	0xd4, 0x5c, 0x8f, 0x71, 0x86, 0xb6, 0xe9, 0xcc, 0xb1, 0xb9, 0xc3, 0x26, 0xee, 0x68, 0x3a, 0x70,
+	0x26, 0xb5, 0x10, 0x52, 0x7a, 0x36, 0x70, 0xf8, 0x70, 0xda, 0xaf, 0xd9, 0x6c, 0x5c, 0x1f, 0xb0,
+	0x01, 0xab, 0x4b, 0x7c, 0x7f, 0x7a, 0x26, 0x25, 0x29, 0xc8, 0x3f, 0xe5, 0xa7, 0x64, 0x9c, 0xef,
+	0xfb, 0x35, 0x87, 0x09, 0xcf, 0x75, 0x9b, 0x79, 0xb4, 0x3e, 0xdb, 0xad, 0x0f, 0xe8, 0x84, 0x7a,
+	0x16, 0xa7, 0x44, 0x61, 0x8c, 0x24, 0x6c, 0x36, 0xc7, 0x2e, 0xbf, 0x30, 0x7e, 0xd5, 0x20, 0x7d,
+	0xc8, 0x26, 0xc4, 0x11, 0x1b, 0xa3, 0x53, 0xc8, 0xdb, 0xa1, 0x60, 0xf2, 0x0b, 0x97, 0x16, 0xb5,
+	0x8a, 0x56, 0xcd, 0x37, 0xde, 0xaf, 0xad, 0x88, 0xad, 0x16, 0xd9, 0xf6, 0x2e, 0x5c, 0x8a, 0x73,
+	0xf6, 0xbc, 0x88, 0x8a, 0x90, 0xa4, 0x67, 0x67, 0xd4, 0xe6, 0x7e, 0x71, 0xa3, 0xa2, 0x57, 0xd3,
+	0x38, 0x14, 0xd1, 0x7b, 0xf3, 0x1b, 0x4d, 0xac, 0x31, 0x2d, 0xea, 0x15, 0xad, 0x9a, 0x9e, 0x73,
+	0xd0, 0xb2, 0xc6, 0x14, 0x3d, 0x86, 0xdc, 0x98, 0x72, 0x33, 0x52, 0x16, 0xe3, 0x15, 0xad, 0x9a,
+	0xc2, 0xd9, 0x31, 0xe5, 0xd1, 0xc6, 0x06, 0x86, 0x87, 0xc7, 0x94, 0xf7, 0x86, 0x1e, 0xf5, 0x87,
+	0x6c, 0x44, 0x4e, 0x29, 0xc7, 0xf4, 0x9b, 0x29, 0xf5, 0x39, 0xda, 0x87, 0x8c, 0x65, 0x73, 0x67,
+	0x46, 0x4d, 0x97, 0x11, 0xbf, 0xa8, 0x55, 0xf4, 0x6a, 0xa6, 0xb1, 0x5d, 0x53, 0xf5, 0xa9, 0x89,
+	0xca, 0x8b, 0xfa, 0xd4, 0x66, 0xbb, 0xb5, 0x0e, 0x23, 0x18, 0x14, 0xb6, 0xc3, 0x88, 0x6f, 0x5c,
+	0xea, 0xb0, 0xb5, 0xe8, 0xd1, 0x77, 0xd9, 0xc4, 0xa7, 0xe8, 0x09, 0xdc, 0xe3, 0xa1, 0xde, 0x9c,
+	0x59, 0xa3, 0xa9, 0x2a, 0x91, 0x86, 0xf3, 0x91, 0xfa, 0x0b, 0xa1, 0x15, 0x19, 0xb2, 0xbe, 0x4f,
+	0xbd, 0x19, 0x0d, 0x71, 0x1b, 0x12, 0x97, 0x0b, 0xb5, 0x0a, 0xf6, 0x15, 0xa0, 0x2b, 0x7f, 0xcc,
+	0x15, 0x24, 0x31, 0x4f, 0x16, 0x23, 0xdf, 0xd8, 0x59, 0x59, 0xf5, 0x28, 0xb4, 0x76, 0x60, 0x81,
+	0xef, 0xf3, 0xeb, 0x2a, 0x74, 0x04, 0x29, 0x51, 0x3c, 0x49, 0x63, 0x5c, 0x3a, 0x7c, 0x7a, 0xbb,
+	0xc3, 0x53, 0xca, 0x25, 0x93, 0xc9, 0xb1, 0xfa, 0x11, 0x79, 0x84, 0x46, 0xa6, 0x6f, 0x33, 0x97,
+	0x16, 0x37, 0x15, 0x53, 0xa1, 0xb6, 0x2b, 0x94, 0xe8, 0x43, 0xd8, 0x1a, 0x78, 0x96, 0x4d, 0x4d,
+	0x97, 0x7a, 0x0e, 0x23, 0xa6, 0x4f, 0x05, 0x69, 0x7e, 0x31, 0x51, 0xd1, 0xaa, 0x3a, 0x46, 0x72,
+	0xad, 0x23, 0x97, 0xba, 0x6a, 0x05, 0xbd, 0x80, 0xf4, 0x15, 0xaf, 0xc9, 0x8a, 0x56, 0xcd, 0x34,
+	0x8c, 0xdb, 0xdb, 0x0c, 0x5f, 0x19, 0xa1, 0xe7, 0x90, 0xb7, 0xad, 0x09, 0x71, 0x88, 0xc5, 0x03,
+	0x86, 0x53, 0xeb, 0x19, 0xce, 0x45, 0x70, 0x49, 0xf2, 0x3f, 0x1a, 0xbc, 0x23, 0x3a, 0x87, 0xb9,
+	0xcd, 0x60, 0x5b, 0xa1, 0xbe, 0x73, 0xf3, 0x20, 0x04, 0x71, 0xce, 0xdc, 0x96, 0x24, 0x3c, 0x8e,
+	0xe5, 0xff, 0x92, 0x32, 0xea, 0xcb, 0xca, 0x48, 0xa1, 0x74, 0x95, 0x52, 0x64, 0xe0, 0x51, 0x9b,
+	0x79, 0xc4, 0x2f, 0xc6, 0x65, 0x0c, 0x4f, 0x56, 0x56, 0x29, 0x4c, 0x03, 0x4b, 0x3c, 0x2e, 0x46,
+	0xae, 0x16, 0x17, 0x7c, 0xe3, 0x17, 0x0d, 0x4a, 0xcb, 0x32, 0x0f, 0x9a, 0x7c, 0x1f, 0x32, 0xdc,
+	0xf2, 0x06, 0x94, 0xbf, 0x5d, 0xea, 0x0a, 0x2b, 0x53, 0xef, 0x42, 0x81, 0xd0, 0x11, 0x95, 0x51,
+	0x33, 0x57, 0x7c, 0x7c, 0x59, 0x86, 0x4c, 0xa3, 0xba, 0x32, 0xea, 0xa3, 0xc0, 0xa0, 0xad, 0xf0,
+	0xf8, 0x1e, 0x59, 0x54, 0x18, 0x7f, 0x6b, 0x90, 0x92, 0x71, 0x76, 0x18, 0x41, 0x4f, 0x41, 0x77,
+	0x19, 0x91, 0x87, 0x6e, 0x4d, 0x4c, 0x02, 0x83, 0x1e, 0x42, 0xc2, 0xa3, 0x96, 0xcf, 0x26, 0x32,
+	0x84, 0x34, 0x0e, 0xa4, 0xa5, 0x41, 0xea, 0x77, 0x0c, 0x12, 0x3d, 0x82, 0xcc, 0x19, 0xf3, 0xec,
+	0x80, 0xb5, 0x60, 0x50, 0x81, 0x54, 0xc9, 0xd8, 0xc5, 0x09, 0x89, 0x08, 0x55, 0xde, 0xd5, 0xe0,
+	0x53, 0xc7, 0x09, 0x85, 0x6b, 0x1d, 0xb9, 0x24, 0xa6, 0x9f, 0xd1, 0x86, 0x07, 0xc7, 0x94, 0x87,
+	0x99, 0xdf, 0xbd, 0x31, 0x8d, 0x9f, 0x34, 0xd8, 0x5a, 0xf4, 0x18, 0x10, 0xfe, 0x02, 0x40, 0xee,
+	0x3f, 0xef, 0xf1, 0xdd, 0xf5, 0x6d, 0x26, 0x7c, 0xa7, 0x69, 0xe8, 0x69, 0xf1, 0x34, 0x6f, 0xfc,
+	0x8f, 0xd3, 0x6c, 0x54, 0xa1, 0x20, 0x5b, 0xf2, 0x9c, 0x4e, 0xa2, 0xb8, 0xb6, 0x60, 0x93, 0x0b,
+	0x85, 0xa4, 0x3b, 0x8d, 0x95, 0x60, 0x1c, 0xc2, 0xbd, 0x6b, 0x74, 0xac, 0x1c, 0x3f, 0xda, 0xaa,
+	0xf1, 0x63, 0xfc, 0xbc, 0x01, 0xf9, 0xc5, 0x63, 0x81, 0x0a, 0xa0, 0x4f, 0x1d, 0x12, 0xec, 0x25,
+	0x7e, 0xd1, 0x36, 0x24, 0x87, 0x96, 0x6f, 0xba, 0xa4, 0x2f, 0x73, 0x4a, 0xe1, 0xc4, 0xd0, 0xf2,
+	0x3b, 0xa4, 0x8f, 0x3e, 0x81, 0x64, 0x7f, 0x6a, 0x9f, 0x53, 0x1e, 0x76, 0x4e, 0x65, 0x65, 0xb2,
+	0x2f, 0x15, 0x0e, 0x87, 0x06, 0xa8, 0x0e, 0x0f, 0x88, 0xe3, 0x7b, 0x53, 0x15, 0xba, 0x69, 0x8d,
+	0x46, 0xec, 0x5b, 0x4a, 0x64, 0xc7, 0x6c, 0x62, 0x34, 0xb7, 0x74, 0xa0, 0x56, 0xc4, 0x9d, 0x63,
+	0x4f, 0x3d, 0x8f, 0x4e, 0xb8, 0x39, 0xa4, 0xd6, 0x88, 0x0f, 0x2f, 0x64, 0xd3, 0x6c, 0xe2, 0x7c,
+	0xa0, 0x3e, 0x51, 0x5a, 0x01, 0x24, 0xd4, 0x77, 0x3c, 0x4a, 0x22, 0x60, 0x42, 0x01, 0x03, 0x75,
+	0x08, 0x7c, 0x0c, 0x39, 0xfa, 0x9d, 0x4b, 0x6d, 0x4e, 0x89, 0xa2, 0x3c, 0x29, 0x61, 0xd9, 0x50,
+	0x29, 0xbb, 0xe5, 0x39, 0x24, 0x83, 0xd8, 0xd1, 0x1e, 0xc4, 0x47, 0x8e, 0xcf, 0x83, 0xce, 0x78,
+	0x74, 0x4b, 0xae, 0x58, 0x82, 0x8d, 0x16, 0x24, 0x94, 0x2c, 0x07, 0xa2, 0x33, 0xa6, 0x01, 0x1b,
+	0xf2, 0x1f, 0x95, 0x20, 0x45, 0xa6, 0x9e, 0x15, 0xf5, 0x8b, 0x8e, 0x23, 0x59, 0xd0, 0x6e, 0xb3,
+	0xe9, 0x84, 0xcb, 0xda, 0xea, 0x58, 0x09, 0x3b, 0x9f, 0x42, 0xe1, 0xfa, 0x35, 0x85, 0x32, 0x90,
+	0x6c, 0xb5, 0x7b, 0xe6, 0x69, 0xb3, 0x57, 0x88, 0xa1, 0x2c, 0xa4, 0xba, 0xed, 0xcf, 0x94, 0xa4,
+	0x09, 0xe9, 0xe4, 0x00, 0x1f, 0x49, 0x69, 0x63, 0xe7, 0x23, 0xb8, 0x7f, 0xe3, 0xd2, 0x44, 0x39,
+	0x48, 0x7f, 0xde, 0xec, 0x76, 0xcd, 0xde, 0xc9, 0x41, 0xab, 0x10, 0x43, 0x05, 0xc8, 0x1e, 0xe3,
+	0xe6, 0x41, 0xaf, 0x89, 0x95, 0x46, 0xdb, 0xf9, 0x18, 0x72, 0x0b, 0x0f, 0x1c, 0x84, 0x20, 0xdf,
+	0x6a, 0x1f, 0x35, 0xcd, 0xc3, 0x76, 0xeb, 0xe8, 0x55, 0xef, 0x55, 0x5b, 0x98, 0xdd, 0x87, 0xdc,
+	0x61, 0x0b, 0xcf, 0xa9, 0xb4, 0xc6, 0x6f, 0xfa, 0x55, 0x73, 0xa9, 0x03, 0x8d, 0xbe, 0x84, 0x54,
+	0xd8, 0xde, 0xa8, 0xbc, 0xfa, 0x68, 0x89, 0x47, 0x59, 0x69, 0xf5, 0x3d, 0x7d, 0xfd, 0x84, 0x18,
+	0x31, 0xe4, 0x42, 0x76, 0xbe, 0x2c, 0xa8, 0xbe, 0xd6, 0xf8, 0xe6, 0x2b, 0xa9, 0xf4, 0xec, 0xad,
+	0x5e, 0x05, 0x73, 0x3b, 0x7e, 0x0f, 0xe8, 0xe6, 0xe5, 0x81, 0x1a, 0xeb, 0x83, 0x5e, 0x76, 0xc7,
+	0x96, 0xf6, 0xfe, 0x93, 0x4d, 0x14, 0xc0, 0x18, 0xb2, 0xf3, 0x63, 0x0c, 0x7d, 0xb0, 0xce, 0xcd,
+	0xf5, 0xf9, 0xb9, 0x26, 0xdf, 0x65, 0xb3, 0xd1, 0x88, 0xbd, 0xac, 0xbe, 0x7e, 0x53, 0xd6, 0xfe,
+	0x78, 0x53, 0x8e, 0xfd, 0x70, 0x59, 0xd6, 0x5e, 0x5f, 0x96, 0xb5, 0xdf, 0x2f, 0xcb, 0xda, 0x9f,
+	0x97, 0x65, 0xed, 0xc7, 0xbf, 0xca, 0xb1, 0xaf, 0xa1, 0x56, 0x0f, 0x1d, 0xf4, 0x13, 0xf2, 0x75,
+	0xbd, 0xf7, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3a, 0x0a, 0xd7, 0xb9, 0xdf, 0x0b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -796,7 +1075,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type EvictionPluginClient interface {
 	GetToken(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetTokenResponse, error)
-	ThresholdMet(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ThresholdMetResponse, error)
+	ThresholdMet(ctx context.Context, in *GetThresholdMetRequest, opts ...grpc.CallOption) (*ThresholdMetResponse, error)
 	GetTopEvictionPods(ctx context.Context, in *GetTopEvictionPodsRequest, opts ...grpc.CallOption) (*GetTopEvictionPodsResponse, error)
 	GetEvictPods(ctx context.Context, in *GetEvictPodsRequest, opts ...grpc.CallOption) (*GetEvictPodsResponse, error)
 }
@@ -818,7 +1097,7 @@ func (c *evictionPluginClient) GetToken(ctx context.Context, in *Empty, opts ...
 	return out, nil
 }
 
-func (c *evictionPluginClient) ThresholdMet(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ThresholdMetResponse, error) {
+func (c *evictionPluginClient) ThresholdMet(ctx context.Context, in *GetThresholdMetRequest, opts ...grpc.CallOption) (*ThresholdMetResponse, error) {
 	out := new(ThresholdMetResponse)
 	err := c.cc.Invoke(ctx, "/evictionplugin.v1alpha1.EvictionPlugin/ThresholdMet", in, out, opts...)
 	if err != nil {
@@ -848,7 +1127,7 @@ func (c *evictionPluginClient) GetEvictPods(ctx context.Context, in *GetEvictPod
 // EvictionPluginServer is the server API for EvictionPlugin service.
 type EvictionPluginServer interface {
 	GetToken(context.Context, *Empty) (*GetTokenResponse, error)
-	ThresholdMet(context.Context, *Empty) (*ThresholdMetResponse, error)
+	ThresholdMet(context.Context, *GetThresholdMetRequest) (*ThresholdMetResponse, error)
 	GetTopEvictionPods(context.Context, *GetTopEvictionPodsRequest) (*GetTopEvictionPodsResponse, error)
 	GetEvictPods(context.Context, *GetEvictPodsRequest) (*GetEvictPodsResponse, error)
 }
@@ -860,7 +1139,7 @@ type UnimplementedEvictionPluginServer struct {
 func (*UnimplementedEvictionPluginServer) GetToken(ctx context.Context, req *Empty) (*GetTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetToken not implemented")
 }
-func (*UnimplementedEvictionPluginServer) ThresholdMet(ctx context.Context, req *Empty) (*ThresholdMetResponse, error) {
+func (*UnimplementedEvictionPluginServer) ThresholdMet(ctx context.Context, req *GetThresholdMetRequest) (*ThresholdMetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ThresholdMet not implemented")
 }
 func (*UnimplementedEvictionPluginServer) GetTopEvictionPods(ctx context.Context, req *GetTopEvictionPodsRequest) (*GetTopEvictionPodsResponse, error) {
@@ -893,7 +1172,7 @@ func _EvictionPlugin_GetToken_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _EvictionPlugin_ThresholdMet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetThresholdMetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -905,7 +1184,7 @@ func _EvictionPlugin_ThresholdMet_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/evictionplugin.v1alpha1.EvictionPlugin/ThresholdMet",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EvictionPluginServer).ThresholdMet(ctx, req.(*Empty))
+		return srv.(EvictionPluginServer).ThresholdMet(ctx, req.(*GetThresholdMetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1048,6 +1327,43 @@ func (m *Condition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *GetThresholdMetRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GetThresholdMetRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *GetThresholdMetRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ActivePods) > 0 {
+		for iNdEx := len(m.ActivePods) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ActivePods[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintApi(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *ThresholdMetResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1068,6 +1384,20 @@ func (m *ThresholdMetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.CandidatePods) > 0 {
+		for iNdEx := len(m.CandidatePods) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CandidatePods[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintApi(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x42
+		}
+	}
 	if m.Condition != nil {
 		{
 			size, err := m.Condition.MarshalToSizedBuffer(dAtA[:i])
@@ -1137,6 +1467,20 @@ func (m *GetTopEvictionPodsRequest) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	_ = i
 	var l int
 	_ = l
+	if len(m.CandidateEvictionRecords) > 0 {
+		for iNdEx := len(m.CandidateEvictionRecords) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CandidateEvictionRecords[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintApi(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x22
+		}
+	}
 	if len(m.EvictionScope) > 0 {
 		i -= len(m.EvictionScope)
 		copy(dAtA[i:], m.EvictionScope)
@@ -1430,6 +1774,153 @@ func (m *DeletionOptions) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *EvictionRecord) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *EvictionRecord) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *EvictionRecord) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ExpectedPods != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.ExpectedPods))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.DesiredHealthy != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.DesiredHealthy))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.CurrentHealthy != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.CurrentHealthy))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.DisruptionsAllowed != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.DisruptionsAllowed))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.Buckets != nil {
+		{
+			size, err := m.Buckets.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintApi(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.HasPdb {
+		i--
+		if m.HasPdb {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Uid) > 0 {
+		i -= len(m.Uid)
+		copy(dAtA[i:], m.Uid)
+		i = encodeVarintApi(dAtA, i, uint64(len(m.Uid)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Buckets) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Buckets) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Buckets) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.List) > 0 {
+		for iNdEx := len(m.List) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.List[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintApi(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Bucket) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Bucket) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Bucket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Count != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.Count))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.Duration != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.Duration))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Time != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.Time))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintApi(dAtA []byte, offset int, v uint64) int {
 	offset -= sovApi(v)
 	base := offset
@@ -1475,6 +1966,21 @@ func (m *Condition) Size() (n int) {
 	return n
 }
 
+func (m *GetThresholdMetRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.ActivePods) > 0 {
+		for _, e := range m.ActivePods {
+			l = e.Size()
+			n += 1 + l + sovApi(uint64(l))
+		}
+	}
+	return n
+}
+
 func (m *ThresholdMetResponse) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1504,6 +2010,12 @@ func (m *ThresholdMetResponse) Size() (n int) {
 		l = m.Condition.Size()
 		n += 1 + l + sovApi(uint64(l))
 	}
+	if len(m.CandidatePods) > 0 {
+		for _, e := range m.CandidatePods {
+			l = e.Size()
+			n += 1 + l + sovApi(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -1525,6 +2037,12 @@ func (m *GetTopEvictionPodsRequest) Size() (n int) {
 	l = len(m.EvictionScope)
 	if l > 0 {
 		n += 1 + l + sovApi(uint64(l))
+	}
+	if len(m.CandidateEvictionRecords) > 0 {
+		for _, e := range m.CandidateEvictionRecords {
+			l = e.Size()
+			n += 1 + l + sovApi(uint64(l))
+		}
 	}
 	return n
 }
@@ -1635,6 +2153,71 @@ func (m *DeletionOptions) Size() (n int) {
 	return n
 }
 
+func (m *EvictionRecord) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Uid)
+	if l > 0 {
+		n += 1 + l + sovApi(uint64(l))
+	}
+	if m.HasPdb {
+		n += 2
+	}
+	if m.Buckets != nil {
+		l = m.Buckets.Size()
+		n += 1 + l + sovApi(uint64(l))
+	}
+	if m.DisruptionsAllowed != 0 {
+		n += 1 + sovApi(uint64(m.DisruptionsAllowed))
+	}
+	if m.CurrentHealthy != 0 {
+		n += 1 + sovApi(uint64(m.CurrentHealthy))
+	}
+	if m.DesiredHealthy != 0 {
+		n += 1 + sovApi(uint64(m.DesiredHealthy))
+	}
+	if m.ExpectedPods != 0 {
+		n += 1 + sovApi(uint64(m.ExpectedPods))
+	}
+	return n
+}
+
+func (m *Buckets) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.List) > 0 {
+		for _, e := range m.List {
+			l = e.Size()
+			n += 1 + l + sovApi(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *Bucket) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Time != 0 {
+		n += 1 + sovApi(uint64(m.Time))
+	}
+	if m.Duration != 0 {
+		n += 1 + sovApi(uint64(m.Duration))
+	}
+	if m.Count != 0 {
+		n += 1 + sovApi(uint64(m.Count))
+	}
+	return n
+}
+
 func sovApi(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
@@ -1663,10 +2246,30 @@ func (this *Condition) String() string {
 	}, "")
 	return s
 }
+func (this *GetThresholdMetRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	repeatedStringForActivePods := "[]*Pod{"
+	for _, f := range this.ActivePods {
+		repeatedStringForActivePods += strings.Replace(fmt.Sprintf("%v", f), "Pod", "v1.Pod", 1) + ","
+	}
+	repeatedStringForActivePods += "}"
+	s := strings.Join([]string{`&GetThresholdMetRequest{`,
+		`ActivePods:` + repeatedStringForActivePods + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *ThresholdMetResponse) String() string {
 	if this == nil {
 		return "nil"
 	}
+	repeatedStringForCandidatePods := "[]*Pod{"
+	for _, f := range this.CandidatePods {
+		repeatedStringForCandidatePods += strings.Replace(fmt.Sprintf("%v", f), "Pod", "v1.Pod", 1) + ","
+	}
+	repeatedStringForCandidatePods += "}"
 	s := strings.Join([]string{`&ThresholdMetResponse{`,
 		`ThresholdValue:` + fmt.Sprintf("%v", this.ThresholdValue) + `,`,
 		`ObservedValue:` + fmt.Sprintf("%v", this.ObservedValue) + `,`,
@@ -1675,6 +2278,7 @@ func (this *ThresholdMetResponse) String() string {
 		`EvictionScope:` + fmt.Sprintf("%v", this.EvictionScope) + `,`,
 		`GracePeriodSeconds:` + fmt.Sprintf("%v", this.GracePeriodSeconds) + `,`,
 		`Condition:` + strings.Replace(this.Condition.String(), "Condition", "Condition", 1) + `,`,
+		`CandidatePods:` + repeatedStringForCandidatePods + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1688,10 +2292,16 @@ func (this *GetTopEvictionPodsRequest) String() string {
 		repeatedStringForActivePods += strings.Replace(fmt.Sprintf("%v", f), "Pod", "v1.Pod", 1) + ","
 	}
 	repeatedStringForActivePods += "}"
+	repeatedStringForCandidateEvictionRecords := "[]*EvictionRecord{"
+	for _, f := range this.CandidateEvictionRecords {
+		repeatedStringForCandidateEvictionRecords += strings.Replace(f.String(), "EvictionRecord", "EvictionRecord", 1) + ","
+	}
+	repeatedStringForCandidateEvictionRecords += "}"
 	s := strings.Join([]string{`&GetTopEvictionPodsRequest{`,
 		`ActivePods:` + repeatedStringForActivePods + `,`,
 		`TopN:` + fmt.Sprintf("%v", this.TopN) + `,`,
 		`EvictionScope:` + fmt.Sprintf("%v", this.EvictionScope) + `,`,
+		`CandidateEvictionRecords:` + repeatedStringForCandidateEvictionRecords + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1773,6 +2383,49 @@ func (this *DeletionOptions) String() string {
 	}
 	s := strings.Join([]string{`&DeletionOptions{`,
 		`GracePeriodSeconds:` + fmt.Sprintf("%v", this.GracePeriodSeconds) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *EvictionRecord) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&EvictionRecord{`,
+		`Uid:` + fmt.Sprintf("%v", this.Uid) + `,`,
+		`HasPdb:` + fmt.Sprintf("%v", this.HasPdb) + `,`,
+		`Buckets:` + strings.Replace(this.Buckets.String(), "Buckets", "Buckets", 1) + `,`,
+		`DisruptionsAllowed:` + fmt.Sprintf("%v", this.DisruptionsAllowed) + `,`,
+		`CurrentHealthy:` + fmt.Sprintf("%v", this.CurrentHealthy) + `,`,
+		`DesiredHealthy:` + fmt.Sprintf("%v", this.DesiredHealthy) + `,`,
+		`ExpectedPods:` + fmt.Sprintf("%v", this.ExpectedPods) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Buckets) String() string {
+	if this == nil {
+		return "nil"
+	}
+	repeatedStringForList := "[]*Bucket{"
+	for _, f := range this.List {
+		repeatedStringForList += strings.Replace(f.String(), "Bucket", "Bucket", 1) + ","
+	}
+	repeatedStringForList += "}"
+	s := strings.Join([]string{`&Buckets{`,
+		`List:` + repeatedStringForList + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Bucket) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Bucket{`,
+		`Time:` + fmt.Sprintf("%v", this.Time) + `,`,
+		`Duration:` + fmt.Sprintf("%v", this.Duration) + `,`,
+		`Count:` + fmt.Sprintf("%v", this.Count) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1988,6 +2641,90 @@ func (m *Condition) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *GetThresholdMetRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowApi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GetThresholdMetRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GetThresholdMetRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ActivePods", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ActivePods = append(m.ActivePods, &v1.Pod{})
+			if err := m.ActivePods[len(m.ActivePods)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipApi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthApi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *ThresholdMetResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2164,6 +2901,40 @@ func (m *ThresholdMetResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CandidatePods", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CandidatePods = append(m.CandidatePods, &v1.Pod{})
+			if err := m.CandidatePods[len(m.CandidatePods)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipApi(dAtA[iNdEx:])
@@ -2298,6 +3069,40 @@ func (m *GetTopEvictionPodsRequest) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.EvictionScope = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CandidateEvictionRecords", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CandidateEvictionRecords = append(m.CandidateEvictionRecords, &EvictionRecord{})
+			if err := m.CandidateEvictionRecords[len(m.CandidateEvictionRecords)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2976,6 +3781,411 @@ func (m *DeletionOptions) Unmarshal(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.GracePeriodSeconds |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipApi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthApi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *EvictionRecord) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowApi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: EvictionRecord: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: EvictionRecord: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Uid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HasPdb", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.HasPdb = bool(v != 0)
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Buckets", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Buckets == nil {
+				m.Buckets = &Buckets{}
+			}
+			if err := m.Buckets.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DisruptionsAllowed", wireType)
+			}
+			m.DisruptionsAllowed = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.DisruptionsAllowed |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentHealthy", wireType)
+			}
+			m.CurrentHealthy = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentHealthy |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DesiredHealthy", wireType)
+			}
+			m.DesiredHealthy = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.DesiredHealthy |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExpectedPods", wireType)
+			}
+			m.ExpectedPods = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ExpectedPods |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipApi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthApi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Buckets) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowApi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Buckets: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Buckets: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field List", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthApi
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthApi
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.List = append(m.List, &Bucket{})
+			if err := m.List[len(m.List)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipApi(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthApi
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Bucket) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowApi
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Bucket: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Bucket: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
+			}
+			m.Time = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Time |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Duration", wireType)
+			}
+			m.Duration = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Duration |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Count", wireType)
+			}
+			m.Count = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowApi
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Count |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
