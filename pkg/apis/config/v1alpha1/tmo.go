@@ -79,6 +79,12 @@ type TransparentMemoryOffloadingConfig struct {
 	// +listType=map
 	CgroupConfig []CgroupConfig `json:"CgroupConfig,omitempty"`
 
+	// PoolNameConfig is a configuration for manipulating TMO on specified resource pools
+	// +optional
+	// +listMapKey=poolName
+	// +listType=map
+	PoolNameConfig []PoolNameConfig `json:"poolNameConfig,omitempty"`
+
 	// BlockConfig is a configuration for blocking tmo on specified pods.
 	// +optional
 	BlockConfig *BlockConfig `json:"blockConfig,omitempty"`
@@ -95,6 +101,14 @@ type QoSLevelConfig struct {
 type CgroupConfig struct {
 	// CgroupPath is an cgroupV2 absolute path, e.g. /sys/fs/cgroup/hdfs
 	CgroupPath string `json:"cgroupPath"`
+
+	// ConfigDetail is configuration details of TMO
+	ConfigDetail TMOConfigDetail `json:"configDetail"`
+}
+
+type PoolNameConfig struct {
+	// PoolName is a resource pool name, e.g. system, shared, reclaimed
+	PoolName string `json:"poolName"`
 
 	// ConfigDetail is configuration details of TMO
 	ConfigDetail TMOConfigDetail `json:"configDetail"`
