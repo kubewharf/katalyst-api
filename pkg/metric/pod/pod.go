@@ -35,3 +35,10 @@ const (
 const (
 	CustomMetricPodGPUUsage = "pod_gpu_usage"
 )
+
+// real-time memory bandwidth related metric
+const (
+	CustomMetricPodTotalMemoryBandwidth  = "pod_mbm_total"
+	CustomMetricPodLocalMemoryBandwidth  = "pod_mbm_local"
+	CustomMetricPodVictimMemoryBandwidth = "pod_mbm_victim"
+)

@@ -33,7 +33,7 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 // ResourceNameKatalystCNR is used to construct standard gvr
 const (
 	ResourceNameKatalystCNR = "customnoderesources"
-	ResourceNameKatalystNPD = "nodeprofiledescriptor"
+	ResourceNameKatalystNPD = "nodeprofiledescriptors"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
