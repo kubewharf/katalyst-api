@@ -70,10 +70,10 @@ type UserWatermarkConfigurationSpec struct {
 type UserWatermarkConfig struct {
 	// EnableReclaimer is whether to enable reclaimer on target objective
 	// +optional
-	EnableReclaimer bool `json:"enableReclaimer,omitempty"`
+	EnableReclaimer *bool `json:"enableReclaimer,omitempty"`
 	// ReconcileInterval is the minimum duration the objectives got memory reclaimed by reclaimer
 	// +optional
-	ReconcileInterval int64 `json:"reconcileInterval,omitempty"`
+	ReconcileInterval *int64 `json:"reconcileInterval,omitempty"`
 	// ServiceLabel is the label selector to filter services that need to be configured
 	// +optional
 	ServiceLabel string `json:"serviceLabel,omitempty"`
@@ -102,7 +102,7 @@ type UserWatermarkServiceConfig struct {
 	ServiceName string `json:"serviceName"`
 
 	// ConfigDetail is configuration details of UserWatermark
-	ConfigDetail UserWatermarkConfigDetail `json:"configDetail"`
+	ConfigDetail ReclaimConfigDetail `json:"configDetail"`
 }
 
 type UserWatermarkQoSLevelConfig struct {
@@ -110,7 +110,7 @@ type UserWatermarkQoSLevelConfig struct {
 	QoSLevel consts.QoSLevel `json:"qosLevel"`
 
 	// ConfigDetail is configuration details of UserWatermark
-	ConfigDetail UserWatermarkConfigDetail `json:"configDetail"`
+	ConfigDetail ReclaimConfigDetail `json:"configDetail"`
 }
 
 type UserWatermarkCgroupConfig struct {
@@ -118,10 +118,10 @@ type UserWatermarkCgroupConfig struct {
 	CgroupPath string `json:"cgroupPath"`
 
 	// ConfigDetail is configuration details of UserWatermark
-	ConfigDetail UserWatermarkConfigDetail `json:"configDetail"`
+	ConfigDetail ReclaimConfigDetail `json:"configDetail"`
 }
 
-type UserWatermarkConfigDetail struct {
+type ReclaimConfigDetail struct {
 	// EnableMemoryReclaim is whether to enable memory reclaim on target objective
 	// +optional
 	EnableMemoryReclaim *bool `json:"enableMemoryReclaim,omitempty"`
