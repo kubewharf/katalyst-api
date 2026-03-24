@@ -945,6 +945,14 @@ type CPUBurstConfig struct {
 	// +optional
 	EnableDedicatedCoresDefaultCPUBurst *bool `json:"enableDedicatedCoresDefaultCPUBurst,omitempty"`
 
+	// EnableSharedCoresDefaultCPUBurst indicates whether cpu burst should be enabled by default for pods with shared cores.
+	// To avoid cpu contention with other pods, CPU burst should only be enabled for shared cores pods when they are the sole shared cores pod running on the node.
+	// If set to true, it means that cpu burst should be enabled by default for pods with shared cores (cpu burst value is calculated and set).
+	// If set to false, it means that cpu burst should be disabled for pods with shared cores (cpu burst value is set to 0).
+	// If set to nil, it means that no operation is done on the cpu burst value.
+	// +optional
+	EnableSharedCoresDefaultCPUBurst *bool `json:"enableSharedCoresDefaultCPUBurst,omitempty"`
+
 	// DefaultCPUBurstPercent is the default cpu burst percent to be set for pods with dedicated cores.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=100

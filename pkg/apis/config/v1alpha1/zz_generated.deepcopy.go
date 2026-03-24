@@ -429,6 +429,11 @@ func (in *CPUBurstConfig) DeepCopyInto(out *CPUBurstConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableSharedCoresDefaultCPUBurst != nil {
+		in, out := &in.EnableSharedCoresDefaultCPUBurst, &out.EnableSharedCoresDefaultCPUBurst
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DefaultCPUBurstPercent != nil {
 		in, out := &in.DefaultCPUBurstPercent, &out.DefaultCPUBurstPercent
 		*out = new(int64)
