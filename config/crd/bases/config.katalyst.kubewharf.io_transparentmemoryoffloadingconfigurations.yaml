@@ -223,6 +223,76 @@ spec:
                           type: object
                         type: array
                     type: object
+                  poolNameConfig:
+                    description: PoolNameConfig is a configuration for manipulating
+                      TMO on specified resource pools
+                    items:
+                      properties:
+                        configDetail:
+                          description: ConfigDetail is configuration details of TMO
+                          properties:
+                            enableSwap:
+                              description: EnableSwap is whether to enable swap to
+                                offloading anon pages
+                              type: boolean
+                            enableTMO:
+                              description: EnableTMO is whether to enable TMO on target
+                                objective
+                              type: boolean
+                            interval:
+                              description: Interval is the minimum duration the objectives
+                                got memory reclaimed by TMO
+                              type: string
+                            policyName:
+                              description: PolicyName is used to specify the policy
+                                for calculating memory offloading size
+                              type: string
+                            psiPolicy:
+                              description: PSIPolicyConf is configurations of a TMO
+                                policy which reclaim memory by PSI
+                              properties:
+                                maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
+                                  type: number
+                                psiAvg60Threshold:
+                                  description: |-
+                                    PSIAvg60Threshold indicates the threshold of memory pressure. If observed pressure exceeds
+                                    this threshold, memory offloading will be paused.
+                                  type: number
+                              type: object
+                            refaultPolicy:
+                              description: RefaultPolicy is configurations of a TMO
+                                policy which reclaim memory by refault
+                              properties:
+                                maxProbe:
+                                  description: MaxProbe limits the memory offloading
+                                    size in one cycle, it's a ratio of memory usage.
+                                  type: number
+                                reclaimAccuracyTarget:
+                                  description: ReclaimAccuracyTarget indicates the
+                                    desired level of precision or accuracy in offloaded
+                                    pages.
+                                  type: number
+                                reclaimScanEfficiencyTarget:
+                                  description: |-
+                                    ReclaimScanEfficiencyTarget indicates the desired level of efficiency in scanning and
+                                    identifying memory pages that can be offloaded.
+                                  type: number
+                              type: object
+                          type: object
+                        poolName:
+                          description: PoolName is a resource pool name, e.g. system,
+                            shared, reclaimed
+                          type: string
+                      required:
+                      - configDetail
+                      - poolName
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - poolName
+                    x-kubernetes-list-type: map
                   qosLevelConfig:
                     description: QoSLevelConfig is a configuration for manipulating
                       TMO on Different QoS Level
