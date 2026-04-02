@@ -78,6 +78,10 @@ type UserWatermarkConfig struct {
 	// +optional
 	ServiceLabel string `json:"serviceLabel,omitempty"`
 
+	// DefaultConfig is the default configuration for UserWatermark
+	// +optional
+	DefaultConfig *ReclaimConfigDetail `json:"defaultConfig,omitempty"`
+
 	// ServiceConfig is a configuration used to reclaim user watermark on specified services
 	// +optional
 	// +listMapKey=serviceName

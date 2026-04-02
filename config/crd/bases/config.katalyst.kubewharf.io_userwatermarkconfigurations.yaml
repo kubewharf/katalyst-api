@@ -175,6 +175,76 @@ spec:
                     x-kubernetes-list-map-keys:
                     - cgroupPath
                     x-kubernetes-list-type: map
+                  defaultConfig:
+                    description: DefaultConfig is the default configuration for UserWatermark
+                    properties:
+                      backoffDuration:
+                        description: BackoffDuration is the duration the reclaimer
+                          will wait before next reclaim cycle
+                        type: string
+                      enableMemoryReclaim:
+                        description: EnableMemoryReclaim is whether to enable memory
+                          reclaim on target objective
+                        type: boolean
+                      failureFreezePeriod:
+                        description: |-
+                          FailureFreezePeriod is the duration the reclaimer will wait before next reclaim cycle after
+                          consecutive reclaim failed times reach the threshold.
+                        type: string
+                      feedbackPolicy:
+                        description: FeedbackPolicy is the policy used to feedback
+                          memory reclaim status to reclaimer
+                        type: string
+                      psiPolicy:
+                        description: PSIPolicyConf is a configuration that uses the
+                          psi indicator to report memory reclamation status
+                        properties:
+                          psiAvg60Threshold:
+                            description: |-
+                              PSIAvg60Threshold indicates the threshold of memory pressure. If observed pressure exceeds
+                              this threshold, memory reclaiming will be paused.
+                            type: number
+                        type: object
+                      reclaimFailedThreshold:
+                        description: |-
+                          ReclaimFailedThreshold is the threshold of consecutive reclaim failed times. If the threshold
+                          is reached, the reclaimer will pause reclaiming.
+                        format: int64
+                        type: integer
+                      reclaimInterval:
+                        description: ReclaimInterval is the minimum duration the objectives
+                          got memory reclaimed by reclaimer
+                        format: int64
+                        type: integer
+                      refaultPolicy:
+                        description: RefaultPolicy is a configuration that uses the
+                          refault indicator to report memory reclamation status
+                        properties:
+                          reclaimAccuracyTarget:
+                            description: ReclaimAccuracyTarget indicates the desired
+                              level of precision or accuracy in offloaded pages.
+                            type: number
+                          reclaimScanEfficiencyTarget:
+                            description: |-
+                              ReclaimScanEfficiencyTarget indicates the desired level of efficiency in scanning and
+                              identifying memory pages that can be offloaded.
+                            type: number
+                        type: object
+                      scaleFactor:
+                        description: ScaleFactor is the scale factor of memory reclaim
+                          size
+                        format: int64
+                        type: integer
+                      singleReclaimFactor:
+                        description: SingleReclaimFactor is the max memory reclaim
+                          size ratio in one reclaim cycle
+                        type: number
+                      singleReclaimSize:
+                        description: SingleReclaimSize is the max memory reclaim size
+                          in one reclaim cycle
+                        format: int64
+                        type: integer
+                    type: object
                   enableReclaimer:
                     description: EnableReclaimer is whether to enable reclaimer on
                       target objective

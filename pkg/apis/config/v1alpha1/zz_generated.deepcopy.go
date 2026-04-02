@@ -3437,6 +3437,11 @@ func (in *UserWatermarkConfig) DeepCopyInto(out *UserWatermarkConfig) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.DefaultConfig != nil {
+		in, out := &in.DefaultConfig, &out.DefaultConfig
+		*out = new(ReclaimConfigDetail)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.ServiceConfig != nil {
 		in, out := &in.ServiceConfig, &out.ServiceConfig
 		*out = make([]UserWatermarkServiceConfig, len(*in))
