@@ -206,6 +206,19 @@ type TopologyZone struct {
 	Siblings []Sibling `json:"siblings,omitempty" patchStrategy:"merge" patchMergeKey:"name"`
 }
 
+// TopologyAllocation is the map of topology type to map of zone name to zone allocation。
+// This is used in QRM for reporting the allocations of containers through pod annotations, and it will be used by kubelet.
+type TopologyAllocation map[TopologyType]map[string]ZoneAllocation
+
+// ZoneAllocation describes a specific zone allocation result.
+type ZoneAllocation struct {
+	// Allocated indicates the resources that are allocated to the pod.
+	Allocated v1.ResourceList `json:"allocated,omitempty"`
+
+	// Attributes store additional attributes specific to the device.
+	Attributes map[string]string `json:"attributes,omitempty"`
+}
+
 type TopologyType string
 
 const (
