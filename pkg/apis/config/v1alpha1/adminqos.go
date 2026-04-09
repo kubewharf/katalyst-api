@@ -408,12 +408,12 @@ type ReclaimedResourcesEvictionConfig struct {
 	SoftEvictionThreshold map[v1.ResourceName]float64 `json:"softEvictionThreshold"`
 
 	// GracePeriod is the grace period of reclaimed resources' eviction
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
 	// ThresholdMetToleranceDuration is the tolerance duration before eviction.
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	ThresholdMetToleranceDuration *int64 `json:"thresholdMetToleranceDuration,omitempty"`
 }
@@ -477,7 +477,7 @@ type CPUPressureEvictionConfig struct {
 	MinSuppressionToleranceDuration *metav1.Duration `json:"minSuppressionToleranceDuration,omitempty"`
 
 	// GracePeriod is the grace period of cpu pressure eviction
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
@@ -508,7 +508,7 @@ type NumaCPUPressureEvictionConfig struct {
 
 	// GracePeriod is the grace period (in seconds) after a pod starts before it can be considered for eviction
 	// due to NUMA CPU pressure. 0 means no grace period.
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
@@ -635,12 +635,12 @@ type MemoryPressureEvictionConfig struct {
 	RSSOveruseRateThreshold *float64 `json:"rssOveruseRateThreshold,omitempty"`
 
 	// GracePeriod is the grace period of memory pressure eviction
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
 	// ReclaimedGracePeriod is the grace period of memory pressure reclaimed eviction
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	ReclaimedGracePeriod *int64 `json:"reclaimedGracePeriod,omitempty"`
 
@@ -680,6 +680,7 @@ type SystemLoadPressureEvictionConfig struct {
 	CoolDownTime *int64 `json:"coolDownTime,omitempty"`
 
 	// GracePeriod is the grace period of pod deletion
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
@@ -742,6 +743,7 @@ type RootfsPressureEvictionConfig struct {
 	MinimumImageFsDiskCapacityThreshold *resource.Quantity `json:"minimumImageFsDiskCapacityThreshold,omitempty"`
 
 	// GracePeriod is the grace period of pod deletion
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
@@ -775,7 +777,7 @@ type NetworkEvictionConfig struct {
 	NICUnhealthyToleranceDuration *metav1.Duration `json:"nicUnhealthyToleranceDuration,omitempty"`
 
 	// GracePeriod is the grace period of nic health eviction
-	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
@@ -838,6 +840,8 @@ type CPUSystemPressureEvictionConfig struct {
 	// +optional
 	EvictionRankingMetrics []string `json:"evictionRankingMetrics,omitempty"`
 
+	// GracePeriod is the grace period of cpu system pressure eviction
+	// +kubebuilder:validation:Minimum=-1
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 
