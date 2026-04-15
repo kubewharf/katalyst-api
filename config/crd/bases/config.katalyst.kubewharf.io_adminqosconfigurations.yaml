@@ -863,6 +863,12 @@ spec:
                                   reclaimed_cores cgroup
                                 minimum: 0
                                 type: number
+                              requestBasedRatio:
+                                description: RequestBasedRatio is the rate of reserved
+                                  memory for request, 0 means disable reserved memory
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               staticBasedCapacity:
                                 description: StaticBasedCapacity is the static oversold
                                   memory size by bytes
