@@ -289,6 +289,12 @@ type MemoryHeadroomUtilBasedConfig struct {
 	// +optional
 	CacheBasedRatio *float64 `json:"cacheBasedRatio,omitempty"`
 
+	// RequestBasedRatio is the rate of reserved memory for request, 0 means disable reserved memory
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	RequestBasedRatio *float64 `json:"requestBasedRatio,omitempty"`
+
 	// MaxOversoldRate is the max oversold rate of memory headroom to the memory limit of
 	// reclaimed_cores cgroup
 	// +kubebuilder:validation:Minimum=0
