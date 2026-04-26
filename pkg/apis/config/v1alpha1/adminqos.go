@@ -184,16 +184,16 @@ type QoSRegionType string
 
 const (
 	// QoSRegionTypeShare for each share pool
-	QoSRegionTypeShare QoSRegionType = "share"
-
+	QoSRegionTypeShare     QoSRegionType = "share"
 	QoSRegionTypeDedicated QoSRegionType = "dedicated"
-
 	// QoSRegionTypeIsolation for each isolation pool
 	QoSRegionTypeIsolation QoSRegionType = "isolation"
+	// QoSRegionEmptyNUMA for NUMAs without real workloads
+	QoSRegionEmptyNUMA QoSRegionType = "empty-numa"
 
 	// QoSRegionTypeDedicatedNumaExclusive for each dedicated core with numa binding
 	// and numa exclusive container
-	// deprecated, will be removed later, use QoSRegionTypeDedicated instead
+	// DEPRECATED, will be removed later, use QoSRegionTypeDedicated instead
 	QoSRegionTypeDedicatedNumaExclusive QoSRegionType = "dedicated-numa-exclusive"
 )
 
