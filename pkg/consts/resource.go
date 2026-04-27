@@ -26,6 +26,7 @@ const (
 const (
 	ResourceNetBandwidth    v1.ResourceName = "resource.katalyst.kubewharf.io/net_bandwidth"
 	ResourceMemoryBandwidth v1.ResourceName = "resource.katalyst.kubewharf.io/memory_bandwidth"
+	ResourceMilliGPU        v1.ResourceName = "resource.katalyst.kubewharf.io/milligpu"
 	ResourceGPUMemory       v1.ResourceName = "resource.katalyst.kubewharf.io/gpu_memory"
 	ResourceSriovNic        v1.ResourceName = "resource.katalyst.kubewharf.io/sriov_nic"
 )
