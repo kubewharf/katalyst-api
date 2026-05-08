@@ -2092,6 +2092,11 @@ func (in *NumaCPUPressureEvictionConfig) DeepCopyInto(out *NumaCPUPressureEvicti
 		*out = new(float64)
 		**out = **in
 	}
+	if in.CpuUsageRatioThreshold != nil {
+		in, out := &in.CpuUsageRatioThreshold, &out.CpuUsageRatioThreshold
+		*out = new(float64)
+		**out = **in
+	}
 	if in.CandidateCount != nil {
 		in, out := &in.CandidateCount, &out.CandidateCount
 		*out = new(int)
@@ -3080,6 +3085,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 	if in.EnableSwap != nil {
 		in, out := &in.EnableSwap, &out.EnableSwap
 		*out = new(bool)
+		**out = **in
+	}
+	if in.ReservedInactiveFile != nil {
+		in, out := &in.ReservedInactiveFile, &out.ReservedInactiveFile
+		*out = new(uint64)
 		**out = **in
 	}
 	if in.Interval != nil {
