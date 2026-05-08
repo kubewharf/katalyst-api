@@ -540,6 +540,11 @@ type NumaCPUPressureEvictionConfig struct {
 	// +optional
 	ThresholdExpandFactor *float64 `json:"thresholdExpandFactor,omitempty"`
 
+	// CpuUsageRatioThreshold is the CPU usage ratio threshold for NUMA-level CPU pressure eviction.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	CpuUsageRatioThreshold *float64 `json:"cpuUsageRatioThreshold,omitempty"`
+
 	// CandidateCount is the candidate pod count when selecting pods to be evicted.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
