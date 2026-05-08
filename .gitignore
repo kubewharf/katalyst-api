@@ -1,6 +1,7 @@
 # Compiled binaries and deployment files 
 /bin/
 hack/tools/bin
+.protoinclude/
 
 # Binaries for programs and plugins
 *.exe

@@ -17,6 +17,7 @@ ifeq ($(GOPROXY),)
 GOPROXY := https://proxy.golang.org
 endif
 export GOPROXY
+GOPATH ?= $(shell go env GOPATH)
 
 # Directories
 TOOLS_DIR := hack/tools
@@ -28,6 +29,10 @@ CONTROLLER_GEN := $(abspath $(TOOLS_BIN_DIR)/controller-gen)
 
 # Protocols
 Protocol_PATH = pkg/protocol
+PROTO_INCLUDE_DIR := $(abspath .protoinclude)
+GOGO_PROTOBUF_DIR := $(shell go list -m -f '{{.Dir}}' github.com/gogo/protobuf)
+K8S_API_DIR := $(shell go list -m -f '{{.Dir}}' k8s.io/api)
+K8S_APIMACHINERY_DIR := $(shell go list -m -f '{{.Dir}}' k8s.io/apimachinery)
 
 all: generate
 crd: generate-manifests generate-go
@@ -68,16 +73,23 @@ generate-manifests: $(CONTROLLER_GEN)
 ## --------------------------------------
 
 .PHONY: generate-pb
-generate-pb: generate-reporter-plugin generate-eviction-plugin
+generate-pb: prepare-proto-includes generate-reporter-plugin generate-eviction-plugin
+
+.PHONY: prepare-proto-includes
+prepare-proto-includes:
+	mkdir -p "$(PROTO_INCLUDE_DIR)/github.com/gogo" "$(PROTO_INCLUDE_DIR)/k8s.io"
+	ln -sfn "$(GOGO_PROTOBUF_DIR)" "$(PROTO_INCLUDE_DIR)/github.com/gogo/protobuf"
+	ln -sfn "$(K8S_API_DIR)" "$(PROTO_INCLUDE_DIR)/k8s.io/api"
+	ln -sfn "$(K8S_APIMACHINERY_DIR)" "$(PROTO_INCLUDE_DIR)/k8s.io/apimachinery"
 
 .PHONY: generate-reporter-plugin ## Generate Protocol for reporter manager
 generate-reporter-plugin:
-	(protoc -I=$(Protocol_PATH)/reporterplugin/ -I=$(GOPATH)/src/ --gogo_out=plugins=grpc:$(Protocol_PATH)/reporterplugin/ $(Protocol_PATH)/reporterplugin/v1alpha1/api.proto)
+	(protoc -I=$(Protocol_PATH)/reporterplugin/ -I=$(PROTO_INCLUDE_DIR) -I=$(GOPATH)/src/ --gogo_out=plugins=grpc:$(Protocol_PATH)/reporterplugin/ $(Protocol_PATH)/reporterplugin/v1alpha1/api.proto)
 	cat ./hack/boilerplate.go.txt "$(Protocol_PATH)/reporterplugin/v1alpha1/api.pb.go" > tmpfile && mv tmpfile "$(Protocol_PATH)/reporterplugin/v1alpha1/api.pb.go"
 
 .PHONY: generate-eviction-plugin ## Generate Protocol for eviction manager
 generate-eviction-plugin:
-	(protoc -I=$(Protocol_PATH)/evictionplugin/ -I=$(GOPATH)/src/ --gogo_out=plugins=grpc:$(Protocol_PATH)/evictionplugin/ $(Protocol_PATH)/evictionplugin/v1alpha1/api.proto)
+	(protoc -I=$(Protocol_PATH)/evictionplugin/ -I=$(PROTO_INCLUDE_DIR) -I=$(GOPATH)/src/ --gogo_out=plugins=grpc:$(Protocol_PATH)/evictionplugin/ $(Protocol_PATH)/evictionplugin/v1alpha1/api.proto)
 	cat ./hack/boilerplate.go.txt "$(Protocol_PATH)/evictionplugin/v1alpha1/api.pb.go" > tmpfile && mv tmpfile "$(Protocol_PATH)/evictionplugin/v1alpha1/api.pb.go"
 
 

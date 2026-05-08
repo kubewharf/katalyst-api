@@ -248,6 +248,11 @@ spec:
                                   when selecting pods to be evicted.
                                 minimum: 0
                                 type: integer
+                              cpuUsageRatioThreshold:
+                                description: CpuUsageRatioThreshold is the CPU usage
+                                  ratio threshold for NUMA-level CPU pressure eviction.
+                                minimum: 0
+                                type: number
                               enableEviction:
                                 description: EnableEviction indicates whether to enable
                                   NUMA-level CPU pressure eviction.
@@ -749,6 +754,56 @@ spec:
                               If set to nil, it means that no operation is done on the cpu burst value.
                             type: boolean
                         type: object
+                      cpuWeightConfig:
+                        description: CPUWeightConfig has cpu weight related configurations
+                        properties:
+                          overrideRules:
+                            description: OverrideRules is a list of CPU weight override
+                              rules
+                            items:
+                              description: CPUWeightOverride defines a single rule
+                                for CPU weight override
+                              properties:
+                                name:
+                                  description: Name is the name of this rule
+                                  type: string
+                                podCPUDemand:
+                                  description: |-
+                                    PodCPUDemand is the CPU demand for the pod in cores
+                                    The value will be converted to cpu.shares (cgroupv1) or cpu.weight (cgroupv2) automatically
+                                  format: int64
+                                  minimum: 1
+                                  type: integer
+                                podSelector:
+                                  description: PodSelector selects the pods to apply
+                                    this rule to
+                                  type: string
+                              required:
+                              - name
+                              - podCPUDemand
+                              - podSelector
+                              type: object
+                            type: array
+                          restoreRules:
+                            description: RestoreRules is a list of CPU weight restore
+                              rules
+                            items:
+                              description: CPUWeightRestore defines a single rule
+                                for CPU weight restore
+                              properties:
+                                name:
+                                  description: Name is the name of this rule
+                                  type: string
+                                podSelector:
+                                  description: PodSelector selects the pods to apply
+                                    this rule to
+                                  type: string
+                              required:
+                              - name
+                              - podSelector
+                              type: object
+                            type: array
+                        type: object
                     type: object
                   qrmPluginConfig:
                     description: QRMPluginConfig is a configuration for qrm plugin
@@ -761,6 +816,31 @@ spec:
                               PreferUseExistNUMAHintResult prefer to use existing numa hint results
                               The calculation results may originate from upstream components and be recorded in the pod annotation
                             type: boolean
+                          systemExclusivePool:
+                            additionalProperties:
+                              type: integer
+                            description: SystemExclusivePool is the config for system
+                              exclusive pool, key is pool name, value is the number
+                              of cores to allocate
+                            type: object
+                          systemExclusivePoolShrinkMax:
+                            description: SystemExclusivePoolShrinkMax is the max number
+                              of cores to shrink for system exclusive pool
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          systemExclusivePoolShrinkMin:
+                            description: SystemExclusivePoolShrinkMin is the min number
+                              of cores to shrink for system exclusive pool
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          systemExclusivePoolShrinkRatio:
+                            description: SystemExclusivePoolShrinkRatio is the shrink
+                              ratio of system exclusive pool
+                            maximum: 1
+                            minimum: 0
+                            type: number
                         type: object
                     type: object
                   reclaimedResourceConfig:

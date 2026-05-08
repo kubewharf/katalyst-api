@@ -42,6 +42,11 @@ const (
 	PodAnnotationNICSelectionResultKey = "katalyst.kubewharf.io/nic_selection_result"
 )
 
+// PodAnnotationGPUSelectionResultKey is a const variable for pod annotation about a gpu selection result.
+const (
+	PodAnnotationGPUSelectionResultKey = "katalyst.kubewharf.io/gpu_selection_result"
+)
+
 const (
 	// PodAnnotationResourcePoolKey is a const variable for pod annotation about resource pool name
 	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
@@ -65,4 +70,11 @@ const (
 // PodAnnotationSriovVFResultKey is a const variable for pod annotation about sriov vf result.
 const (
 	PodAnnotationSriovVFResultKey = "katalyst.kubewharf.io/sriov_vf_result"
+)
+
+const (
+	// PodAnnotationCPUWeightDemandCoresKey is a const variable for pod annotation about cpu cores demand to calculate cpu weight.
+	PodAnnotationCPUWeightDemandCoresKey = "katalyst.kubewharf.io/cpu_weight_demand_cores"
+	// PodAnnotationCPUWeightBurstRatioKey is a const variable for pod annotation about cpu burst ratio to calculate cpu weight.
+	PodAnnotationCPUWeightBurstRatioKey = "katalyst.kubewharf.io/cpu_weight_burst_ratio"
 )

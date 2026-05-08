@@ -338,17 +338,12 @@ type NodeMetricStatus struct {
 	GroupMetric []GroupMetricInfo `json:"groupMetric,omitempty"`
 }
 
-type ResourceMetric struct {
-	CPU    *resource.Quantity `json:"cpu,omitempty"`
-	Memory *resource.Quantity `json:"memory,omitempty"`
-}
-
 type ResourceUsage struct {
 	// NUMAUsage contains the real-time resource usage for each NUMA
 	NUMAUsage []NUMAMetricInfo `json:"numaUsage,omitempty"`
 
 	// GenericUsage contains the real-time resource usage
-	GenericUsage *ResourceMetric `json:"genericUsage,omitempty"`
+	GenericUsage v1.ResourceList `json:"genericUsage,omitempty"`
 }
 
 type GroupMetricInfo struct {
@@ -367,7 +362,7 @@ type NodeMetricInfo struct {
 type NUMAMetricInfo struct {
 	NUMAId int `json:"numaId"`
 	// Usage contains the real-time resource usage for this NUMA node
-	Usage *ResourceMetric `json:"usage"`
+	Usage v1.ResourceList `json:"usage"`
 }
 
 // ResourcePackage represents a single compute package definition.
