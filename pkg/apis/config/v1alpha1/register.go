@@ -50,6 +50,7 @@ const (
 	ResourceNameStrategyGroups                = "strategygroups"
 	ResourceNameIRQTuningConfigurations       = "irqtuningconfigurations"
 	ResourceNameMemoryBandwidthConfigurations = "memorybandwidthconfigurations"
+	ResourceNamePowerManagementConfigurations = "powermanagementconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -95,6 +96,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&IRQTuningConfigurationList{},
 		&MemoryBandwidthConfiguration{},
 		&MemoryBandwidthConfigurationList{},
+		&PowerManagementConfiguration{},
+		&PowerManagementConfigurationList{},
 
 		// global resource portrait configuration
 		&GlobalResourcePortraitConfiguration{},
