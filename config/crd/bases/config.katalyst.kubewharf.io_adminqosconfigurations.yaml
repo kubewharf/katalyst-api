@@ -749,6 +749,56 @@ spec:
                               If set to nil, it means that no operation is done on the cpu burst value.
                             type: boolean
                         type: object
+                      cpuWeightConfig:
+                        description: CPUWeightConfig has cpu weight related configurations
+                        properties:
+                          overrideRules:
+                            description: OverrideRules is a list of CPU weight override
+                              rules
+                            items:
+                              description: CPUWeightOverride defines a single rule
+                                for CPU weight override
+                              properties:
+                                name:
+                                  description: Name is the name of this rule
+                                  type: string
+                                podCPUDemand:
+                                  description: |-
+                                    PodCPUDemand is the CPU demand for the pod in cores
+                                    The value will be converted to cpu.shares (cgroupv1) or cpu.weight (cgroupv2) automatically
+                                  format: int64
+                                  minimum: 1
+                                  type: integer
+                                podSelector:
+                                  description: PodSelector selects the pods to apply
+                                    this rule to
+                                  type: string
+                              required:
+                              - name
+                              - podCPUDemand
+                              - podSelector
+                              type: object
+                            type: array
+                          restoreRules:
+                            description: RestoreRules is a list of CPU weight restore
+                              rules
+                            items:
+                              description: CPUWeightRestore defines a single rule
+                                for CPU weight restore
+                              properties:
+                                name:
+                                  description: Name is the name of this rule
+                                  type: string
+                                podSelector:
+                                  description: PodSelector selects the pods to apply
+                                    this rule to
+                                  type: string
+                              required:
+                              - name
+                              - podSelector
+                              type: object
+                            type: array
+                        type: object
                     type: object
                   qrmPluginConfig:
                     description: QRMPluginConfig is a configuration for qrm plugin

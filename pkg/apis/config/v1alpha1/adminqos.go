@@ -941,6 +941,39 @@ type FineGrainedResourceConfig struct {
 	// CPUBurstConfig has cpu burst related configurations
 	// +optional
 	CPUBurstConfig *CPUBurstConfig `json:"cpuBurstConfig,omitempty"`
+	// CPUWeightConfig has cpu weight related configurations
+	// +optional
+	CPUWeightConfig *CPUWeightConfig `json:"cpuWeightConfig,omitempty"`
+}
+
+// CPUWeightConfig defines the configuration for dynamic CPU weight adjustment
+type CPUWeightConfig struct {
+	// RestoreRules is a list of CPU weight restore rules
+	// +optional
+	RestoreRules []CPUWeightRestore `json:"restoreRules,omitempty"`
+	// OverrideRules is a list of CPU weight override rules
+	// +optional
+	OverrideRules []CPUWeightOverride `json:"overrideRules,omitempty"`
+}
+
+// CPUWeightRestore defines a single rule for CPU weight restore
+type CPUWeightRestore struct {
+	// Name is the name of this rule
+	Name string `json:"name"`
+	// PodSelector selects the pods to apply this rule to
+	PodSelector string `json:"podSelector"`
+}
+
+// CPUWeightOverride defines a single rule for CPU weight override
+type CPUWeightOverride struct {
+	// Name is the name of this rule
+	Name string `json:"name"`
+	// PodSelector selects the pods to apply this rule to
+	PodSelector string `json:"podSelector"`
+	// PodCPUDemand is the CPU demand for the pod in cores
+	// The value will be converted to cpu.shares (cgroupv1) or cpu.weight (cgroupv2) automatically
+	// +kubebuilder:validation:Minimum=1
+	PodCPUDemand int64 `json:"podCPUDemand"`
 }
 
 type CPUBurstConfig struct {
