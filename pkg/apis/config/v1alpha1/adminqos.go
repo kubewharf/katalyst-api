@@ -941,6 +941,29 @@ type FineGrainedResourceConfig struct {
 	// CPUBurstConfig has cpu burst related configurations
 	// +optional
 	CPUBurstConfig *CPUBurstConfig `json:"cpuBurstConfig,omitempty"`
+	// CPUWeightConfig has cpu weight related configurations
+	// +optional
+	CPUWeightConfig *CPUWeightConfig `json:"cpuWeightConfig,omitempty"`
+}
+
+// CPUWeightConfig defines the configuration for dynamic CPU weight adjustment
+type CPUWeightConfig struct {
+	// Rules is a list of dynamic CPU weight rules
+	// +optional
+	Rules []CPUWeightRule `json:"rules,omitempty"`
+}
+
+// CPUWeightRule defines a single rule for CPU weight adjustment
+type CPUWeightRule struct {
+	// Name is the name of this rule
+	Name string `json:"name"`
+	// PodSelector selects the pods to apply this rule to
+	PodSelector string `json:"podSelector"`
+	// NodeSelector defines the conditions that this rule applies to
+	NodeSelector string `json:"nodeSelector"`
+	// PodCPUDemand is the CPU demand for the pod in cores
+	// The value will be converted to cpu.shares (cgroupv1) or cpu.weight (cgroupv2) automatically
+	PodCPUDemand int64 `json:"podCPUDemand"`
 }
 
 type CPUBurstConfig struct {
