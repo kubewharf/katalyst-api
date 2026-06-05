@@ -147,6 +147,11 @@ spec:
                                     identifying memory pages that can be offloaded.
                                   type: number
                               type: object
+                            reservedInactiveFile:
+                              description: ReservedInactiveFile is the reserved value
+                                of inactive file memory
+                              format: int64
+                              type: integer
                           type: object
                       required:
                       - cgroupPath
@@ -280,6 +285,11 @@ spec:
                                     identifying memory pages that can be offloaded.
                                   type: number
                               type: object
+                            reservedInactiveFile:
+                              description: ReservedInactiveFile is the reserved value
+                                of inactive file memory
+                              format: int64
+                              type: integer
                           type: object
                         poolName:
                           description: PoolName is a resource pool name, e.g. system,
@@ -350,6 +360,11 @@ spec:
                                     identifying memory pages that can be offloaded.
                                   type: number
                               type: object
+                            reservedInactiveFile:
+                              description: ReservedInactiveFile is the reserved value
+                                of inactive file memory
+                              format: int64
+                              type: integer
                           type: object
                         qosLevel:
                           description: QoSLevel is either of reclaimed_cores, shared_cores,
