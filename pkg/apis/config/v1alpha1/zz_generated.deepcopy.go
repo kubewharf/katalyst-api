@@ -3082,6 +3082,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.ReservedInactiveFile != nil {
+		in, out := &in.ReservedInactiveFile, &out.ReservedInactiveFile
+		*out = new(uint64)
+		**out = **in
+	}
 	if in.Interval != nil {
 		in, out := &in.Interval, &out.Interval
 		*out = new(v1.Duration)

@@ -31,6 +31,11 @@ const (
 	ResourceSriovNic        v1.ResourceName = "resource.katalyst.kubewharf.io/sriov_nic"
 )
 
+// const variables for resource names of heterogeneous resource
+const (
+	ResourcePower v1.ResourceName = "resource.katalyst.kubewharf.io/power"
+)
+
 // const variables for resource attributes of resources
 const (
 	// ResourceAnnotationKeyResourceIdentifier nominated the key to override the default name
