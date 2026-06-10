@@ -761,6 +761,31 @@ spec:
                               PreferUseExistNUMAHintResult prefer to use existing numa hint results
                               The calculation results may originate from upstream components and be recorded in the pod annotation
                             type: boolean
+                          systemExclusivePool:
+                            additionalProperties:
+                              type: integer
+                            description: SystemExclusivePool is the config for system
+                              exclusive pool, key is pool name, value is the number
+                              of cores to allocate
+                            type: object
+                          systemExclusivePoolShrinkMax:
+                            description: SystemExclusivePoolShrinkMax is the max number
+                              of cores to shrink for system exclusive pool
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          systemExclusivePoolShrinkMin:
+                            description: SystemExclusivePoolShrinkMin is the min number
+                              of cores to shrink for system exclusive pool
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          systemExclusivePoolShrinkRatio:
+                            description: SystemExclusivePoolShrinkRatio is the shrink
+                              ratio of system exclusive pool
+                            maximum: 1
+                            minimum: 0
+                            type: number
                         type: object
                     type: object
                   reclaimedResourceConfig:

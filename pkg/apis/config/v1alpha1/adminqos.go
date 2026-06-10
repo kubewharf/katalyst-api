@@ -363,6 +363,22 @@ type CPUPluginConfig struct {
 	// The calculation results may originate from upstream components and be recorded in the pod annotation
 	// +optional
 	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
+	// SystemExclusivePool is the config for system exclusive pool, key is pool name, value is the number of cores to allocate
+	// +optional
+	SystemExclusivePool map[string]int `json:"systemExclusivePool,omitempty"`
+	// SystemExclusivePoolShrinkRatio is the shrink ratio of system exclusive pool
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	SystemExclusivePoolShrinkRatio *float64 `json:"systemExclusivePoolShrinkRatio,omitempty"`
+	// SystemExclusivePoolShrinkMin is the min number of cores to shrink for system exclusive pool
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	SystemExclusivePoolShrinkMin *int64 `json:"systemExclusivePoolShrinkMin,omitempty"`
+	// SystemExclusivePoolShrinkMax is the max number of cores to shrink for system exclusive pool
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	SystemExclusivePoolShrinkMax *int64 `json:"systemExclusivePoolShrinkMax,omitempty"`
 }
 
 type EvictionConfig struct {
