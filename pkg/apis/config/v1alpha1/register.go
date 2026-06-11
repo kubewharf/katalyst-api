@@ -49,6 +49,7 @@ const (
 	ResourceNameStrategyGroupConfigurations = "strategygroupconfigurations"
 	ResourceNameStrategyGroups              = "strategygroups"
 	ResourceNameIRQTuningConfigurations     = "irqtuningconfigurations"
+	ResourceNameUserWatermarkConfigurations = "userwatermarkconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -92,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StrategyGroupList{},
 		&IRQTuningConfiguration{},
 		&IRQTuningConfigurationList{},
+		&UserWatermarkConfiguration{},
+		&UserWatermarkConfigurationList{},
 
 		// global resource portrait configuration
 		&GlobalResourcePortraitConfiguration{},
