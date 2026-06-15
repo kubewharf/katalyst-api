@@ -73,6 +73,11 @@ type KatalystVerticalPodAutoscalerStatus struct {
 	// +optional
 	ContainerResources []ContainerResources `json:"containerResources,omitempty"`
 
+	// VolumeResources is the most recently computed amount of resources for the controlled volumes
+	// it will be overwritten by PodResources
+	// +optional
+	VolumeResources []VolumeResources `json:"volumeResources,omitempty"`
+
 	// Conditions is the set of conditions required for this autoscaler to scale its target,
 	// and indicates whether those conditions are met.
 	// +optional
@@ -318,11 +323,14 @@ const (
 )
 
 type PodResources struct {
-	// Name of the pod.
-	PodName *string `json:"podName,omitempty"`
-	// Resources recommended by the autoscaler for each container.
-	ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
-}
+		// Name of the pod.
+		PodName *string `json:"podName,omitempty"`
+		// Resources recommended by the autoscaler for each container.
+		ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
+		// Resources recommended by the autoscaler for each volume.
+		// +optional
+		VolumeResources []VolumeResources `json:"volumeRecommendations,omitempty"`
+	}
 
 // ContainerResources is the recommendation of resources computed by
 // autoscaler for a specific container. Respects the container resource policy
@@ -335,6 +343,19 @@ type ContainerResources struct {
 	// +optional
 	Requests *ContainerResourceList `json:"requests,omitempty"`
 	// Limits indicates the recommendation resources for limits of this container
+	// +optional
+	Limits *ContainerResourceList `json:"limits,omitempty"`
+}
+
+// VolumeResources is the recommendation of resources computed by
+// autoscaler for a specific volume.
+type VolumeResources struct {
+	// Name of the volume.
+	VolumeName *string `json:"volumeName,omitempty"`
+	// Requests indicates the recommendation resources for requests of this volume
+	// +optional
+	Requests *ContainerResourceList `json:"requests,omitempty"`
+	// Limits indicates the recommendation resources for limits of this volume
 	// +optional
 	Limits *ContainerResourceList `json:"limits,omitempty"`
 }
