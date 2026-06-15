@@ -179,6 +179,12 @@ type PodResourcePolicy struct {
 	// +patchMergeKey=containerName
 	// +patchStrategy=merge
 	ContainerPolicies []ContainerResourcePolicy `json:"containerPolicies,omitempty" patchStrategy:"merge" patchMergeKey:"containerName"`
+
+	// Per-volume resource policies.
+	// +optional
+	// +patchMergeKey=volumeName
+	// +patchStrategy=merge
+	VolumePolicies []VolumeResourcePolicy `json:"volumePolicies,omitempty" patchStrategy:"merge" patchMergeKey:"volumeName"`
 }
 
 type AlgorithmPolicy struct {
@@ -214,6 +220,41 @@ type ContainerResourcePolicy struct {
 
 	// Specifies the maximum amount of resources that will be recommended
 	// for the container. The default is no maximum.
+	// +optional
+	MaxAllowed v1.ResourceList `json:"maxAllowed,omitempty"`
+
+	// Specifies the type of recommendations that will be computed
+	// (and possibly applied) by VPA.
+	// If not specified, the default of [ResourceCPU] will be used.
+	// +kubebuilder:default:={cpu}
+	ControlledResources []v1.ResourceName `json:"controlledResources,omitempty" patchStrategy:"merge"`
+
+	// Specifies which resource values should be controlled.
+	// The default is "RequestsAndLimits".
+	// +kubebuilder:default:=RequestsAndLimits
+	ControlledValues ContainerControlledValues `json:"controlledValues"`
+
+	// ResourceResizePolicy specifies how Kubernetes should handle resource resize.
+	// The default is "None"
+	// +kubebuilder:default:=None
+	ResourceResizePolicy ResourceResizePolicy `json:"resourceResizePolicy"`
+}
+
+// VolumeResourcePolicy controls how autoscaler computes the recommended
+// resources for a specific volume.
+type VolumeResourcePolicy struct {
+	// Name of the volume or DefaultVolumeResourcePolicy, in which
+	// case the policy is used by the volumes that don't have their own
+	// policy specified.
+	VolumeName *string `json:"volumeName"`
+
+	// Specifies the minimal amount of resources that will be recommended
+	// for the volume. The default is no minimum.
+	// +optional
+	MinAllowed v1.ResourceList `json:"minAllowed,omitempty"`
+
+	// Specifies the maximum amount of resources that will be recommended
+	// for the volume. The default is no maximum.
 	// +optional
 	MaxAllowed v1.ResourceList `json:"maxAllowed,omitempty"`
 
@@ -392,6 +433,11 @@ type VerticalPodAutoscalerRecommendationSpec struct {
 	// It will be overwritten by PodRecommendations
 	// +optional
 	ContainerRecommendations []RecommendedContainerResources `json:"containerRecommendations,omitempty"`
+	// default volume resources recommended by the
+	// autoscaler for the controlled volumes.
+	// It will be overwritten by PodRecommendations
+	// +optional
+	VolumeRecommendations []RecommendedVolumeResources `json:"volumeRecommendations,omitempty"`
 }
 
 // VerticalPodAutoscalerRecommendationStatus is the recommendation of resources computed by
@@ -403,6 +449,11 @@ type VerticalPodAutoscalerRecommendationStatus struct {
 	// ContainerRecommendations is the most recently defaultRecommendation handled by the controller
 	// +optional
 	ContainerRecommendations []RecommendedContainerResources `json:"containerRecommendations,omitempty"`
+
+	// default volume resources recommended by the
+	// autoscaler for the controlled volumes.
+	// +optional
+	VolumeRecommendations []RecommendedVolumeResources `json:"volumeRecommendations,omitempty"`
 
 	// Conditions is the set of conditions required for this vparec to scale its target,
 	// and indicates whether those conditions are met.
@@ -418,6 +469,9 @@ type RecommendedPodResources struct {
 	// Resources recommended by the autoscaler for each container.
 	// +optional
 	ContainerRecommendations []RecommendedContainerResources `json:"containerRecommendations,omitempty"`
+	// Resources recommended by the autoscaler for each volume.
+	// +optional
+	VolumeRecommendations []RecommendedVolumeResources `json:"volumeRecommendations,omitempty"`
 }
 
 // RecommendedContainerResources is the recommendation of resources computed by
@@ -431,6 +485,19 @@ type RecommendedContainerResources struct {
 	// +optional
 	Requests *RecommendedRequestResources `json:"requests,omitempty"`
 	// Limits indicates the recommendation resources for limits of this container
+	// +optional
+	Limits *RecommendedRequestResources `json:"limits,omitempty"`
+}
+
+// RecommendedVolumeResources is the recommendation of resources computed by
+// autoscaler for a specific volume.
+type RecommendedVolumeResources struct {
+	// Name of the volume.
+	VolumeName *string `json:"volumeName"`
+	// Requests indicates the recommendation resources for requests of this volume
+	// +optional
+	Requests *RecommendedRequestResources `json:"requests,omitempty"`
+	// Limits indicates the recommendation resources for limits of this volume
 	// +optional
 	Limits *RecommendedRequestResources `json:"limits,omitempty"`
 }

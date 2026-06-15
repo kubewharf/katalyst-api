@@ -147,8 +147,100 @@ spec:
                     podName:
                       description: Name of the pod.
                       type: string
+                    volumeRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        volume.
+                      items:
+                        description: |-
+                          RecommendedVolumeResources is the recommendation of resources computed by
+                          autoscaler for a specific volume.
+                        properties:
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this volume
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this volume
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          volumeName:
+                            description: Name of the volume.
+                            type: string
+                        required:
+                        - volumeName
+                        type: object
+                      type: array
                   required:
                   - podName
+                  type: object
+                type: array
+              volumeRecommendations:
+                description: |-
+                  default volume resources recommended by the
+                  autoscaler for the controlled volumes.
+                  It will be overwritten by PodRecommendations
+                items:
+                  description: |-
+                    RecommendedVolumeResources is the recommendation of resources computed by
+                    autoscaler for a specific volume.
+                  properties:
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this volume
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this volume
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    volumeName:
+                      description: Name of the volume.
+                      type: string
+                  required:
+                  - volumeName
                   type: object
                 type: array
             type: object
@@ -292,8 +384,99 @@ spec:
                     podName:
                       description: Name of the pod.
                       type: string
+                    volumeRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        volume.
+                      items:
+                        description: |-
+                          RecommendedVolumeResources is the recommendation of resources computed by
+                          autoscaler for a specific volume.
+                        properties:
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this volume
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this volume
+                            properties:
+                              resources:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                description: Resources indicates the recommended resources
+                                  in quantity format.
+                                type: object
+                            type: object
+                          volumeName:
+                            description: Name of the volume.
+                            type: string
+                        required:
+                        - volumeName
+                        type: object
+                      type: array
                   required:
                   - podName
+                  type: object
+                type: array
+              volumeRecommendations:
+                description: |-
+                  default volume resources recommended by the
+                  autoscaler for the controlled volumes.
+                items:
+                  description: |-
+                    RecommendedVolumeResources is the recommendation of resources computed by
+                    autoscaler for a specific volume.
+                  properties:
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this volume
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this volume
+                      properties:
+                        resources:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: Resources indicates the recommended resources
+                            in quantity format.
+                          type: object
+                      type: object
+                    volumeName:
+                      description: Name of the volume.
+                      type: string
+                  required:
+                  - volumeName
                   type: object
                 type: array
             type: object

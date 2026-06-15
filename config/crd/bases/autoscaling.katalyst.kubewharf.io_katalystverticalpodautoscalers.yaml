@@ -145,6 +145,75 @@ spec:
                       - resourceResizePolicy
                       type: object
                     type: array
+                  volumePolicies:
+                    description: Per-volume resource policies.
+                    items:
+                      description: |-
+                        VolumeResourcePolicy controls how autoscaler computes the recommended
+                        resources for a specific volume.
+                      properties:
+                        controlledResources:
+                          default:
+                          - cpu
+                          description: |-
+                            Specifies the type of recommendations that will be computed
+                            (and possibly applied) by VPA.
+                            If not specified, the default of [ResourceCPU] will be used.
+                          items:
+                            description: ResourceName is the name identifying various
+                              resources in a ResourceList.
+                            type: string
+                          type: array
+                        controlledValues:
+                          default: RequestsAndLimits
+                          description: |-
+                            Specifies which resource values should be controlled.
+                            The default is "RequestsAndLimits".
+                          enum:
+                          - RequestsAndLimits
+                          - RequestsOnly
+                          - LimitsOnly
+                          type: string
+                        maxAllowed:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: |-
+                            Specifies the maximum amount of resources that will be recommended
+                            for the volume. The default is no maximum.
+                          type: object
+                        minAllowed:
+                          additionalProperties:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          description: |-
+                            Specifies the minimal amount of resources that will be recommended
+                            for the volume. The default is no minimum.
+                          type: object
+                        resourceResizePolicy:
+                          default: None
+                          description: |-
+                            ResourceResizePolicy specifies how Kubernetes should handle resource resize.
+                            The default is "None"
+                          type: string
+                        volumeName:
+                          description: |-
+                            Name of the volume or DefaultVolumeResourcePolicy, in which
+                            case the policy is used by the volumes that don't have their own
+                            policy specified.
+                          type: string
+                      required:
+                      - controlledValues
+                      - resourceResizePolicy
+                      - volumeName
+                      type: object
+                    type: array
                 type: object
               targetRef:
                 description: |-
