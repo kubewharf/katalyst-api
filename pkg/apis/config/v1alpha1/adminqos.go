@@ -439,6 +439,10 @@ type EvictionConfig struct {
 	// NetworkEvictionConfig is the config for network eviction
 	// +optional
 	NetworkEvictionConfig *NetworkEvictionConfig `json:"networkEvictionConfig,omitempty"`
+
+	// PIDOveruseEvictionConfig is the config for pid overuse eviction
+	// +optional
+	PIDOveruseEvictionConfig *PIDOveruseEvictionConfig `json:"pidOveruseEvictionConfig,omitempty"`
 }
 
 type ReclaimedResourcesEvictionConfig struct {
@@ -823,6 +827,60 @@ type NetworkEvictionConfig struct {
 	NICUnhealthyToleranceDuration *metav1.Duration `json:"nicUnhealthyToleranceDuration,omitempty"`
 
 	// GracePeriod is the grace period of nic health eviction
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
+
+	// EnableNICBandwidthEviction is whether to enable NIC bandwidth eviction.
+	// +optional
+	EnableNICBandwidthEviction *bool `json:"enableNICBandwidthEviction,omitempty"`
+
+	// NICBandwidthUtilizationThreshold is the NIC bandwidth utilization threshold.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	NICBandwidthUtilizationThreshold *float64 `json:"nicBandwidthUtilizationThreshold,omitempty"`
+
+	// NICBandwidthContinuousMetThreshold is the number of consecutive threshold hits required.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	NICBandwidthContinuousMetThreshold *int64 `json:"nicBandwidthContinuousMetThreshold,omitempty"`
+
+	// NICBandwidthRingSize is the size of the bandwidth pressure ring buffer.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	NICBandwidthRingSize *int64 `json:"nicBandwidthRingSize,omitempty"`
+
+	// NICBandwidthRingMetThreshold is the number of ring hits required for eviction.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	NICBandwidthRingMetThreshold *int64 `json:"nicBandwidthRingMetThreshold,omitempty"`
+
+	// NICBandwidthGracePeriod is the grace period of nic bandwidth eviction.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	NICBandwidthGracePeriod *int64 `json:"nicBandwidthGracePeriod,omitempty"`
+}
+
+type PIDOveruseEvictionConfig struct {
+	// EnablePIDOveruseEviction is whether to enable pod-level pid overuse eviction.
+	// +optional
+	EnablePIDOveruseEviction *bool `json:"enablePIDOveruseEviction,omitempty"`
+
+	// PIDOveruseThreshold is the pod-level pid threshold aggregated from pod spec containers.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	PIDOveruseThreshold *int64 `json:"pidOveruseThreshold,omitempty"`
+
+	// CandidatePodLabelSelector filters pods participating in pid overuse evaluation by labels.
+	// +optional
+	CandidatePodLabelSelector *string `json:"candidatePodLabelSelector,omitempty"`
+
+	// CandidatePodAnnotationSelector filters pods participating in pid overuse evaluation by annotations.
+	// +optional
+	CandidatePodAnnotationSelector *string `json:"candidatePodAnnotationSelector,omitempty"`
+
+	// GracePeriod is the grace period of pid overuse eviction
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`

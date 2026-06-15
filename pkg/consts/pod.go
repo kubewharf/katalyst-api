@@ -42,6 +42,16 @@ const (
 	PodAnnotationNICSelectionResultKey = "katalyst.kubewharf.io/nic_selection_result"
 )
 
+// PodAnnotationSaleModeKey is a const variable for pod annotation about pod sale mode.
+const (
+	PodAnnotationSaleModeKey = "katalyst.kubewharf.io/sale_mode"
+
+	PodSaleModeSpot      = "spot"
+	PodSaleModeScheduled = "scheduled"
+	PodSaleModeReserved  = "reserved"
+	PodSaleModeDefault   = "default"
+)
+
 // PodAnnotationGPUSelectionResultKey is a const variable for pod annotation about a gpu selection result.
 const (
 	PodAnnotationGPUSelectionResultKey = "katalyst.kubewharf.io/gpu_selection_result"
