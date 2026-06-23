@@ -911,6 +911,27 @@ spec:
                         description: MemoryHeadroomConfig is a configuration for memory
                           headroom
                         properties:
+                          podRequestLimitAwareConfig:
+                            description: MemoryHeadroomPodRequestLimitAwareConfig
+                              is a config for pod request limit aware memory headroom
+                              policy
+                            properties:
+                              requestLimitGapFactor:
+                                description: RequestLimitGapFactor is the gap factor
+                                  between pod request and pod limit
+                                minimum: 0
+                                type: number
+                              requestUsedGapFactor:
+                                description: RequestUsedGapFactor is the gap factor
+                                  between pod request and actual used
+                                minimum: 0
+                                type: number
+                              totalLimitGapFactor:
+                                description: TotalLimitGapFactor is the gap factor
+                                  between pod limit and total memory
+                                minimum: 0
+                                type: number
+                            type: object
                           utilBasedConfig:
                             description: MemoryHeadroomUtilBasedConfig is a config
                               for utilization based memory headroom policy

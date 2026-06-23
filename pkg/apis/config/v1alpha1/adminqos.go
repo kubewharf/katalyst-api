@@ -160,6 +160,10 @@ type MemoryHeadroomConfig struct {
 	// MemoryHeadroomUtilBasedConfig is a config for utilization based memory headroom policy
 	// +optional
 	UtilBasedConfig *MemoryHeadroomUtilBasedConfig `json:"utilBasedConfig,omitempty"`
+
+	// MemoryHeadroomPodRequestLimitAwareConfig is a config for pod request limit aware memory headroom policy
+	// +optional
+	PodRequestLimitAwareConfig *MemoryHeadroomPodRequestLimitAwareConfig `json:"podRequestLimitAwareConfig,omitempty"`
 }
 
 type AdvisorConfig struct {
@@ -300,6 +304,23 @@ type MemoryHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	MaxOversoldRate *float64 `json:"maxOversoldRate,omitempty"`
+}
+
+type MemoryHeadroomPodRequestLimitAwareConfig struct {
+	// RequestLimitGapFactor is the gap factor between pod request and pod limit
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	RequestLimitGapFactor *float64 `json:"requestLimitGapFactor,omitempty"`
+
+	// RequestUsedGapFactor is the gap factor between pod request and actual used
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	RequestUsedGapFactor *float64 `json:"requestUsedGapFactor,omitempty"`
+
+	// TotalLimitGapFactor is the gap factor between pod limit and total memory
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	TotalLimitGapFactor *float64 `json:"totalLimitGapFactor,omitempty"`
 }
 
 type CPUHeadroomConfig struct {
