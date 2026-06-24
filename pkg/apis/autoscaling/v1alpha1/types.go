@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -253,16 +254,6 @@ type VolumeResourcePolicy struct {
 	// policy specified.
 	VolumeName *string `json:"volumeName"`
 
-	// Specifies the minimal amount of resources that will be recommended
-	// for the volume. The default is no minimum.
-	// +optional
-	MinAllowed v1.ResourceList `json:"minAllowed,omitempty"`
-
-	// Specifies the maximum amount of resources that will be recommended
-	// for the volume. The default is no maximum.
-	// +optional
-	MaxAllowed v1.ResourceList `json:"maxAllowed,omitempty"`
-
 	// Specifies the type of recommendations that will be computed
 	// (and possibly applied) by VPA.
 	// If not specified, the default of [ResourceCPU] will be used.
@@ -323,14 +314,14 @@ const (
 )
 
 type PodResources struct {
-		// Name of the pod.
-		PodName *string `json:"podName,omitempty"`
-		// Resources recommended by the autoscaler for each container.
-		ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
-		// Resources recommended by the autoscaler for each volume.
-		// +optional
-		VolumeResources []VolumeResources `json:"volumeRecommendations,omitempty"`
-	}
+	// Name of the pod.
+	PodName *string `json:"podName,omitempty"`
+	// Resources recommended by the autoscaler for each container.
+	ContainerResources []ContainerResources `json:"containerRecommendations,omitempty"`
+	// Resources recommended by the autoscaler for each volume.
+	// +optional
+	VolumeResources []VolumeResources `json:"volumeRecommendations,omitempty"`
+}
 
 // ContainerResources is the recommendation of resources computed by
 // autoscaler for a specific container. Respects the container resource policy
@@ -354,10 +345,19 @@ type VolumeResources struct {
 	VolumeName *string `json:"volumeName,omitempty"`
 	// Requests indicates the recommendation resources for requests of this volume
 	// +optional
-	Requests *ContainerResourceList `json:"requests,omitempty"`
+	Requests *VolumeResourceList `json:"requests,omitempty"`
 	// Limits indicates the recommendation resources for limits of this volume
 	// +optional
-	Limits *ContainerResourceList `json:"limits,omitempty"`
+	Limits *VolumeResourceList `json:"limits,omitempty"`
+}
+
+type VolumeResourceList struct {
+	// Current indicates the real resource configuration from the view of CRI interface.
+	// +optional
+	Current RecommendedVolumeRequestResources `json:"current,omitempty"`
+	// Recommended amount of resources. Observes ContainerResourcePolicy.
+	// +optional
+	Target RecommendedVolumeRequestResources `json:"target,omitempty"`
 }
 
 // ContainerResourceList is used to represent the resourceLists
@@ -517,16 +517,23 @@ type RecommendedVolumeResources struct {
 	VolumeName *string `json:"volumeName"`
 	// Requests indicates the recommendation resources for requests of this volume
 	// +optional
-	Requests *RecommendedRequestResources `json:"requests,omitempty"`
+	Requests *RecommendedVolumeRequestResources `json:"requests,omitempty"`
 	// Limits indicates the recommendation resources for limits of this volume
 	// +optional
-	Limits *RecommendedRequestResources `json:"limits,omitempty"`
+	Limits *RecommendedVolumeRequestResources `json:"limits,omitempty"`
 }
 
 // RecommendedRequestResources is used to represent the resourceLists
 type RecommendedRequestResources struct {
 	// Resources indicates the recommended resources in quantity format.
 	Resources v1.ResourceList `json:"resources,omitempty"`
+}
+
+// RecommendedVolumeRequestResources is used to represent the volume resourceLists
+type RecommendedVolumeRequestResources struct {
+	Space     resource.Quantity `json:"space,omitempty"`
+	Iops      string            `json:"iops,omitempty"`
+	ReadRatio string            `json:"readRatio,omitempty"`
 }
 
 // VerticalPodAutoscalerRecommendationConditionType are the valid conditions of
