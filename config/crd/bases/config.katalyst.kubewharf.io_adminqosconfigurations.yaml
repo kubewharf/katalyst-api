@@ -124,6 +124,13 @@ spec:
                                   - name
                                   type: object
                                 type: array
+                              reclaimedCPUMaxRatio:
+                                description: ReclaimedCPUMaxRatio is the ratio of
+                                  the maximum amount of CPUs that can be reclaimed
+                                  at any time.
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               regionIndicators:
                                 items:
                                   properties:
@@ -937,6 +944,13 @@ spec:
                                 minimum: 0
                                 type: number
                             type: object
+                          reclaimedMemoryMaxRatio:
+                            description: ReclaimedMemoryMaxRatio is the ratio of the
+                              maximum amount of memory that can be reclaimed per numa
+                              at any time.
+                            maximum: 1
+                            minimum: 0
+                            type: number
                           utilBasedConfig:
                             description: MemoryHeadroomUtilBasedConfig is a config
                               for utilization based memory headroom policy

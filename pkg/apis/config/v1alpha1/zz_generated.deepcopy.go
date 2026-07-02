@@ -652,6 +652,11 @@ func (in *CPUProvisionConfig) DeepCopyInto(out *CPUProvisionConfig) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.ReclaimedCPUMaxRatio != nil {
+		in, out := &in.ReclaimedCPUMaxRatio, &out.ReclaimedCPUMaxRatio
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
@@ -1946,6 +1951,11 @@ func (in *MemoryHeadroomConfig) DeepCopyInto(out *MemoryHeadroomConfig) {
 		in, out := &in.PodRequestLimitAwareConfig, &out.PodRequestLimitAwareConfig
 		*out = new(MemoryHeadroomPodRequestLimitAwareConfig)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.ReclaimedMemoryMaxRatio != nil {
+		in, out := &in.ReclaimedMemoryMaxRatio, &out.ReclaimedMemoryMaxRatio
+		*out = new(float64)
+		**out = **in
 	}
 	return
 }
