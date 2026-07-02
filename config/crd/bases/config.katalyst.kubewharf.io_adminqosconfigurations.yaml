@@ -811,6 +811,14 @@ spec:
                       cpuPluginConfig:
                         description: CPUPluginConfig is the config for cpu plugin
                         properties:
+                          enableBypassCPUSetAdjustment:
+                            description: |-
+                              EnableBypassCPUSetAdjustment is a flag to bypass cpuset backfill in QRM
+                              CPU plugin's PackAllocationResponse for shared_cores, reclaimed_cores and
+                              system_cores pools. When enabled, QRM will not populate cpuset for those
+                              pools during allocation, and cpuset adjustment is delegated to the
+                              reconcile plugin. Dedicated pools are unaffected.
+                            type: boolean
                           preferUseExistNUMAHintResult:
                             description: |-
                               PreferUseExistNUMAHintResult prefer to use existing numa hint results

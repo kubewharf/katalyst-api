@@ -532,6 +532,11 @@ func (in *CPUPluginConfig) DeepCopyInto(out *CPUPluginConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableBypassCPUSetAdjustment != nil {
+		in, out := &in.EnableBypassCPUSetAdjustment, &out.EnableBypassCPUSetAdjustment
+		*out = new(bool)
+		**out = **in
+	}
 	if in.SystemExclusivePool != nil {
 		in, out := &in.SystemExclusivePool, &out.SystemExclusivePool
 		*out = make(map[string]int, len(*in))

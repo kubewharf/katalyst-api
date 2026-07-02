@@ -384,6 +384,13 @@ type CPUPluginConfig struct {
 	// The calculation results may originate from upstream components and be recorded in the pod annotation
 	// +optional
 	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
+	// EnableBypassCPUSetAdjustment is a flag to bypass cpuset backfill in QRM
+	// CPU plugin's PackAllocationResponse for shared_cores, reclaimed_cores and
+	// system_cores pools. When enabled, QRM will not populate cpuset for those
+	// pools during allocation, and cpuset adjustment is delegated to the
+	// reconcile plugin. Dedicated pools are unaffected.
+	// +optional
+	EnableBypassCPUSetAdjustment *bool `json:"enableBypassCPUSetAdjustment,omitempty"`
 	// SystemExclusivePool is the config for system exclusive pool, key is pool name, value is the number of cores to allocate
 	// +optional
 	SystemExclusivePool map[string]int `json:"systemExclusivePool,omitempty"`
