@@ -811,13 +811,17 @@ spec:
                       cpuPluginConfig:
                         description: CPUPluginConfig is the config for cpu plugin
                         properties:
+                          disableSharedCoresRampUp:
+                            description: |-
+                              DisableSharedCoresRampUp disables initial full-pool cpuset binding for
+                              newly scheduled shared_cores pods. When true, shared_cores pods are allocated
+                              from their target pool directly instead of entering RampUp.
+                            type: boolean
                           enableBypassCPUSetAdjustment:
                             description: |-
-                              EnableBypassCPUSetAdjustment is a flag to bypass cpuset backfill in QRM
-                              CPU plugin's PackAllocationResponse for shared_cores, reclaimed_cores and
-                              system_cores pools. When enabled, QRM will not populate cpuset for those
-                              pools during allocation, and cpuset adjustment is delegated to the
-                              reconcile plugin. Dedicated pools are unaffected.
+                              EnableBypassCPUSetAdjustment controls whether GetResourcesAllocation clears
+                              CPU AllocationResult for all QoS classes. Allocation responses returned by
+                              Allocate/AllocateForPod keep their cpuset unchanged.
                             type: boolean
                           preferUseExistNUMAHintResult:
                             description: |-

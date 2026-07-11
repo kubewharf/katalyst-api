@@ -537,6 +537,11 @@ func (in *CPUPluginConfig) DeepCopyInto(out *CPUPluginConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.DisableSharedCoresRampUp != nil {
+		in, out := &in.DisableSharedCoresRampUp, &out.DisableSharedCoresRampUp
+		*out = new(bool)
+		**out = **in
+	}
 	if in.SystemExclusivePool != nil {
 		in, out := &in.SystemExclusivePool, &out.SystemExclusivePool
 		*out = make(map[string]int, len(*in))
