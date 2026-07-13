@@ -41,14 +41,15 @@ var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha
 
 // ResourceName const is used to construct standard gvr
 const (
-	ResourceNameKatalystCustomConfigs       = "katalystcustomconfigs"
-	ResourceNameCustomNodeConfigs           = "customnodeconfigs"
-	ResourceNameAdminQoSConfigurations      = "adminqosconfigurations"
-	ResourceNameAuthConfigurations          = "authconfigurations"
-	ResourceNameTMOConfigurations           = "transparentmemoryoffloadingconfigurations"
-	ResourceNameStrategyGroupConfigurations = "strategygroupconfigurations"
-	ResourceNameStrategyGroups              = "strategygroups"
-	ResourceNameIRQTuningConfigurations     = "irqtuningconfigurations"
+	ResourceNameKatalystCustomConfigs         = "katalystcustomconfigs"
+	ResourceNameCustomNodeConfigs             = "customnodeconfigs"
+	ResourceNameAdminQoSConfigurations        = "adminqosconfigurations"
+	ResourceNameAuthConfigurations            = "authconfigurations"
+	ResourceNameTMOConfigurations             = "transparentmemoryoffloadingconfigurations"
+	ResourceNameStrategyGroupConfigurations   = "strategygroupconfigurations"
+	ResourceNameStrategyGroups                = "strategygroups"
+	ResourceNameIRQTuningConfigurations       = "irqtuningconfigurations"
+	ResourceNameMemoryBandwidthConfigurations = "memorybandwidthconfigurations"
 )
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource
@@ -92,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StrategyGroupList{},
 		&IRQTuningConfiguration{},
 		&IRQTuningConfigurationList{},
+		&MemoryBandwidthConfiguration{},
+		&MemoryBandwidthConfigurationList{},
 
 		// global resource portrait configuration
 		&GlobalResourcePortraitConfiguration{},
