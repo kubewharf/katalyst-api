@@ -121,7 +121,7 @@ The Katalyst stack is layered strictly from schema to rollout:
 
 1. `katalyst-api` — shared schema, constants, and plugin protocols.
 2. `katalyst-core` — upstream runtime binaries (agent, controller, scheduler, webhook, metric).
-3. Internal downstream repos — internal-only repos vendor the upstream releases and produce deployment artifacts. Their contents and workflows are out of scope for this file.
+3. Internal downstream repos — internal-only repos consume the upstream releases and produce deployment artifacts. Their contents and workflows are out of scope for this file.
 
 Dependency direction is one-way: internal downstream <- `katalyst-core` <- `katalyst-api`. Never introduce reverse or cyclic imports. Cross-repo changes always land in `katalyst-api` first, then `katalyst-core`, then internal downstream.
 
