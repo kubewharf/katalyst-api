@@ -17,8 +17,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/kubewharf/katalyst-api/pkg/consts"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -134,6 +136,10 @@ type TMOConfigDetail struct {
 	// PolicyName is used to specify the policy for calculating memory offloading size
 	// +optional
 	PolicyName *TMOPolicyName `json:"policyName,omitempty"`
+
+	// MaxReclaimSize is a Kubernetes resource quantity that limits the size that can be reclaimed in one TMO cycle. Zero means unlimited.
+	// +optional
+	MaxReclaimSize *resource.Quantity `json:"maxReclaimSize,omitempty"`
 
 	// PSIPolicyConf is configurations of a TMO policy which reclaim memory by PSI
 	// +optional

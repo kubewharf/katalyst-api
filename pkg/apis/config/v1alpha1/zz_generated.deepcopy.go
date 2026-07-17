@@ -3223,6 +3223,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 		*out = new(TMOPolicyName)
 		**out = **in
 	}
+	if in.MaxReclaimSize != nil {
+		in, out := &in.MaxReclaimSize, &out.MaxReclaimSize
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	if in.PSIPolicyConf != nil {
 		in, out := &in.PSIPolicyConf, &out.PSIPolicyConf
 		*out = new(PSIPolicyConf)
