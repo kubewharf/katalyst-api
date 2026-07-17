@@ -264,6 +264,14 @@ spec:
                                 format: int64
                                 minimum: 0
                                 type: integer
+                              lowerBoundRatio:
+                                description: |-
+                                  LowerBoundRatio is the soft threshold ratio (0~1) applied to the NUMA CPU
+                                  usage ratio. When enough recent samples cross this bound but the upper bound
+                                  is not yet reached, the plugin reports SOFT_MET together with a NodeCondition
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               metricRingSize:
                                 description: MetricRingSize is the size of the metric
                                   ring buffer for calculating NUMA CPU pressure.
@@ -285,6 +293,15 @@ spec:
                                 description: |-
                                   ThresholdMetPercentage is the percentage of time the NUMA's CPU pressure
                                   must be above the threshold for an eviction to be triggered.
+                                maximum: 1
+                                minimum: 0
+                                type: number
+                              upperBoundRatio:
+                                description: |-
+                                  UpperBoundRatio is the hard threshold ratio (0~1) applied to the NUMA CPU
+                                  usage ratio. When enough recent samples cross this bound, the plugin reports
+                                  HARD_MET together with a NodeCondition + NoSchedule taint, which allows the
+                                  eviction manager to actually evict candidate pods.
                                 maximum: 1
                                 minimum: 0
                                 type: number

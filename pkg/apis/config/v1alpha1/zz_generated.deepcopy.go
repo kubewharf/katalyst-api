@@ -2218,6 +2218,16 @@ func (in *NumaCPUPressureEvictionConfig) DeepCopyInto(out *NumaCPUPressureEvicti
 		*out = new(float64)
 		**out = **in
 	}
+	if in.UpperBoundRatio != nil {
+		in, out := &in.UpperBoundRatio, &out.UpperBoundRatio
+		*out = new(float64)
+		**out = **in
+	}
+	if in.LowerBoundRatio != nil {
+		in, out := &in.LowerBoundRatio, &out.LowerBoundRatio
+		*out = new(float64)
+		**out = **in
+	}
 	if in.CandidateCount != nil {
 		in, out := &in.CandidateCount, &out.CandidateCount
 		*out = new(int)

@@ -554,18 +554,15 @@ type NumaCPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	GracePeriod *int64 `json:"gracePeriod,omitempty"`
-
 	// ThresholdExpandFactor expands the metric threshold from a specific machine to set the eviction threshold.
 	// E.g., 1.1 means a 10% increase.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ThresholdExpandFactor *float64 `json:"thresholdExpandFactor,omitempty"`
-
 	// CpuUsageRatioThreshold is the CPU usage ratio threshold for NUMA-level CPU pressure eviction.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	CpuUsageRatioThreshold *float64 `json:"cpuUsageRatioThreshold,omitempty"`
-
 	// CandidateCount is the candidate pod count when selecting pods to be evicted.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
@@ -574,6 +571,24 @@ type NumaCPUPressureEvictionConfig struct {
 	// SkippedPodKinds is the pod kind that will be skipped when selecting pods to be evicted.
 	// +optional
 	SkippedPodKinds []string `json:"skippedPodKinds,omitempty"`
+
+	// UpperBoundRatio is the hard threshold ratio (0~1) applied to the NUMA CPU
+	// usage ratio. When enough recent samples cross this bound, the plugin reports
+	// HARD_MET together with a NodeCondition + NoSchedule taint, which allows the
+	// eviction manager to actually evict candidate pods.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	UpperBoundRatio *float64 `json:"upperBoundRatio,omitempty"`
+
+	// LowerBoundRatio is the soft threshold ratio (0~1) applied to the NUMA CPU
+	// usage ratio. When enough recent samples cross this bound but the upper bound
+	// is not yet reached, the plugin reports SOFT_MET together with a NodeCondition
+	// + NoSchedule taint, which only prevents new scheduling without evicting pods.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	LowerBoundRatio *float64 `json:"lowerBoundRatio,omitempty"`
 }
 
 // NumaSysCPUPressureEvictionConfig holds the configurations for NUMA-level system CPU pressure eviction.
