@@ -1053,6 +1053,14 @@ spec:
                           by shared_cores pods.
                           For example, {"cpu": 0.1, "memory": 0.2}.
                         type: object
+                      reclaimedConsumerToReclaimedResourcePercentage:
+                        additionalProperties:
+                          type: integer
+                        description: |-
+                          ReclaimedConsumerToReclaimedResourcePercentage is a configuration for reclaimed consumer to a percentage of the total
+                          reclaimed resource, used for both headroom and provision.
+                          For example, {"generic": 40, "custom-consumer-1": 60}
+                        type: object
                       reservedResourceForAllocate:
                         additionalProperties:
                           anyOf:

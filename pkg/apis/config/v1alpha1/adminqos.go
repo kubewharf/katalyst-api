@@ -154,6 +154,12 @@ type ReclaimedResourceConfig struct {
 	// MemoryHeadroomConfig is a configuration for memory headroom
 	// +optional
 	MemoryHeadroomConfig *MemoryHeadroomConfig `json:"memoryHeadroomConfig,omitempty"`
+
+	// ReclaimedConsumerToReclaimedResourcePercentage is a configuration for reclaimed consumer to a percentage of the total
+	// reclaimed resource, used for both headroom and provision.
+	// For example, {"generic": 40, "custom-consumer-1": 60}
+	// +optional
+	ReclaimedConsumerToReclaimedResourcePercentage *map[string]int `json:"reclaimedConsumerToReclaimedResourcePercentage,omitempty"`
 }
 
 type MemoryHeadroomConfig struct {

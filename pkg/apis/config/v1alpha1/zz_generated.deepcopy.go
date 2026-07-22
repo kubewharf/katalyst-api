@@ -2591,6 +2591,17 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 		*out = new(MemoryHeadroomConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ReclaimedConsumerToReclaimedResourcePercentage != nil {
+		in, out := &in.ReclaimedConsumerToReclaimedResourcePercentage, &out.ReclaimedConsumerToReclaimedResourcePercentage
+		*out = new(map[string]int)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[string]int, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val
+			}
+		}
+	}
 	return
 }
 
