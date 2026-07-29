@@ -2389,6 +2389,11 @@ func (in *NumaCPUPressureEvictionConfig) DeepCopyInto(out *NumaCPUPressureEvicti
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.ReclaimedEvictBoundRatio != nil {
+		in, out := &in.ReclaimedEvictBoundRatio, &out.ReclaimedEvictBoundRatio
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 

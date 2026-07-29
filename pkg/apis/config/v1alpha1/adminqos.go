@@ -589,6 +589,14 @@ type NumaCPUPressureEvictionConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	LowerBoundRatio *float64 `json:"lowerBoundRatio,omitempty"`
+
+	// ReclaimedEvictBoundRatio is the NUMA average CPU usage ratio (0~1) that
+	// triggers the reclaim eviction tier when ForceEvictReclaimed is true.
+	// Recommended relation: ReclaimedEvictBoundRatio <= LowerBoundRatio <= UpperBoundRatio.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ReclaimedEvictBoundRatio *float64 `json:"reclaimedEvictBoundRatio,omitempty"`
 }
 
 // NumaSysCPUPressureEvictionConfig holds the configurations for NUMA-level system CPU pressure eviction.
