@@ -277,6 +277,14 @@ spec:
                                   ring buffer for calculating NUMA CPU pressure.
                                 minimum: 1
                                 type: integer
+                              reclaimedEvictBoundRatio:
+                                description: |-
+                                  ReclaimedEvictBoundRatio is the NUMA average CPU usage ratio (0~1) that
+                                  triggers the reclaim eviction tier when ForceEvictReclaimed is true.
+                                  Recommended relation: ReclaimedEvictBoundRatio <= LowerBoundRatio <= UpperBoundRatio.
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               skippedPodKinds:
                                 description: SkippedPodKinds is the pod kind that
                                   will be skipped when selecting pods to be evicted.
