@@ -1,0 +1,84 @@
+language: "en-US"
+early_access: false
+tone_instructions: >-
+  Focus on correctness, API compatibility, nil/error handling, and meaningful
+  tests. Avoid style-only feedback unless it affects maintainability. Write all
+  review comments, summaries, and chat replies in both English and Simplified
+  Chinese, with English first and Chinese second. Keep both versions concise
+  and semantically equivalent. Do not translate code, paths, APIs, kubebuilder
+  markers, protobuf field names, or error strings.
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_instructions: >-
+    Summarize API surface changes, compatibility impact, code generation impact,
+    and expected downstream consumer updates. Call out when changes are docs-
+    only or generated-only.
+  high_level_summary_in_walkthrough: true
+  review_status: true
+  collapse_walkthrough: true
+  poem: false
+  slop_detection:
+    enabled: true
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_pause_after_reviewed_commits: 0
+    base_branches:
+      - "main"
+    ignore_title_keywords:
+      - "WIP"
+      - "DRAFT"
+      - "DO NOT MERGE"
+  path_filters:
+    - "!**/*.pb.go"
+    - "!**/zz_generated_*.go"
+    - "!pkg/client/**"
+    - "!config/crd/bases/**"
+    - "!docs/imgs/**"
+    - "!**/*.png"
+    - "!**/*.jpg"
+    - "!**/*.jpeg"
+    - "!**/*.gif"
+    - "!**/*.svg"
+  path_instructions:
+    - path: "go.mod"
+      instructions: |
+        Review dependency and toolchain changes for API compatibility, generator drift, and downstream consumer impact.
+        Flag version bumps that likely require coordinated changes in katalyst-core or regeneration steps.
+    - path: ".github/workflows/**"
+      instructions: |
+        Review CI and automation changes for correct branch triggers, pinned actions where appropriate, timeout and permission hygiene, and consistency with this repo's validation flow.
+        Flag changes that bypass fmt, inlinecheck, generation, or other expected API validation steps.
+    - path: "pkg/apis/**"
+      instructions: |
+        Review for backward-compatible API evolution only.
+        Flag removed or renamed exported fields, json tag changes, new required behavior in existing versions, incorrect kubebuilder markers, and inline anonymous structs.
+    - path: "pkg/protocol/**/*.proto"
+      instructions: |
+        Review for append-only protobuf compatibility.
+        Flag reused field numbers, wire-incompatible changes, required fields, and protocol changes without corresponding compatibility notes or tests.
+    - path: "pkg/consts/**"
+      instructions: |
+        Check that constants remain canonical and compatibility-safe for downstream consumers.
+        Flag duplicate keys, silent semantic changes, and changes that should be documented as cross-repo impacts.
+    - path: "**/*_test.go"
+      instructions: |
+        Prefer focused tests that cover serialization, deepcopy, protocol, and compatibility-sensitive edge cases when relevant.
+        Avoid asking for broad speculative tests that mostly restate the implementation.
+    - path: "docs/**/*.md"
+      instructions: |
+        Check for technical accuracy, outdated API behavior, and missing notes about compatibility, generation, or downstream impact.
+
+knowledge_base:
+  linked_repositories:
+    - repository: "kubewharf/katalyst-core"
+      instructions: >-
+        Use this repository to assess downstream impact of API, protocol,
+        constant, and dependency changes. Focus on compatibility breaks, needed
+        consumer updates, and rollout coordination.
+
+chat:
+  auto_reply: true
