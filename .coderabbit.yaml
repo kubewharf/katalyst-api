@@ -12,8 +12,10 @@ reviews:
   high_level_summary_instructions: >-
     Summarize API surface changes, compatibility impact, code generation impact,
     and expected downstream consumer updates. Call out when changes are docs-
-    only or generated-only.
-  high_level_summary_in_walkthrough: true
+    only or generated-only. Write concise English text first, then equivalent 
+    Simplified Chinese. Do not translate code, paths, APIs, markers, protobuf 
+    names, or error strings.
+  high_level_summary_in_walkthrough: false
   review_status: true
   collapse_walkthrough: true
   poem: false
