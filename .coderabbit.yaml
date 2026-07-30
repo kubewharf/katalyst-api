@@ -70,12 +70,7 @@ reviews:
         Check for technical accuracy, outdated API behavior, and missing notes about compatibility, generation, or downstream impact.
 
 knowledge_base:
-  linked_repositories:
-    - repository: "kubewharf/katalyst-core"
-      instructions: >-
-        Use this repository to assess downstream impact of API, protocol,
-        constant, and dependency changes. Focus on compatibility breaks, needed
-        consumer updates, and rollout coordination.
+  automatic_repository_linking: true
 
 chat:
   auto_reply: true
