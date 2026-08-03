@@ -3612,6 +3612,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableSwappinessReclaim != nil {
+		in, out := &in.EnableSwappinessReclaim, &out.EnableSwappinessReclaim
+		*out = new(bool)
+		**out = **in
+	}
 	if in.ReservedInactiveFile != nil {
 		in, out := &in.ReservedInactiveFile, &out.ReservedInactiveFile
 		*out = new(uint64)

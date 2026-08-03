@@ -102,6 +102,10 @@ spec:
                               description: EnableSwap is whether to enable swap to
                                 offloading anon pages
                               type: boolean
+                            enableSwappinessReclaim:
+                              description: EnableSwappinessReclaim is whether to set
+                                swappiness for individual TMO reclaim requests.
+                              type: boolean
                             enableTMO:
                               description: EnableTMO is whether to enable TMO on target
                                 objective
@@ -249,6 +253,10 @@ spec:
                               description: EnableSwap is whether to enable swap to
                                 offloading anon pages
                               type: boolean
+                            enableSwappinessReclaim:
+                              description: EnableSwappinessReclaim is whether to set
+                                swappiness for individual TMO reclaim requests.
+                              type: boolean
                             enableTMO:
                               description: EnableTMO is whether to enable TMO on target
                                 objective
@@ -332,6 +340,10 @@ spec:
                             enableSwap:
                               description: EnableSwap is whether to enable swap to
                                 offloading anon pages
+                              type: boolean
+                            enableSwappinessReclaim:
+                              description: EnableSwappinessReclaim is whether to set
+                                swappiness for individual TMO reclaim requests.
                               type: boolean
                             enableTMO:
                               description: EnableTMO is whether to enable TMO on target

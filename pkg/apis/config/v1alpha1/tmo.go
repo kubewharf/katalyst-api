@@ -125,6 +125,10 @@ type TMOConfigDetail struct {
 	// +optional
 	EnableSwap *bool `json:"enableSwap,omitempty"`
 
+	// EnableSwappinessReclaim is whether to set swappiness for individual TMO reclaim requests.
+	// +optional
+	EnableSwappinessReclaim *bool `json:"enableSwappinessReclaim,omitempty"`
+
 	// ReservedInactiveFile is the reserved value of inactive file memory
 	// +optional
 	ReservedInactiveFile *uint64 `json:"reservedInactiveFile,omitempty"`
