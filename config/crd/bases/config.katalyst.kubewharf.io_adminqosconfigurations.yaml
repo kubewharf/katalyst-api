@@ -124,6 +124,13 @@ spec:
                                   - name
                                   type: object
                                 type: array
+                              reclaimedCPUMaxRatio:
+                                description: ReclaimedCPUMaxRatio is the ratio of
+                                  the maximum amount of CPUs that can be reclaimed
+                                  at any time.
+                                maximum: 1
+                                minimum: 0
+                                type: number
                               regionIndicators:
                                 items:
                                   properties:
@@ -962,6 +969,13 @@ spec:
                                 minimum: 0
                                 type: number
                             type: object
+                          reclaimedMemoryMaxRatio:
+                            description: ReclaimedMemoryMaxRatio is the ratio of the
+                              maximum amount of memory that can be reclaimed per numa
+                              at any time.
+                            maximum: 1
+                            minimum: 0
+                            type: number
                           utilBasedConfig:
                             description: MemoryHeadroomUtilBasedConfig is a config
                               for utilization based memory headroom policy
@@ -1063,6 +1077,14 @@ spec:
                           NumaMinReclaimedResourceRatioForAllocate is a resource reserved ratio at numa level for reclaimed_cores pods，these resources will not be used
                           by shared_cores pods.
                           For example, {"cpu": 0.1, "memory": 0.2}.
+                        type: object
+                      reclaimedConsumerToReclaimedResourcePercentage:
+                        additionalProperties:
+                          type: integer
+                        description: |-
+                          ReclaimedConsumerToReclaimedResourcePercentage is a configuration for reclaimed consumer to a percentage of the total
+                          reclaimed resource, used for both headroom and provision.
+                          For example, {"generic": 40, "custom-consumer-1": 60}
                         type: object
                       reservedResourceForAllocate:
                         additionalProperties:
