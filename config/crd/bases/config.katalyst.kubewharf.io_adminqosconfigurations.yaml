@@ -571,6 +571,10 @@ spec:
                         description: NetworkEvictionConfig is the config for network
                           eviction
                         properties:
+                          enableNICBandwidthEviction:
+                            description: EnableNICBandwidthEviction is whether to
+                              enable NIC bandwidth eviction.
+                            type: boolean
                           enableNICNetworkEviction:
                             description: EnableNICHealthEviction is whether to enable
                               NIC health eviction.
@@ -581,11 +585,70 @@ spec:
                             format: int64
                             minimum: 0
                             type: integer
+                          nicBandwidthContinuousMetThreshold:
+                            description: NICBandwidthContinuousMetThreshold is the
+                              number of consecutive threshold hits required.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          nicBandwidthGracePeriod:
+                            description: NICBandwidthGracePeriod is the grace period
+                              of nic bandwidth eviction.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          nicBandwidthRingMetThreshold:
+                            description: NICBandwidthRingMetThreshold is the number
+                              of ring hits required for eviction.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          nicBandwidthRingSize:
+                            description: NICBandwidthRingSize is the size of the bandwidth
+                              pressure ring buffer.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          nicBandwidthUtilizationThreshold:
+                            description: NICBandwidthUtilizationThreshold is the NIC
+                              bandwidth utilization threshold.
+                            maximum: 1
+                            minimum: 0
+                            type: number
                           nicUnhealthyToleranceDuration:
                             description: |-
                               NICUnhealthyToleranceDuration is the default duration a pod can tolerate nic
                               unhealthy
                             type: string
+                        type: object
+                      pidOveruseEvictionConfig:
+                        description: PIDOveruseEvictionConfig is the config for pid
+                          overuse eviction
+                        properties:
+                          candidatePodAnnotationSelector:
+                            description: CandidatePodAnnotationSelector filters pods
+                              participating in pid overuse evaluation by annotations.
+                            type: string
+                          candidatePodLabelSelector:
+                            description: CandidatePodLabelSelector filters pods participating
+                              in pid overuse evaluation by labels.
+                            type: string
+                          enablePIDOveruseEviction:
+                            description: EnablePIDOveruseEviction is whether to enable
+                              pod-level pid overuse eviction.
+                            type: boolean
+                          gracePeriod:
+                            description: GracePeriod is the grace period of pid overuse
+                              eviction
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          pidOveruseThreshold:
+                            description: PIDOveruseThreshold is the pod-level pid
+                              threshold aggregated from pod spec containers.
+                            format: int64
+                            minimum: 0
+                            type: integer
                         type: object
                       reclaimedResourcesEvictionConfig:
                         description: ReclaimedResourcesEvictionConfig is the config
