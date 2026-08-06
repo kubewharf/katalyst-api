@@ -377,6 +377,9 @@ type QRMPluginConfig struct {
 	// CPUPluginConfig is the config for cpu plugin
 	// +optional
 	CPUPluginConfig *CPUPluginConfig `json:"cpuPluginConfig,omitempty"`
+	// MemoryPluginConfig is the config for memory plugin
+	// +optional
+	MemoryPluginConfig *MemoryPluginConfig `json:"memoryPluginConfig,omitempty"`
 }
 
 type CPUPluginConfig struct {
@@ -400,6 +403,61 @@ type CPUPluginConfig struct {
 	// +kubebuilder:validation:Minimum=1
 	// +optional
 	SystemExclusivePoolShrinkMax *int64 `json:"systemExclusivePoolShrinkMax,omitempty"`
+}
+
+type MemoryPluginConfig struct {
+	// FragMemConfig is the config for memory compaction and THP tuning
+	// +optional
+	FragMemConfig *FragMemConfig `json:"fragMemConfig,omitempty"`
+	// HostWatermarkConfig is the config for host vm watermark related sysctls
+	// +optional
+	HostWatermarkConfig *HostWatermarkConfig `json:"hostWatermarkConfig,omitempty"`
+}
+
+type FragMemConfig struct {
+	// EnableFragMem enables memory compaction related features
+	// +optional
+	EnableFragMem *bool `json:"enableFragMem,omitempty"`
+	// MemFragScoreAsync sets the threshold of frag score for async memory compaction.
+	// The async compaction behavior will be triggered while exceeding this score.
+	// +optional
+	MemFragScoreAsync *int64 `json:"memFragScoreAsync,omitempty"`
+	// THPDefaultConfig is the default host THP config we try to recover to when
+	// fragmentation is not severe. Valid values: "madvise", "always", "never".
+	//
+	// Default: "madvise".
+	// +optional
+	THPDefaultConfig *string `json:"thpDefaultConfig,omitempty"`
+	// THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.
+	// - If max(highOrderScore) > threshold, then disable THP (set to "never").
+	// - If max(highOrderScore) < threshold*0.9, then recover THP to THPDefaultConfig.
+	//   (Using 0.9 hysteresis to avoid THP toggling when score fluctuates around the threshold.)
+	//
+	// Default: 85.
+	// +optional
+	THPHighOrderScoreThreshold *int64 `json:"thpHighOrderScoreThreshold,omitempty"`
+}
+
+type HostWatermarkConfig struct {
+	// EnableHostWatermark enables tuning host vm.* watermark sysctls
+	// +optional
+	EnableHostWatermark *bool `json:"enableHostWatermark,omitempty"`
+	// VMWatermarkScaleFactor sets /proc/sys/vm/watermark_scale_factor
+	// The unit is per ten thousand (i.e. 10000 means 100%). 0 means do not change.
+	// +optional
+	VMWatermarkScaleFactor *int64 `json:"vmWatermarkScaleFactor,omitempty"`
+	// VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
+	// +optional
+	VMWatermarkBoostFactor *int64 `json:"vmWatermarkBoostFactor,omitempty"`
+	// VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
+	// +optional
+	VMExtFragThreshold *int64 `json:"vmExtFragThreshold,omitempty"`
+	// ReservedKswapdWatermarkGB is used to calculate watermark_scale_factor automatically.
+	// It means we want to reserve this amount of memory on a single NUMA node
+	// for kswapd asynchronous reclaim (e.g. 10GB on a 100GB NUMA -> 1000).
+	// It only takes effect when VMWatermarkScaleFactor is 0.
+	// +optional
+	ReservedKswapdWatermarkGB *int64 `json:"reservedKswapdWatermarkGB,omitempty"`
 }
 
 type EvictionConfig struct {
