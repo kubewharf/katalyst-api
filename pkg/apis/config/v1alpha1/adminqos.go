@@ -713,6 +713,10 @@ type EvictionConfig struct {
 	// +optional
 	NetworkEvictionConfig *NetworkEvictionConfig `json:"networkEvictionConfig,omitempty"`
 
+	// MemorySetEvictionConfig is the config for memory set eviction
+	// +optional
+	MemorySetEvictionConfig *MemorySetEvictionConfig `json:"memorySetEvictionConfig,omitempty"`
+
 	// BEMemorySuppressionEvictionConfig configures eviction caused by reclaimed cgroup memory limits.
 	// +optional
 	BEMemorySuppressionEvictionConfig *BEMemorySuppressionEvictionConfig `json:"beMemorySuppressionEvictionConfig,omitempty"`
@@ -1353,6 +1357,11 @@ type CPUSystemPressureEvictionConfig struct {
 
 	// +optional
 	RankingLabels map[string][]string `json:"RankingLabels,omitempty"`
+}
+
+type MemorySetEvictionConfig struct {
+	// +optional
+	EnableMemorySetEviction *bool `json:"enableMemorySetEviction,omitempty"`
 }
 
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
