@@ -588,6 +588,13 @@ spec:
                             minimum: 0
                             type: integer
                         type: object
+                      memorySetEvictionConfig:
+                        description: MemorySetEvictionConfig is the config for memory
+                          set eviction
+                        properties:
+                          enableMemorySetEviction:
+                            type: boolean
+                        type: object
                       networkEvictionConfig:
                         description: NetworkEvictionConfig is the config for network
                           eviction
