@@ -722,6 +722,29 @@ type MemoryPressureEvictionConfig struct {
 	// EvictNonReclaimedLabelSelector is a non-reclaimed pod eviction label selector
 	// +optional
 	EvictNonReclaimedLabelSelector string `json:"evictNonReclaimedLabelSelector,omitempty"`
+
+	// EnableGlobalTCPMemoryPressureEviction is whether to enable global TCP memory pressure eviction.
+	// +optional
+	EnableGlobalTCPMemoryPressureEviction *bool `json:"enableGlobalTCPMemoryPressureEviction,omitempty"`
+
+	// GlobalTCPMemoryHardThresholdRatio is the hard threshold ratio of global TCP memory utilization.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +kubebuilder:validation:ExclusiveMinimum=true
+	// +optional
+	GlobalTCPMemoryHardThresholdRatio *float64 `json:"globalTCPMemoryHardThresholdRatio,omitempty"`
+
+	// GlobalTCPMemoryThresholdMetToleranceDuration is the duration in seconds that global TCP memory utilization
+	// must continuously exceed the hard threshold before eviction is triggered.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GlobalTCPMemoryThresholdMetToleranceDuration *int64 `json:"globalTCPMemoryThresholdMetToleranceDuration,omitempty"`
+
+	// GlobalTCPMemoryCoolDownPeriodSeconds is the cool-down period in seconds between global TCP memory eviction
+	// candidate selections.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GlobalTCPMemoryCoolDownPeriodSeconds *int64 `json:"globalTCPMemoryCoolDownPeriodSeconds,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {

@@ -454,6 +454,10 @@ spec:
                         description: MemoryPressureEvictionConfig is the config for
                           memory pressure eviction
                         properties:
+                          enableGlobalTCPMemoryPressureEviction:
+                            description: EnableGlobalTCPMemoryPressureEviction is
+                              whether to enable global TCP memory pressure eviction.
+                            type: boolean
                           enableNumaLevelEviction:
                             description: EnableNumaLevelEviction is whether to enable
                               numa-level eviction
@@ -474,6 +478,27 @@ spec:
                             description: EvictNonReclaimedLabelSelector is a non-reclaimed
                               pod eviction label selector
                             type: string
+                          globalTCPMemoryCoolDownPeriodSeconds:
+                            description: |-
+                              GlobalTCPMemoryCoolDownPeriodSeconds is the cool-down period in seconds between global TCP memory eviction
+                              candidate selections.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          globalTCPMemoryHardThresholdRatio:
+                            description: GlobalTCPMemoryHardThresholdRatio is the
+                              hard threshold ratio of global TCP memory utilization.
+                            exclusiveMinimum: true
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          globalTCPMemoryThresholdMetToleranceDuration:
+                            description: |-
+                              GlobalTCPMemoryThresholdMetToleranceDuration is the duration in seconds that global TCP memory utilization
+                              must continuously exceed the hard threshold before eviction is triggered.
+                            format: int64
+                            minimum: 0
+                            type: integer
                           gracePeriod:
                             description: GracePeriod is the grace period of memory
                               pressure eviction
