@@ -2266,6 +2266,26 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(int64)
 		**out = **in
 	}
+	if in.EnableGlobalTCPMemoryPressureEviction != nil {
+		in, out := &in.EnableGlobalTCPMemoryPressureEviction, &out.EnableGlobalTCPMemoryPressureEviction
+		*out = new(bool)
+		**out = **in
+	}
+	if in.GlobalTCPMemoryHardThresholdRatio != nil {
+		in, out := &in.GlobalTCPMemoryHardThresholdRatio, &out.GlobalTCPMemoryHardThresholdRatio
+		*out = new(float64)
+		**out = **in
+	}
+	if in.GlobalTCPMemoryThresholdMetToleranceDuration != nil {
+		in, out := &in.GlobalTCPMemoryThresholdMetToleranceDuration, &out.GlobalTCPMemoryThresholdMetToleranceDuration
+		*out = new(int64)
+		**out = **in
+	}
+	if in.GlobalTCPMemoryCoolDownPeriodSeconds != nil {
+		in, out := &in.GlobalTCPMemoryCoolDownPeriodSeconds, &out.GlobalTCPMemoryCoolDownPeriodSeconds
+		*out = new(int64)
+		**out = **in
+	}
 	return
 }
 
