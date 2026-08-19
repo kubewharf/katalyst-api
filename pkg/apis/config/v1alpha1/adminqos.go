@@ -734,17 +734,15 @@ type MemoryPressureEvictionConfig struct {
 	// +optional
 	GlobalTCPMemoryHardThresholdRatio *float64 `json:"globalTCPMemoryHardThresholdRatio,omitempty"`
 
-	// GlobalTCPMemoryThresholdMetToleranceDuration is the duration in seconds that global TCP memory utilization
+	// GlobalTCPMemoryThresholdMetToleranceDuration is the duration that global TCP memory utilization
 	// must continuously exceed the hard threshold before eviction is triggered.
-	// +kubebuilder:validation:Minimum=0
 	// +optional
-	GlobalTCPMemoryThresholdMetToleranceDuration *int64 `json:"globalTCPMemoryThresholdMetToleranceDuration,omitempty"`
+	GlobalTCPMemoryThresholdMetToleranceDuration *metav1.Duration `json:"globalTCPMemoryThresholdMetToleranceDuration,omitempty"`
 
-	// GlobalTCPMemoryCoolDownPeriodSeconds is the cool-down period in seconds between global TCP memory eviction
+	// GlobalTCPMemoryCoolDownPeriod is the cool-down period between global TCP memory eviction
 	// candidate selections.
-	// +kubebuilder:validation:Minimum=0
 	// +optional
-	GlobalTCPMemoryCoolDownPeriodSeconds *int64 `json:"globalTCPMemoryCoolDownPeriodSeconds,omitempty"`
+	GlobalTCPMemoryCoolDownPeriod *metav1.Duration `json:"globalTCPMemoryCoolDownPeriod,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {
