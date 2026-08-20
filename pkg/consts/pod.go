@@ -16,6 +16,19 @@ limitations under the License.
 
 package consts
 
+// ContainerCPUIdleRateConfig defines the annotation value schema for
+// PodAnnotationContainerCPUIdleRateKey.
+//
+// The key is the container name, and the value is the target CPU idle rate
+// percentage for that container in the inclusive range [0, 100].
+//
+// For example:
+//
+//	{
+//	  "testContainer": 50
+//	}
+type ContainerCPUIdleRateConfig map[string]int64
+
 // const variables for pod annotations about vpa in-place resource update.
 const (
 	PodAnnotationInplaceUpdateResourcesKey = "pod.kubernetes.io/resizeResources"
@@ -77,4 +90,17 @@ const (
 	PodAnnotationCPUWeightDemandCoresKey = "katalyst.kubewharf.io/cpu_weight_demand_cores"
 	// PodAnnotationCPUWeightBurstRatioKey is a const variable for pod annotation about cpu burst ratio to calculate cpu weight.
 	PodAnnotationCPUWeightBurstRatioKey = "katalyst.kubewharf.io/cpu_weight_burst_ratio"
+)
+
+const (
+	// PodAnnotationContainerCPUIdleRateKey is a const variable for pod annotation about per-container cpu idle rate.
+	//
+	// The annotation value is expected to be a JSON object encoded from ContainerCPUIdleRateConfig.
+	// Each per-container value is a percentage in the inclusive range [0, 100].
+	//
+	// For example:
+	// {
+	//   "testContainer": 50
+	// }
+	PodAnnotationContainerCPUIdleRateKey = "katalyst.kubewharf.io/container_cpu_idle_rate"
 )
