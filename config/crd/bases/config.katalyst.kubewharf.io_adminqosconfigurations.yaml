@@ -912,6 +912,10 @@ spec:
 
 
                                   Default: "madvise".
+                                enum:
+                                - madvise
+                                - always
+                                - never
                                 type: string
                               thpHighOrderScoreThreshold:
                                 description: |-
@@ -940,18 +944,18 @@ spec:
                                   for kswapd asynchronous reclaim (e.g. 10GB on a 100GB NUMA -> 1000).
                                   It only takes effect when VMWatermarkScaleFactor is 0.
                                 format: int64
+                                minimum: 0
                                 type: integer
                               vmExtFragThreshold:
-                                description: |-
-                                  VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
-                                  0 means do not change.
+                                description: VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
                                 format: int64
+                                maximum: 1000
+                                minimum: 0
                                 type: integer
                               vmWatermarkBoostFactor:
-                                description: |-
-                                  VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
-                                  0 means do not change.
+                                description: VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
                                 format: int64
+                                minimum: 0
                                 type: integer
                               vmWatermarkScaleFactor:
                                 description: |-
