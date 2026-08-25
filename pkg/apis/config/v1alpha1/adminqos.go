@@ -387,6 +387,16 @@ type CPUPluginConfig struct {
 	// The calculation results may originate from upstream components and be recorded in the pod annotation
 	// +optional
 	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
+	// EnableBypassCPUSetAdjustment controls whether GetResourcesAllocation clears
+	// CPU AllocationResult for all QoS classes. Allocation responses returned by
+	// Allocate/AllocateForPod keep their cpuset unchanged.
+	// +optional
+	EnableBypassCPUSetAdjustment *bool `json:"enableBypassCPUSetAdjustment,omitempty"`
+	// DisableSharedCoresRampUp disables initial full-pool cpuset binding for
+	// newly scheduled shared_cores pods. When true, shared_cores pods are allocated
+	// from their target pool directly instead of entering RampUp.
+	// +optional
+	DisableSharedCoresRampUp *bool `json:"disableSharedCoresRampUp,omitempty"`
 	// SystemExclusivePool is the config for system exclusive pool, key is pool name, value is the number of cores to allocate
 	// +optional
 	SystemExclusivePool map[string]int `json:"systemExclusivePool,omitempty"`
