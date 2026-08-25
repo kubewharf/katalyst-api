@@ -1010,12 +1010,12 @@ type CPUSystemPressureEvictionConfig struct {
 
 // NumaEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // NUMA level
-// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.total.numa.container
+// +kubebuilder:validation:Enum=qos.pod;priority.pod;sale_mode.pod;mem.total.numa.container
 type NumaEvictionRankingMetric string
 
 // SystemEvictionRankingMetric is the metrics used to rank pods for eviction at the
 // system level
-// +kubebuilder:validation:Enum=qos.pod;priority.pod;mem.usage.container;native.qos.pod;owner.pod
+// +kubebuilder:validation:Enum=qos.pod;priority.pod;sale_mode.pod;mem.usage.container;native.qos.pod;owner.pod
 type SystemEvictionRankingMetric string
 
 // ReclaimResourceIndicators defines the workload configuration for reclaim resource indicators.
