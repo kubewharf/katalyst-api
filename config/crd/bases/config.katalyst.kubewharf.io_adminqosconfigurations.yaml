@@ -857,6 +857,12 @@ spec:
                       cpuPluginConfig:
                         description: CPUPluginConfig is the config for cpu plugin
                         properties:
+                          cpuTotalRequestThresholdRatio:
+                            description: CPUTotalRequestThresholdRatio is the ratio
+                              to limit total NUMA binding pod CPU requests on a NUMA
+                            maximum: 1
+                            minimum: 0
+                            type: number
                           preferUseExistNUMAHintResult:
                             description: |-
                               PreferUseExistNUMAHintResult prefer to use existing numa hint results
@@ -960,6 +966,13 @@ spec:
                                 format: int64
                                 type: integer
                             type: object
+                          memoryTotalRequestThresholdRatio:
+                            description: MemoryTotalRequestThresholdRatio is the ratio
+                              to limit total NUMA binding pod memory requests on a
+                              NUMA
+                            maximum: 1
+                            minimum: 0
+                            type: number
                         type: object
                     type: object
                   reclaimedResourceConfig:
