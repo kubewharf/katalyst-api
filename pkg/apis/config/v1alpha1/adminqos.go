@@ -383,6 +383,11 @@ type QRMPluginConfig struct {
 }
 
 type CPUPluginConfig struct {
+	// CPUTotalRequestThresholdRatio is the ratio to limit total NUMA binding pod CPU requests on a NUMA
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	CPUTotalRequestThresholdRatio *float64 `json:"cpuTotalRequestThresholdRatio,omitempty"`
 	// PreferUseExistNUMAHintResult prefer to use existing numa hint results
 	// The calculation results may originate from upstream components and be recorded in the pod annotation
 	// +optional
@@ -406,6 +411,11 @@ type CPUPluginConfig struct {
 }
 
 type MemoryPluginConfig struct {
+	// MemoryTotalRequestThresholdRatio is the ratio to limit total NUMA binding pod memory requests on a NUMA
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	MemoryTotalRequestThresholdRatio *float64 `json:"memoryTotalRequestThresholdRatio,omitempty"`
 	// FragMemConfig is the config for memory compaction and THP tuning
 	// +optional
 	FragMemConfig *FragMemConfig `json:"fragMemConfig,omitempty"`
