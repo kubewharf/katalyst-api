@@ -512,6 +512,7 @@ spec:
                               enum:
                               - qos.pod
                               - priority.pod
+                              - sale_mode.pod
                               - mem.total.numa.container
                               type: string
                             minItems: 1
@@ -561,6 +562,7 @@ spec:
                               enum:
                               - qos.pod
                               - priority.pod
+                              - sale_mode.pod
                               - mem.usage.container
                               - native.qos.pod
                               - owner.pod
@@ -948,15 +950,11 @@ spec:
                                 format: int64
                                 type: integer
                               vmExtFragThreshold:
-                                description: |-
-                                  VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
-                                  0 means do not change.
+                                description: VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
                                 format: int64
                                 type: integer
                               vmWatermarkBoostFactor:
-                                description: |-
-                                  VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
-                                  0 means do not change.
+                                description: VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
                                 format: int64
                                 type: integer
                               vmWatermarkScaleFactor:
