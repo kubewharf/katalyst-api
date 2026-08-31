@@ -15,6 +15,7 @@
 package v1beta3
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kube-scheduler/config/v1beta3"
 
@@ -84,4 +85,38 @@ type NodeResourceTopologyArgs struct {
 
 	// ResourcePluginPolicy are QRMPlugin resource policy to allocate topology resource for containers.
 	ResourcePluginPolicy consts.ResourcePluginPolicyName `json:"resourcePluginPolicy,omitempty"`
+}
+
+// IndicatorType indicator participate in calculate score
+type IndicatorType string
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// LoadAwareArgs holds arguments used to configure the LoadAwareScheduling plugin.
+type LoadAwareArgs struct {
+	metav1.TypeMeta
+
+	EnablePortrait               *bool   `json:"enablePortrait,omitempty"`
+	PodAnnotationLoadAwareEnable *string `json:"podAnnotationLoadAwareEnable,omitempty"`
+	// FilterExpiredNodeMetrics indicates whether to filter nodes where  fails to update NPD.
+	FilterExpiredNodeMetrics *bool `json:"filterExpiredNodeMetrics,omitempty"`
+	// NodeMetricsExpiredSeconds indicates the NodeMetrics in NPD expiration in seconds.
+	// When NodeMetrics expired, the node is considered abnormal.
+	// default 5 minute
+	NodeMetricsExpiredSeconds *int64 `json:"NodeMetricsExpiredSeconds,omitempty"`
+	// ResourceToWeightMap contains resource name and weight.
+	ResourceToWeightMap map[corev1.ResourceName]int64 `json:"resourceToWeightMap,omitempty"`
+	// ResourceToThresholdMap contains resource name and threshold. Node can not be scheduled
+	// if usage of it is more than threshold.
+	ResourceToThresholdMap map[corev1.ResourceName]int64 `json:"resourceToThresholdMap,omitempty"`
+	// ResourceToScalingFactorMap contains resource name and scaling factor, which are used to estimate pod usage
+	// if usage of pod is not exists in node monitor.
+	ResourceToScalingFactorMap map[corev1.ResourceName]int64 `json:"resourceToScalingFactorMap,omitempty"`
+	// ResourceToTargetMap contains resource name and node usage target which are used in loadAware score
+	ResourceToTargetMap map[corev1.ResourceName]int64 `json:"resourceToTargetMap,omitempty"`
+	// CalculateIndicatorWeight indicates the participates in calculate indicator weight
+	// The default avg_15min 30, max_1hour 30, max_1day 40
+	CalculateIndicatorWeight map[IndicatorType]int64 `json:"calculateIndicatorWeight,omitempty"`
+
+	KubeConfigPath string `json:"kubeConfigPath,omitempty"`
 }
