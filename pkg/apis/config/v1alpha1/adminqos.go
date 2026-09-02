@@ -438,6 +438,15 @@ type FragMemConfig struct {
 	// Default: "madvise".
 	// +optional
 	THPDefaultConfig *string `json:"thpDefaultConfig,omitempty"`
+	// THPConfigPolicy controls how host THP mode is applied.
+	// - "static": always enforce THPDefaultConfig.
+	// - "dynamic": keep the existing fragmentation-based THP tuning behavior.
+	//
+	// Default: "dynamic".
+	// +kubebuilder:validation:Enum=static;dynamic
+	// +kubebuilder:default:=dynamic
+	// +optional
+	THPConfigPolicy *string `json:"thpConfigPolicy,omitempty"`
 	// THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.
 	// - If max(highOrderScore) > threshold, then disable THP (set to "never").
 	// - If max(highOrderScore) < threshold*0.9, then recover THP to THPDefaultConfig.

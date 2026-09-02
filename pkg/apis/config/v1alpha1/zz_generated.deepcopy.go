@@ -590,6 +590,11 @@ func (in *FragMemConfig) DeepCopyInto(out *FragMemConfig) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.THPConfigPolicy != nil {
+		in, out := &in.THPConfigPolicy, &out.THPConfigPolicy
+		*out = new(string)
+		**out = **in
+	}
 	if in.THPHighOrderScoreThreshold != nil {
 		in, out := &in.THPHighOrderScoreThreshold, &out.THPHighOrderScoreThreshold
 		*out = new(int64)
