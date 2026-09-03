@@ -919,6 +919,19 @@ spec:
 
                                   Default: "madvise".
                                 type: string
+                              thpConfigPolicy:
+                                default: dynamic
+                                description: |-
+                                  THPConfigPolicy controls how host THP mode is applied.
+                                  - "static": always enforce THPDefaultConfig.
+                                  - "dynamic": keep the existing fragmentation-based THP tuning behavior.
+
+
+                                  Default: "dynamic".
+                                enum:
+                                - static
+                                - dynamic
+                                type: string
                               thpHighOrderScoreThreshold:
                                 description: |-
                                   THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.
