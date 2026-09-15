@@ -690,13 +690,17 @@ func (in *CPUPressureEvictionConfig) DeepCopyInto(out *CPUPressureEvictionConfig
 	}
 	if in.LoadUpperBoundRatio != nil {
 		in, out := &in.LoadUpperBoundRatio, &out.LoadUpperBoundRatio
-		*out = new(float64)
-		**out = **in
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 	if in.LoadLowerBoundRatio != nil {
 		in, out := &in.LoadLowerBoundRatio, &out.LoadLowerBoundRatio
-		*out = new(float64)
-		**out = **in
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
 	}
 	if in.LoadThresholdMetPercentage != nil {
 		in, out := &in.LoadThresholdMetPercentage, &out.LoadThresholdMetPercentage
