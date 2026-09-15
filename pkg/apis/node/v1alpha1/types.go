@@ -168,6 +168,11 @@ type TopologyZone struct {
 	//   need separate structure to distinguish them.
 	Name string `json:"name"`
 
+	// Taints customized taint for this topology zone, which affect pod scheduling
+	// based on their QoS levels and the specified taint's QoS level.
+	// +optional
+	Taints []Taint `json:"taints,omitempty"`
+
 	// Resources defines the numeric quantities in this TopologyZone; for instance,
 	// - a TopologyZone with type TopologyTypeGPU may have both gpu and gpu-memory
 	// - a TopologyZone with type TopologyTypeNIC may have both ingress and egress bandwidth

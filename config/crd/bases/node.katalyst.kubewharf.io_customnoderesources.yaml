@@ -717,6 +717,48 @@ spec:
                         - type
                         type: object
                       type: array
+                    taints:
+                      description: |-
+                        Taints customized taint for this topology zone, which affect pod scheduling
+                        based on their QoS levels and the specified taint's QoS level.
+                      items:
+                        description: Taint wraps standard Kubernetes Taint with QoSLevel.
+                        properties:
+                          effect:
+                            description: |-
+                              Required. The effect of the taint on pods
+                              that do not tolerate the taint.
+                              Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
+                            type: string
+                          key:
+                            description: Required. The taint key to be applied to
+                              a node.
+                            type: string
+                          qosLevel:
+                            description: QoSLevel specifies the QoS level of pods
+                              that this taint applies to.
+                            enum:
+                            - reclaimed_cores
+                            - shared_cores
+                            - dedicated_cores
+                            - system_cores
+                            type: string
+                          timeAdded:
+                            description: |-
+                              TimeAdded represents the time at which the taint was added.
+                              It is only written for NoExecute taints.
+                            format: date-time
+                            type: string
+                          value:
+                            description: The taint value corresponding to the taint
+                              key.
+                            type: string
+                        required:
+                        - effect
+                        - key
+                        - qosLevel
+                        type: object
+                      type: array
                     type:
                       description: |-
                         Type represents which kind of resource this TopologyZone is for;
