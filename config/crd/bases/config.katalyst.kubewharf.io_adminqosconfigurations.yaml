@@ -197,12 +197,13 @@ spec:
                               disabled for the cool-down time
                             type: string
                           loadLowerBoundRatio:
+                            additionalProperties:
+                              type: string
                             description: |-
-                              LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
-                              of the target cpuset pool is greater than the load lower bound repeatedly, the
-                              node taint will be triggered
-                            minimum: 0
-                            type: number
+                              LoadLowerBoundRatio maps translated pool name prefixes to positive finite ratios encoded as strings.
+                              The longest prefix wins; "default" applies to unmatched pools and falls back to 10 when absent.
+                              Pool size times the ratio is the soft load threshold for node tainting.
+                            type: object
                           loadMetricRingSize:
                             description: |-
                               LoadMetricRingSize is the size of the load metric ring, which is used to calculate the
@@ -219,12 +220,13 @@ spec:
                             minimum: 0
                             type: number
                           loadUpperBoundRatio:
+                            additionalProperties:
+                              type: string
                             description: |-
-                              LoadUpperBoundRatio is the upper bound ratio of cpuset pool load, if the load
-                              of the target cpuset pool is greater than the load upper bound repeatedly, the
-                              eviction will be triggered
-                            minimum: 1
-                            type: number
+                              LoadUpperBoundRatio maps translated pool name prefixes to positive finite ratios encoded as strings.
+                              The longest prefix wins; "default" applies to unmatched pools and falls back to 20 when absent.
+                              Pool size times the ratio is the hard load threshold for eviction.
+                            type: object
                           maxSuppressionToleranceRate:
                             description: |-
                               MaxSuppressionToleranceRate is the maximum cpu suppression tolerance rate that
@@ -948,15 +950,11 @@ spec:
                                 format: int64
                                 type: integer
                               vmExtFragThreshold:
-                                description: |-
-                                  VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
-                                  0 means do not change.
+                                description: VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
                                 format: int64
                                 type: integer
                               vmWatermarkBoostFactor:
-                                description: |-
-                                  VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
-                                  0 means do not change.
+                                description: VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
                                 format: int64
                                 type: integer
                               vmWatermarkScaleFactor:
