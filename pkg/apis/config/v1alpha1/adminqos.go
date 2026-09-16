@@ -436,6 +436,7 @@ type FragMemConfig struct {
 	// fragmentation is not severe. Valid values: "madvise", "always", "never".
 	//
 	// Default: "madvise".
+	// +kubebuilder:validation:Enum=madvise;always;never
 	// +optional
 	THPDefaultConfig *string `json:"thpDefaultConfig,omitempty"`
 	// THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.
@@ -457,15 +458,19 @@ type HostWatermarkConfig struct {
 	// +optional
 	VMWatermarkScaleFactor *int64 `json:"vmWatermarkScaleFactor,omitempty"`
 	// VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	VMWatermarkBoostFactor *int64 `json:"vmWatermarkBoostFactor,omitempty"`
 	// VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000
 	// +optional
 	VMExtFragThreshold *int64 `json:"vmExtFragThreshold,omitempty"`
 	// ReservedKswapdWatermarkGB is used to calculate watermark_scale_factor automatically.
 	// It means we want to reserve this amount of memory on a single NUMA node
 	// for kswapd asynchronous reclaim (e.g. 10GB on a 100GB NUMA -> 1000).
 	// It only takes effect when VMWatermarkScaleFactor is 0.
+	// +kubebuilder:validation:Minimum=0
 	// +optional
 	ReservedKswapdWatermarkGB *int64 `json:"reservedKswapdWatermarkGB,omitempty"`
 }
