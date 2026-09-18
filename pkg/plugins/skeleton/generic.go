@@ -45,7 +45,8 @@ import (
 const (
 	restartRetryInterval = 5 * time.Second
 
-	grpcTimeout = 5 * time.Second
+	grpcTimeout        = 5 * time.Second
+	grpcMaxRecvMsgSize = 8 << 20
 )
 
 // MetricCallback is used to return key metric as a callback function
@@ -378,7 +379,7 @@ func (p *PluginRegistrationWrapper) serve() error {
 			return fmt.Errorf("listen for %s at socket: %s faield with err: %v", p.Name(), socket, err)
 		}
 
-		server := grpc.NewServer()
+		server := grpc.NewServer(grpc.MaxRecvMsgSize(grpcMaxRecvMsgSize))
 		// register reporter plugin server by real reporter Plugin which
 		// only need to implement simple reporter plugin Start/Stop/Get/ListAndWatch
 		// function without concerning plugin registration related logic
