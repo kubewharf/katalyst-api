@@ -930,6 +930,48 @@ spec:
                                   Default: 85.
                                 format: int64
                                 type: integer
+                              thpStaticEnableConfig:
+                                description: |-
+                                  THPStaticEnableConfig defines the host THP settings used by static THP mode.
+                                  When Enable is true, the host THP mode is statically enforced with the configured values.
+                                  When unset or disabled, the existing fragmentation-based THP tuning behavior is kept.
+                                properties:
+                                  enable:
+                                    description: |-
+                                      Enable indicates whether to enable static THP configuration.
+                                      When true, THP and THPShm are enforced with the configured or default values.
+                                      When false or unset, static THP configuration is disabled.
+                                    type: boolean
+                                  thp:
+                                    default: madvise
+                                    description: |-
+                                      THP is the host THP mode enforced in static mode.
+                                      Valid values: "always", "madvise", "never".
+
+
+                                      Default: "madvise".
+                                    enum:
+                                    - always
+                                    - madvise
+                                    - never
+                                    type: string
+                                  thpShm:
+                                    default: advise
+                                    description: |-
+                                      THPShm is the host THP shared memory mode enforced in static mode.
+                                      Valid values: "always", "within_size", "advise", "never", "deny", "force".
+
+
+                                      Default: "advise".
+                                    enum:
+                                    - always
+                                    - within_size
+                                    - advise
+                                    - never
+                                    - deny
+                                    - force
+                                    type: string
+                                type: object
                             type: object
                           hostWatermarkConfig:
                             description: HostWatermarkConfig is the config for host

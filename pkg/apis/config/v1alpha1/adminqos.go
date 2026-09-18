@@ -438,6 +438,11 @@ type FragMemConfig struct {
 	// Default: "madvise".
 	// +optional
 	THPDefaultConfig *string `json:"thpDefaultConfig,omitempty"`
+	// THPStaticEnableConfig defines the host THP settings used by static THP mode.
+	// When Enable is true, the host THP mode is statically enforced with the configured values.
+	// When unset or disabled, the existing fragmentation-based THP tuning behavior is kept.
+	// +optional
+	THPStaticEnableConfig *THPStaticEnableConfig `json:"thpStaticEnableConfig,omitempty"`
 	// THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.
 	// - If max(highOrderScore) > threshold, then disable THP (set to "never").
 	// - If max(highOrderScore) < threshold*0.9, then recover THP to THPDefaultConfig.
@@ -448,6 +453,51 @@ type FragMemConfig struct {
 	THPHighOrderScoreThreshold *int64 `json:"thpHighOrderScoreThreshold,omitempty"`
 }
 
+type THPStaticEnableConfig struct {
+	// Enable indicates whether to enable static THP configuration.
+	// When true, THP and THPShm are enforced with the configured or default values.
+	// When false or unset, static THP configuration is disabled.
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
+	// THP is the host THP mode enforced in static mode.
+	// Valid values: "always", "madvise", "never".
+	//
+	// Default: "madvise".
+	// +kubebuilder:default:=madvise
+	// +optional
+	THP *THPMode `json:"thp,omitempty"`
+	// THPShm is the host THP shared memory mode enforced in static mode.
+	// Valid values: "always", "within_size", "advise", "never", "deny", "force".
+	//
+	// Default: "advise".
+	// +kubebuilder:default:=advise
+	// +optional
+	THPShm *THPShmMode `json:"thpShm,omitempty"`
+}
+
+// THPMode is the host THP mode.
+// +kubebuilder:validation:Enum=always;madvise;never
+type THPMode string
+
+const (
+	THPModeAlways  THPMode = "always"
+	THPModeMadvise THPMode = "madvise"
+	THPModeNever   THPMode = "never"
+)
+
+// THPShmMode is the host THP shared memory mode.
+// +kubebuilder:validation:Enum=always;within_size;advise;never;deny;force
+type THPShmMode string
+
+const (
+	THPShmModeAlways     THPShmMode = "always"
+	THPShmModeWithinSize THPShmMode = "within_size"
+	THPShmModeAdvise     THPShmMode = "advise"
+	THPShmModeNever      THPShmMode = "never"
+	THPShmModeDeny       THPShmMode = "deny"
+	THPShmModeForce      THPShmMode = "force"
+)
+
 type HostWatermarkConfig struct {
 	// EnableHostWatermark enables tuning host vm.* watermark sysctls
 	// +optional
@@ -457,9 +507,11 @@ type HostWatermarkConfig struct {
 	// +optional
 	VMWatermarkScaleFactor *int64 `json:"vmWatermarkScaleFactor,omitempty"`
 	// VMWatermarkBoostFactor sets /proc/sys/vm/watermark_boost_factor
+	// 0 means do not change.
 	// +optional
 	VMWatermarkBoostFactor *int64 `json:"vmWatermarkBoostFactor,omitempty"`
 	// VMExtFragThreshold sets /proc/sys/vm/extfrag_threshold
+	// 0 means do not change.
 	// +optional
 	VMExtFragThreshold *int64 `json:"vmExtFragThreshold,omitempty"`
 	// ReservedKswapdWatermarkGB is used to calculate watermark_scale_factor automatically.
