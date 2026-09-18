@@ -65,6 +65,19 @@ const (
 	PodAnnotationResourcePoolKey = "katalyst.kubewharf.io/resource_pool"
 )
 
+// PodAnnotationSaleModeKey is a const variable for pod annotation about sale mode.
+const (
+	PodAnnotationSaleModeKey = "katalyst.kubewharf.io/sale_mode"
+)
+
+// Pod sale mode values.
+const (
+	PodSaleModeSpot      = "spot"
+	PodSaleModeScheduled = "scheduled"
+	PodSaleModeReserved  = "reserved"
+	PodSaleModeUnknown   = "unknown"
+)
+
 // PodAnnotationResourcePackageKey is a const variable for pod annotation about resource package name
 const (
 	PodAnnotationResourcePackageKey = "katalyst.kubewharf.io/resource_package"
