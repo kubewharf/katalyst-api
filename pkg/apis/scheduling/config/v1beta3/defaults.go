@@ -19,6 +19,7 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/kube-scheduler/config/v1beta3"
+	"k8s.io/utils/pointer"
 
 	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
@@ -34,6 +35,33 @@ var defaultReclaimedResourceSpec = []v1beta3.ResourceSpec{
 }
 
 var defaultAlignedResourceSpec = []string{v1.ResourceCPU.String(), v1.ResourceMemory.String()}
+
+var (
+	defaultNodeMonitorExpiredSeconds int64 = 180
+	defaultResourceToWeightMap             = map[v1.ResourceName]int64{
+		v1.ResourceCPU:    1,
+		v1.ResourceMemory: 1,
+	}
+
+	defaultResourceToThresholdMap = map[v1.ResourceName]int64{
+		v1.ResourceCPU:    70, // 70%
+		v1.ResourceMemory: 95, // 95%
+	}
+
+	defaultResourceToScalingFactorMap = map[v1.ResourceName]int64{
+		v1.ResourceCPU:    85, // 85%
+		v1.ResourceMemory: 70, // 70%
+	}
+	defaultCalculateIndicatorWeight = map[IndicatorType]int64{
+		consts.Usage15MinAvgKey: 30, //30%
+		consts.Usage1HourMaxKey: 30, //30%
+		consts.Usage1DayMaxKey:  40, //40%
+	}
+	defaultResourceToTargetMap = map[v1.ResourceName]int64{
+		v1.ResourceCPU:    50,
+		v1.ResourceMemory: 70,
+	}
+)
 
 // SetDefaults_QoSAwareNodeResourcesFitArgs sets the default parameters for QoSAwareNodeResourcesFit plugin.
 func SetDefaults_QoSAwareNodeResourcesFitArgs(obj *QoSAwareNodeResourcesFitArgs) {
@@ -105,5 +133,32 @@ func SetDefaults_NodeResourceTopologyArgs(obj *NodeResourceTopologyArgs) {
 	}
 	if obj.ResourcePluginPolicy == "" {
 		obj.ResourcePluginPolicy = consts.ResourcePluginPolicyNameDynamic
+	}
+}
+
+func SetDefaults_LoadAwareArgs(obj *LoadAwareArgs) {
+	if obj.FilterExpiredNodeMetrics == nil {
+		obj.FilterExpiredNodeMetrics = pointer.BoolPtr(true)
+	}
+	if obj.NodeMetricsExpiredSeconds == nil {
+		obj.NodeMetricsExpiredSeconds = pointer.Int64Ptr(defaultNodeMonitorExpiredSeconds)
+	}
+	if len(obj.ResourceToWeightMap) == 0 {
+		obj.ResourceToWeightMap = defaultResourceToWeightMap
+	}
+	if len(obj.ResourceToThresholdMap) == 0 {
+		obj.ResourceToThresholdMap = defaultResourceToThresholdMap
+	}
+	if len(obj.ResourceToScalingFactorMap) == 0 {
+		obj.ResourceToScalingFactorMap = defaultResourceToScalingFactorMap
+	}
+	if len(obj.CalculateIndicatorWeight) == 0 {
+		obj.CalculateIndicatorWeight = defaultCalculateIndicatorWeight
+	}
+	if len(obj.ResourceToTargetMap) == 0 {
+		obj.ResourceToTargetMap = defaultResourceToTargetMap
+	}
+	if obj.EnablePortrait == nil {
+		obj.EnablePortrait = pointer.Bool(false)
 	}
 }
