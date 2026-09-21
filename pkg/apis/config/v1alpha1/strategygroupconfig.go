@@ -68,13 +68,31 @@ type StrategyGroupConfigurationSpec struct {
 }
 
 type StrategyGroupConfig struct {
-	// GroupConfigs contains configs for every group,
-	// ratios of all group should sum up to 1.0.
+	// GroupConfigs contains configs for every group.
+	// Ratios must sum to at most 1.0 across all groups in legacy mode, or within each pool in pool mode.
 	GroupConfigs []GroupConfig `json:"groupConfigs,omitempty"`
 }
 
 type GroupConfig struct {
-	// Ratio indicates ratio of nodes belongs to this group
+	// NodePool selects a pool matching a value of the label key in spec.nodeLabelSelector.
+	// Any nonempty NodePool enables pool mode for the entire StrategyGroupConfiguration.
+	// In pool mode, empty selects nodes without that label; nodes are never borrowed across pools.
+	// +optional
+	NodePool string `json:"nodePool,omitempty"`
+
+	// ExperimentDimension selects a specification.<field> or KCNR nodeResourceProperties property for this pool.
+	// Requires pool mode. All groups in the same pool must use the same dimension, including an empty value.
+	// Empty keeps ordinary strategy grouping; nonempty varies the selected hardware dimension across groups.
+	// +optional
+	ExperimentDimension string `json:"experimentDimension,omitempty"`
+
+	// ExperimentValue selects this group's value of ExperimentDimension.
+	// If omitted, the allocator chooses an unused observed value and persists the binding.
+	// +optional
+	ExperimentValue string `json:"experimentValue,omitempty"`
+
+	// Ratio is the desired fraction of nodes for this group; the resulting node count is rounded down.
+	// Legacy mode uses the cluster node count; pool mode uses the eligible node count in the selected pool.
 	Ratio *float64 `json:"ratio"`
 
 	// EnabledStrategies are strategies enabled in this group
