@@ -129,6 +129,13 @@ type TMOConfigDetail struct {
 	// +optional
 	EnableSwappinessReclaim *bool `json:"enableSwappinessReclaim,omitempty"`
 
+	// SwapFreeThresholdRatio is the minimum free swap ratio (0~1) required to
+	// continue TMO reclaim when swap is enabled.
+	// If MemSwapFree / MemSwapTotal is less than or equal to this threshold,
+	// TMO reclaim will be skipped for the current cycle.
+	// +optional
+	SwapFreeThresholdRatio *float64 `json:"swapFreeThresholdRatio,omitempty"`
+
 	// ReservedInactiveFile is the reserved value of inactive file memory
 	// +optional
 	ReservedInactiveFile *uint64 `json:"reservedInactiveFile,omitempty"`
