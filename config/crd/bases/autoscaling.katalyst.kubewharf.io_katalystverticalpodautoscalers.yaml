@@ -154,11 +154,10 @@ spec:
                       properties:
                         controlledResources:
                           default:
-                          - cpu
+                          - space
                           description: |-
-                            Specifies the type of recommendations that will be computed
-                            (and possibly applied) by VPA.
-                            If not specified, the default of [ResourceCPU] will be used.
+                            Specifies the volume resources that will be recommended (and possibly applied) by VPA.
+                            If omitted, defaults to space, the volume capacity resource.
                           items:
                             description: ResourceName is the name identifying various
                               resources in a ResourceList.

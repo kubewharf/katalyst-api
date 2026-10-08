@@ -254,10 +254,9 @@ type VolumeResourcePolicy struct {
 	// policy specified.
 	VolumeName *string `json:"volumeName"`
 
-	// Specifies the type of recommendations that will be computed
-	// (and possibly applied) by VPA.
-	// If not specified, the default of [ResourceCPU] will be used.
-	// +kubebuilder:default:={cpu}
+	// Specifies the volume resources that will be recommended (and possibly applied) by VPA.
+	// If omitted, defaults to space, the volume capacity resource.
+	// +kubebuilder:default:={space}
 	ControlledResources []v1.ResourceName `json:"controlledResources,omitempty" patchStrategy:"merge"`
 
 	// Specifies which resource values should be controlled.
