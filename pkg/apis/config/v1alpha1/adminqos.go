@@ -649,6 +649,10 @@ type CPUPressureEvictionConfig struct {
 
 	// NumaSysCPUPressureEvictionConfig holds configurations for NUMA-level system CPU pressure eviction.
 	NumaSysCPUPressureEvictionConfig NumaSysCPUPressureEvictionConfig `json:"numaSysCPUPressureEvictionConfig,omitempty"`
+
+	// SuppressionUsageCPUPressureEvictionConfig holds configurations for CPU suppression usage eviction.
+	// +optional
+	SuppressionUsageCPUPressureEvictionConfig *SuppressionUsageCPUPressureEvictionConfig `json:"suppressionUsageCPUPressureEvictionConfig,omitempty"`
 }
 
 // NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
@@ -755,6 +759,62 @@ type NumaSysCPUPressureEvictionConfig struct {
 	// NUMASysOverTotalUsageEvictionThreshold is the eviction threshold for NUMA system CPU pressure over total system CPU pressure.
 	// +optional
 	NUMASysOverTotalUsageEvictionThreshold *float64 `json:"numaSysOverTotalUsageEvictionThreshold,omitempty"`
+}
+
+// SuppressionUsageCPUPressureEvictionConfig holds the configurations for CPU suppression usage eviction,
+// which evicts reclaimed pods by considering both the suppression rate and the actual CPU usage.
+type SuppressionUsageCPUPressureEvictionConfig struct {
+	// EnableSuppressionUsageEviction indicates whether to enable CPU suppression usage eviction.
+	// +optional
+	EnableSuppressionUsageEviction *bool `json:"enableSuppressionUsageEviction,omitempty"`
+
+	// SyncPeriod is the sync period (in seconds) for updating suppression usage metrics.
+	// +optional
+	SyncPeriod *int64 `json:"syncPeriod,omitempty"`
+
+	// MetricRingSize is the size of the metric ring buffer for calculating suppression usage.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MetricRingSize *int `json:"metricRingSize,omitempty"`
+
+	// ThresholdMetPercentage is the percentage of time the suppression rate or the pool CPU
+	// usage ratio must be above the threshold for an eviction to be triggered.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
+
+	// SoftSuppressionRateThreshold is the soft threshold of the suppression rate.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	SoftSuppressionRateThreshold *float64 `json:"softSuppressionRateThreshold,omitempty"`
+
+	// SoftCPUUsageThreshold is the soft threshold of the pool CPU usage ratio.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	SoftCPUUsageThreshold *float64 `json:"softCPUUsageThreshold,omitempty"`
+
+	// HardSuppressionRateThreshold is the hard threshold of the suppression rate.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	HardSuppressionRateThreshold *float64 `json:"hardSuppressionRateThreshold,omitempty"`
+
+	// HardCPUUsageThreshold is the hard threshold of the pool CPU usage ratio.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	HardCPUUsageThreshold *float64 `json:"hardCPUUsageThreshold,omitempty"`
+
+	// PodCPUUsageEvictionThreshold is the minimum actual CPU usage (in cores) a pod must
+	// consume to be considered for eviction. 0 means any pod with positive usage.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	PodCPUUsageEvictionThreshold *float64 `json:"podCPUUsageEvictionThreshold,omitempty"`
+
+	// GracePeriod is the grace period (in seconds) after a pod starts before it can be
+	// considered for eviction due to suppression usage. 0 means no grace period.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	GracePeriod *int64 `json:"gracePeriod,omitempty"`
 }
 
 type MemoryPressureEvictionConfig struct {
