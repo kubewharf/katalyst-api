@@ -149,6 +149,11 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                          disableDedicatedCoresOverlapReclaimedCores:
+                            description: |-
+                              DisableDedicatedCoresOverlapReclaimedCores is a flag, when enabled,
+                              dedicated_cores pods must use a cpuset that does not overlap reclaimed_cores pods.
+                            type: boolean
                         required:
                         - cpuProvisionConfig
                         type: object
@@ -162,6 +167,13 @@ spec:
                               criticalWatermarkScaleFactor:
                                 minimum: 0
                                 type: number
+                              criticalWatermarkSource:
+                                description: CriticalWatermarkSource selects the watermark
+                                  used to calculate the critical threshold.
+                                enum:
+                                - low
+                                - high
+                                type: string
                               enable:
                                 description: Enable is a flag to enable memory guard
                                   plugin
@@ -398,16 +410,16 @@ spec:
                             description: |-
                               LoadLowerBoundRatio is the lower bound ratio of node, if the load
                               of the node is greater than the load lower bound repeatedly, the
-                              cordon will be triggered
-                            maximum: 1
+                              cordon will be triggered. the load ratio is normalized by cpu count,
+                              so it may exceed 1 under heavy load
                             minimum: 0
                             type: number
                           loadUpperBoundRatio:
                             description: |-
                               LoadUpperBoundRatio is the upper bound ratio of node, if the load
                               of the node is greater than the load upper bound repeatedly, the
-                              eviction will be triggered
-                            maximum: 1
+                              eviction will be triggered. the load ratio is normalized by cpu count,
+                              so it may exceed 1 under heavy load
                             minimum: 0
                             type: number
                           metricRingSize:
@@ -857,9 +869,184 @@ spec:
                       cpuPluginConfig:
                         description: CPUPluginConfig is the config for cpu plugin
                         properties:
+                          bindIRQToReclaimedPool:
+                            description: |-
+                              BindIRQToReclaimedPool, when set to true, requests that the CPU plugin
+                              pin all network IRQs into the reclaimed pool's cpuset (i.e. GetIRQForbiddenCores
+                              will forbid every CPU that is NOT in the reclaimed pool, subject to reservedCPUs
+                              still being included in the forbidden set). If the reclaimed pool is absent
+                              or empty on the node the plugin falls back to the previous behavior.
+                            type: boolean
+                          bulkheadConfig:
+                            description: BulkheadConfig is the dynamic config for
+                              core bulkhead plugins.
+                            properties:
+                              bulkheadRDTConfig:
+                                description: BulkheadRDTConfig is the dynamic config
+                                  for RDT bulkhead plugins.
+                                properties:
+                                  catPolicy:
+                                    description: CATPolicy controls CAT bit placement
+                                      and exclusive non-overlap policy.
+                                    properties:
+                                      closPlacements:
+                                        additionalProperties:
+                                          description: CATPlacementPolicy controls
+                                            where CAT masks are selected for one CLOS.
+                                          properties:
+                                            allowedBitUsages:
+                                              description: |-
+                                                AllowedBitUsages restricts candidate CAT bits by resctrl bit_usage class.
+                                                Empty means all ways supported by the domain are available.
+                                              items:
+                                                description: CATBitUsage is one resctrl
+                                                  info/L3/bit_usage class.
+                                                enum:
+                                                - '*'
+                                                - S
+                                                - H
+                                                - X
+                                                type: string
+                                              type: array
+                                            direction:
+                                              description: |-
+                                                Direction controls deterministic contiguous mask selection.
+                                                Empty means low.
+                                              enum:
+                                              - low
+                                              - high
+                                              type: string
+                                          type: object
+                                        description: ClosPlacements maps pool names,
+                                          CLOS IDs or restricted trailing-prefix selectors
+                                          to per-CLOS placement policy.
+                                        type: object
+                                      defaultPlacement:
+                                        description: DefaultPlacement is used by CLOS
+                                          IDs without a CLOS-specific placement.
+                                        properties:
+                                          allowedBitUsages:
+                                            description: |-
+                                              AllowedBitUsages restricts candidate CAT bits by resctrl bit_usage class.
+                                              Empty means all ways supported by the domain are available.
+                                            items:
+                                              description: CATBitUsage is one resctrl
+                                                info/L3/bit_usage class.
+                                              enum:
+                                              - '*'
+                                              - S
+                                              - H
+                                              - X
+                                              type: string
+                                            type: array
+                                          direction:
+                                            description: |-
+                                              Direction controls deterministic contiguous mask selection.
+                                              Empty means low.
+                                            enum:
+                                            - low
+                                            - high
+                                            type: string
+                                        type: object
+                                      exclusiveClosIDs:
+                                        description: |-
+                                          ExclusiveClosIDs lists exact canonical CLOS IDs that must not overlap with any other configured CLOS.
+                                          Empty means the exclusive policy is explicitly disabled.
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  closCATWays:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      x-kubernetes-int-or-string: true
+                                    description: ClosCATWays maps pool names or CLOS
+                                      IDs to CAT way counts or expressions.
+                                    type: object
+                                  defaultCATWays:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    description: |-
+                                      DefaultCATWays is the default CAT way count or expression for non-root CLOS.
+                                      Supported expression variables are MaxCATWays and MinCATWays.
+                                    x-kubernetes-int-or-string: true
+                                  enableCAT:
+                                    description: EnableCAT controls whether the RDT
+                                      CAT bulkhead plugin is enabled.
+                                    type: boolean
+                                  enableCPUList:
+                                    description: EnableCPUList controls whether the
+                                      RDT CPU list bulkhead plugin is enabled.
+                                    type: boolean
+                                type: object
+                              enable:
+                                description: Enable controls whether core bulkhead
+                                  is enabled.
+                                type: boolean
+                              enableBulkheadCpusetMems:
+                                description: |-
+                                  EnableBulkheadCpusetMems controls whether the core bulkhead cpuset_mems
+                                  plugin is enabled when Enable is true. The plugin writes cpuset.mems for
+                                  reclaim NUMA buckets independently from cpuset topology.
+                                type: boolean
+                              enableBulkheadCpusetTopology:
+                                description: |-
+                                  EnableBulkheadCpusetTopology controls whether the core bulkhead cpuset
+                                  topology plugin is enabled when Enable is true.
+                                type: boolean
+                              enableBulkheadSystemService:
+                                description: |-
+                                  EnableBulkheadSystemService controls whether the core bulkhead
+                                  system_service plugin is enabled when Enable is true.
+                                type: boolean
+                              enableBulkheadWorkqueue:
+                                description: |-
+                                  EnableBulkheadWorkqueue controls whether the core bulkhead workqueue
+                                  plugin is enabled when Enable is true.
+                                type: boolean
+                              nonReclaimPoolMinSize:
+                                description: |-
+                                  NonReclaimPoolMinSize is the minimum CPU count kept in the non-reclaim
+                                  pool for bulkhead cpuset topology. When the current non-reclaim pool is
+                                  smaller than this value, CPUs are padded from reclaim effective candidates.
+                                  The padded CPUs never overlap with reserve pool CPUs.
+                                format: int64
+                                minimum: 0
+                                type: integer
+                            type: object
                           cpuTotalRequestThresholdRatio:
                             description: CPUTotalRequestThresholdRatio is the ratio
                               to limit total NUMA binding pod CPU requests on a NUMA
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          disableSharedCoresRampUp:
+                            description: |-
+                              DisableSharedCoresRampUp disables initial full-pool cpuset binding for
+                              newly scheduled shared_cores pods. When true, shared_cores pods are allocated
+                              from their target pool directly instead of entering RampUp.
+                            type: boolean
+                          enableBypassCPUSetAdjustment:
+                            description: |-
+                              EnableBypassCPUSetAdjustment bypasses cpuset backfill in QRM CPU plugin
+                              responses for shared_cores, reclaimed_cores and system_cores pods.
+                              When enabled, Allocate/AllocateForPod and GetResourcesAllocation do not
+                              populate cpuset for those QoS classes. Dedicated pools are unaffected.
+                            type: boolean
+                          enableRampUpReclaimHardPartition:
+                            description: |-
+                              EnableRampUpReclaimHardPartition enables hard reclaim partitioning while a
+                              workload is in ramp-up. When disabled or unset, legacy ramp-up behavior is kept.
+                            type: boolean
+                          initialRampUpReclaimCPUSetRatio:
+                            description: |-
+                              InitialRampUpReclaimCPUSetRatio controls the optional dynamic ratio target
+                              used after hard partitioning is enabled. nil keeps the startup flag/default
+                              ratio; 0 uses reserve floors only; (0,1] uses the larger of reserve floor
+                              and ratio target.
                             maximum: 1
                             minimum: 0
                             type: number
@@ -1015,6 +1202,15 @@ spec:
                             maximum: 1
                             minimum: 0
                             type: number
+                        type: object
+                      rdtConfig:
+                        description: RDTConfig is the dynamic config for RDT lifecycle
+                          management.
+                        properties:
+                          disableRDT:
+                            description: DisableRDT force removes managed resctrl
+                              CLOS directories.
+                            type: boolean
                         type: object
                     type: object
                   reclaimedResourceConfig:
@@ -1212,6 +1408,14 @@ spec:
                           NumaMinReclaimedResourceRatioForAllocate is a resource reserved ratio at numa level for reclaimed_cores pods，these resources will not be used
                           by shared_cores pods.
                           For example, {"cpu": 0.1, "memory": 0.2}.
+                        type: object
+                      reclaimedConsumerToReclaimedResourcePercentage:
+                        additionalProperties:
+                          type: integer
+                        description: |-
+                          ReclaimedConsumerToReclaimedResourcePercentage maps a reclaim consumer name to the percentage
+                          of reclaimed resources assigned to that consumer. Values are percentages in [0, 100].
+                        minProperties: 1
                         type: object
                       reservedResourceForAllocate:
                         additionalProperties:

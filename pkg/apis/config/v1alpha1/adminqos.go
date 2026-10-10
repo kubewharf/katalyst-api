@@ -147,6 +147,12 @@ type ReclaimedResourceConfig struct {
 	// +optional
 	NumaMinReclaimedResourceForAllocate *v1.ResourceList `json:"numaMinReclaimedResourceForAllocate,omitempty"`
 
+	// ReclaimedConsumerToReclaimedResourcePercentage maps a reclaim consumer name to the percentage
+	// of reclaimed resources assigned to that consumer. Values are percentages in [0, 100].
+	// +kubebuilder:validation:MinProperties=1
+	// +optional
+	ReclaimedConsumerToReclaimedResourcePercentage *map[string]int `json:"reclaimedConsumerToReclaimedResourcePercentage,omitempty"`
+
 	// CPUHeadroomConfig is a configuration for cpu headroom
 	// +optional
 	CPUHeadroomConfig *CPUHeadroomConfig `json:"cpuHeadroomConfig,omitempty"`
@@ -178,6 +184,11 @@ type CPUAdvisorConfig struct {
 	// we will rely on kernel features to ensure that shared_cores pods can suppress and preempt reclaimed_cores pods.
 	// +optional
 	AllowSharedCoresOverlapReclaimedCores *bool `json:"allowSharedCoresOverlapReclaimedCores,omitempty"`
+
+	// DisableDedicatedCoresOverlapReclaimedCores is a flag, when enabled,
+	// dedicated_cores pods must use a cpuset that does not overlap reclaimed_cores pods.
+	// +optional
+	DisableDedicatedCoresOverlapReclaimedCores *bool `json:"disableDedicatedCoresOverlapReclaimedCores,omitempty"`
 
 	// optional
 	CPUProvisionConfig *CPUProvisionConfig `json:"cpuProvisionConfig"`
@@ -260,6 +271,13 @@ type MemoryAdvisorConfig struct {
 	MemoryGuardConfig *MemoryGuardConfig `json:"memoryGuardConfig,omitempty"`
 }
 
+type CriticalWatermarkSource string
+
+const (
+	CriticalWatermarkSourceLow  CriticalWatermarkSource = "low"
+	CriticalWatermarkSourceHigh CriticalWatermarkSource = "high"
+)
+
 type MemoryGuardConfig struct {
 	// Enable is a flag to enable memory guard plugin
 	// +optional
@@ -268,6 +286,11 @@ type MemoryGuardConfig struct {
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	CriticalWatermarkScaleFactor *float64 `json:"criticalWatermarkScaleFactor,omitempty"`
+
+	// CriticalWatermarkSource selects the watermark used to calculate the critical threshold.
+	// +kubebuilder:validation:Enum=low;high
+	// +optional
+	CriticalWatermarkSource *CriticalWatermarkSource `json:"criticalWatermarkSource,omitempty"`
 }
 
 type MemoryHeadroomUtilBasedConfig struct {
@@ -380,6 +403,15 @@ type QRMPluginConfig struct {
 	// MemoryPluginConfig is the config for memory plugin
 	// +optional
 	MemoryPluginConfig *MemoryPluginConfig `json:"memoryPluginConfig,omitempty"`
+	// RDTConfig is the dynamic config for RDT lifecycle management.
+	// +optional
+	RDTConfig *RDTConfig `json:"rdtConfig,omitempty"`
+}
+
+type RDTConfig struct {
+	// DisableRDT force removes managed resctrl CLOS directories.
+	// +optional
+	DisableRDT *bool `json:"disableRDT,omitempty"`
 }
 
 type CPUPluginConfig struct {
@@ -392,6 +424,32 @@ type CPUPluginConfig struct {
 	// The calculation results may originate from upstream components and be recorded in the pod annotation
 	// +optional
 	PreferUseExistNUMAHintResult *bool `json:"preferUseExistNUMAHintResult,omitempty"`
+	// EnableBypassCPUSetAdjustment bypasses cpuset backfill in QRM CPU plugin
+	// responses for shared_cores, reclaimed_cores and system_cores pods.
+	// When enabled, Allocate/AllocateForPod and GetResourcesAllocation do not
+	// populate cpuset for those QoS classes. Dedicated pools are unaffected.
+	// +optional
+	EnableBypassCPUSetAdjustment *bool `json:"enableBypassCPUSetAdjustment,omitempty"`
+	// BulkheadConfig is the dynamic config for core bulkhead plugins.
+	// +optional
+	BulkheadConfig *BulkheadConfig `json:"bulkheadConfig,omitempty"`
+	// DisableSharedCoresRampUp disables initial full-pool cpuset binding for
+	// newly scheduled shared_cores pods. When true, shared_cores pods are allocated
+	// from their target pool directly instead of entering RampUp.
+	// +optional
+	DisableSharedCoresRampUp *bool `json:"disableSharedCoresRampUp,omitempty"`
+	// EnableRampUpReclaimHardPartition enables hard reclaim partitioning while a
+	// workload is in ramp-up. When disabled or unset, legacy ramp-up behavior is kept.
+	// +optional
+	EnableRampUpReclaimHardPartition *bool `json:"enableRampUpReclaimHardPartition,omitempty"`
+	// InitialRampUpReclaimCPUSetRatio controls the optional dynamic ratio target
+	// used after hard partitioning is enabled. nil keeps the startup flag/default
+	// ratio; 0 uses reserve floors only; (0,1] uses the larger of reserve floor
+	// and ratio target.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	InitialRampUpReclaimCPUSetRatio *float64 `json:"initialRampUpReclaimCPUSetRatio,omitempty"`
 	// SystemExclusivePool is the config for system exclusive pool, key is pool name, value is the number of cores to allocate
 	// +optional
 	SystemExclusivePool map[string]int `json:"systemExclusivePool,omitempty"`
@@ -408,6 +466,13 @@ type CPUPluginConfig struct {
 	// +kubebuilder:validation:Minimum=1
 	// +optional
 	SystemExclusivePoolShrinkMax *int64 `json:"systemExclusivePoolShrinkMax,omitempty"`
+	// BindIRQToReclaimedPool, when set to true, requests that the CPU plugin
+	// pin all network IRQs into the reclaimed pool's cpuset (i.e. GetIRQForbiddenCores
+	// will forbid every CPU that is NOT in the reclaimed pool, subject to reservedCPUs
+	// still being included in the forbidden set). If the reclaimed pool is absent
+	// or empty on the node the plugin falls back to the previous behavior.
+	// +optional
+	BindIRQToReclaimedPool *bool `json:"bindIRQToReclaimedPool,omitempty"`
 }
 
 type MemoryPluginConfig struct {
@@ -998,17 +1063,17 @@ type CPUSystemPressureEvictionConfig struct {
 
 	// LoadUpperBoundRatio is the upper bound ratio of node, if the load
 	// of the node is greater than the load upper bound repeatedly, the
-	// eviction will be triggered
+	// eviction will be triggered. the load ratio is normalized by cpu count,
+	// so it may exceed 1 under heavy load
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1
 	// +optional
 	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
 
 	// LoadLowerBoundRatio is the lower bound ratio of node, if the load
 	// of the node is greater than the load lower bound repeatedly, the
-	// cordon will be triggered
+	// cordon will be triggered. the load ratio is normalized by cpu count,
+	// so it may exceed 1 under heavy load
 	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=1
 	// +optional
 	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
 
