@@ -987,6 +987,11 @@ func (in *CPUProvisionConfig) DeepCopyInto(out *CPUProvisionConfig) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.ReclaimedCPUMaxRatio != nil {
+		in, out := &in.ReclaimedCPUMaxRatio, &out.ReclaimedCPUMaxRatio
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
@@ -2438,6 +2443,11 @@ func (in *MemoryHeadroomConfig) DeepCopyInto(out *MemoryHeadroomConfig) {
 		*out = new(MemoryHeadroomPodRequestLimitAwareConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ReclaimedMemoryMaxRatio != nil {
+		in, out := &in.ReclaimedMemoryMaxRatio, &out.ReclaimedMemoryMaxRatio
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
@@ -3235,6 +3245,17 @@ func (in *ReclaimedResourceConfig) DeepCopyInto(out *ReclaimedResourceConfig) {
 			*out = make(map[corev1.ResourceName]resource.Quantity, len(*in))
 			for key, val := range *in {
 				(*out)[key] = val.DeepCopy()
+			}
+		}
+	}
+	if in.ReclaimedConsumerToReclaimedResourcePercentage != nil {
+		in, out := &in.ReclaimedConsumerToReclaimedResourcePercentage, &out.ReclaimedConsumerToReclaimedResourcePercentage
+		*out = new(map[string]int)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make(map[string]int, len(*in))
+			for key, val := range *in {
+				(*out)[key] = val
 			}
 		}
 	}
