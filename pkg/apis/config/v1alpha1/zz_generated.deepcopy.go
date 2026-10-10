@@ -992,6 +992,11 @@ func (in *CPUProvisionConfig) DeepCopyInto(out *CPUProvisionConfig) {
 		*out = new(float64)
 		**out = **in
 	}
+	if in.FillDefaultSharePoolWithNonReclaimCPUs != nil {
+		in, out := &in.FillDefaultSharePoolWithNonReclaimCPUs, &out.FillDefaultSharePoolWithNonReclaimCPUs
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

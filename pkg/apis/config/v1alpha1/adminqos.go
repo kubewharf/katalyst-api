@@ -274,6 +274,11 @@ type CPUProvisionConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	ReclaimedCPUMaxRatio *float64 `json:"reclaimedCPUMaxRatio,omitempty"`
+
+	// FillDefaultSharePoolWithNonReclaimCPUs makes the default non-NUMA-binding
+	// share pool consume all residual non-reclaim CPUs.
+	// +optional
+	FillDefaultSharePoolWithNonReclaimCPUs *bool `json:"fillDefaultSharePoolWithNonReclaimCPUs,omitempty"`
 }
 
 type MemoryAdvisorConfig struct {

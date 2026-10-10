@@ -124,6 +124,11 @@ spec:
                                   - name
                                   type: object
                                 type: array
+                              fillDefaultSharePoolWithNonReclaimCPUs:
+                                description: |-
+                                  FillDefaultSharePoolWithNonReclaimCPUs makes the default non-NUMA-binding
+                                  share pool consume all residual non-reclaim CPUs.
+                                type: boolean
                               reclaimedCPUMaxRatio:
                                 description: ReclaimedCPUMaxRatio is the ratio of
                                   the maximum amount of CPUs that can be reclaimed
