@@ -194,6 +194,13 @@ const (
 	// we must ensure the numa affinity for nic devices, and we should admit failed if not possible
 	PodAnnotationNetworkEnhancementAffinityRestricted     = "topology_affinity_restricted"
 	PodAnnotationNetworkEnhancementAffinityRestrictedTrue = "true"
+
+	// NIC selection uses comma-separated names with OR semantics, e.g. "nic_preferred":"ns2-eth0,ns2-eth1".
+	// anti_nic avoids matches; nic selects matches. preferred is a preference; required is mandatory.
+	PodAnnotationNetworkEnhancementAntiNICPreferred = "anti_nic_preferred"
+	PodAnnotationNetworkEnhancementAntiNICRequired  = "anti_nic_required"
+	PodAnnotationNetworkEnhancementNICPreferred     = "nic_preferred"
+	PodAnnotationNetworkEnhancementNICRequired      = "nic_required"
 )
 
 // ResourcePluginPolicyName is a string type for QosResourceManager plugin policy
