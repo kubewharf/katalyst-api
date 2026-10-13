@@ -33,6 +33,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/klog/v2"
+	drapluginapi "k8s.io/kubelet/pkg/apis/dra/v1"
+	drapluginapiv1beta1 "k8s.io/kubelet/pkg/apis/dra/v1beta1"
 	watcherapi "k8s.io/kubelet/pkg/apis/pluginregistration/v1"
 	qrmpluginapi "k8s.io/kubelet/pkg/apis/resourceplugin/v1alpha1"
 	utilfs "k8s.io/kubernetes/pkg/util/filesystem"
@@ -111,6 +113,22 @@ func NewRegistrationPluginWrapper(plugin GenericPlugin, pluginsRegistrationDirs 
 			registration.ReporterPlugin, plugin.Name(), []string{registration.BaseVersion})
 		serverRegister = func(server *grpc.Server) {
 			reporterv1apha1.RegisterReporterPluginServer(server, t)
+		}
+	case DRAPlugin:
+		registrationServer = registration.NewRegistrationHandler(
+			watcherapi.DRAPlugin,
+			t.Name(),
+			[]string{
+				drapluginapi.DRAPluginService,
+				drapluginapiv1beta1.DRAPluginService,
+			},
+		)
+		serverRegister = func(server *grpc.Server) {
+			drapluginapi.RegisterDRAPluginServer(server, t)
+			drapluginapiv1beta1.RegisterDRAPluginServer(
+				server,
+				drapluginapiv1beta1.V1ServerWrapper{DRAPluginServer: t},
+			)
 		}
 	case QRMPlugin:
 		registrationServer = registration.NewRegistrationHandler(
