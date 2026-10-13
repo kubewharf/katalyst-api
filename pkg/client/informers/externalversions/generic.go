@@ -27,6 +27,7 @@ import (
 	nodev1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/node/v1alpha1"
 	overcommitv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/overcommit/v1alpha1"
 	recommendationv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/recommendation/v1alpha1"
+	v1beta1 "github.com/kubewharf/katalyst-api/pkg/apis/resource/v1beta1"
 	tidev1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/tide/v1alpha1"
 	workloadv1alpha1 "github.com/kubewharf/katalyst-api/pkg/apis/workload/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -96,6 +97,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=recommendation.katalyst.kubewharf.io, Version=v1alpha1
 	case recommendationv1alpha1.SchemeGroupVersion.WithResource("resourcerecommends"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Recommendation().V1alpha1().ResourceRecommends().Informer()}, nil
+
+		// Group=resource.nvidia.com, Version=v1beta1
+	case v1beta1.SchemeGroupVersion.WithResource("computedomains"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Resource().V1beta1().ComputeDomains().Informer()}, nil
+	case v1beta1.SchemeGroupVersion.WithResource("computedomaincliques"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Resource().V1beta1().ComputeDomainCliques().Informer()}, nil
 
 		// Group=tide.katalyst.kubewharf.io, Version=v1alpha1
 	case tidev1alpha1.SchemeGroupVersion.WithResource("tidenodepools"):
