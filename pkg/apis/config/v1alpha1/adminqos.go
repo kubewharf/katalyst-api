@@ -945,6 +945,26 @@ type MemoryPressureEvictionConfig struct {
 	// candidate selections.
 	// +optional
 	GlobalTCPMemoryCoolDownPeriod *metav1.Duration `json:"globalTCPMemoryCoolDownPeriod,omitempty"`
+
+	// EnableReclaimedMemorySafeZoneGate controls whether the NUMA memory safe-zone
+	// gate is enforced for reclaimed workloads during NUMA-level memory pressure
+	// eviction. When enabled, a reclaimed pod is protected from being selected as
+	// an eviction victim as long as its memory usage on the target NUMA node stays
+	// below ReclaimedMemoryUsageRatioThreshold. When omitted, the safe-zone gate is
+	// not enforced and the previous eviction behavior is preserved.
+	// +optional
+	EnableReclaimedMemorySafeZoneGate *bool `json:"enableReclaimedMemorySafeZoneGate,omitempty"`
+
+	// ReclaimedMemoryUsageRatioThreshold is the NUMA memory safe-zone usage ratio
+	// for reclaimed workloads: a reclaimed pod whose memory usage on a NUMA node,
+	// relative to that node's available memory, stays below this ratio is excluded
+	// from eviction candidate selection by the safe-zone gate. It must be within
+	// [0, 1]. When omitted, the safe-zone gate does not constrain candidate
+	// selection and the previous behavior is preserved.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ReclaimedMemoryUsageRatioThreshold *float64 `json:"reclaimedMemoryUsageRatioThreshold,omitempty"`
 }
 
 type SystemLoadPressureEvictionConfig struct {

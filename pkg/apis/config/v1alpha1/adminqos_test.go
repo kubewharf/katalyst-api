@@ -200,10 +200,114 @@ func TestMemoryGuardConfigCriticalWatermarkSource(t *testing.T) {
 	})
 }
 
+func TestReclaimedMemorySafeZoneGateConfig(t *testing.T) {
+	t.Run("JSON round trip and optional omission", func(t *testing.T) {
+		enabled := true
+		threshold := 0.5
+		in := &MemoryPressureEvictionConfig{
+			EnableReclaimedMemorySafeZoneGate:  &enabled,
+			ReclaimedMemoryUsageRatioThreshold: &threshold,
+		}
+
+		data, err := json.Marshal(in)
+		require.NoError(t, err)
+		require.Contains(t, string(data), `"enableReclaimedMemorySafeZoneGate":true`)
+		require.Contains(t, string(data), `"reclaimedMemoryUsageRatioThreshold":0.5`)
+
+		out := &MemoryPressureEvictionConfig{}
+		require.NoError(t, json.Unmarshal(data, out))
+		require.NotNil(t, out.EnableReclaimedMemorySafeZoneGate)
+		require.True(t, *out.EnableReclaimedMemorySafeZoneGate)
+		require.NotNil(t, out.ReclaimedMemoryUsageRatioThreshold)
+		require.Equal(t, 0.5, *out.ReclaimedMemoryUsageRatioThreshold)
+
+		// Explicit false round-trips as non-nil false and is preserved.
+		disabled := false
+		falseIn := &MemoryPressureEvictionConfig{EnableReclaimedMemorySafeZoneGate: &disabled}
+		falseData, err := json.Marshal(falseIn)
+		require.NoError(t, err)
+		require.Contains(t, string(falseData), `"enableReclaimedMemorySafeZoneGate":false`)
+		falseOut := &MemoryPressureEvictionConfig{}
+		require.NoError(t, json.Unmarshal(falseData, falseOut))
+		require.NotNil(t, falseOut.EnableReclaimedMemorySafeZoneGate)
+		require.False(t, *falseOut.EnableReclaimedMemorySafeZoneGate)
+
+		data, err = json.Marshal(&MemoryPressureEvictionConfig{})
+		require.NoError(t, err)
+		require.NotContains(t, string(data), "enableReclaimedMemorySafeZoneGate")
+		require.NotContains(t, string(data), "reclaimedMemoryUsageRatioThreshold")
+
+		// Omitted objects keep both pointers nil after round-trip, so omission
+		// stays distinguishable from explicit false / zero values.
+		legacy := `{"enableNumaLevelEviction":true}`
+		legacyOut := &MemoryPressureEvictionConfig{}
+		require.NoError(t, json.Unmarshal([]byte(legacy), legacyOut))
+		require.Nil(t, legacyOut.EnableReclaimedMemorySafeZoneGate)
+		require.Nil(t, legacyOut.ReclaimedMemoryUsageRatioThreshold)
+	})
+
+	t.Run("deep copy owns independent pointers", func(t *testing.T) {
+		enabled := true
+		threshold := 0.25
+		in := &MemoryPressureEvictionConfig{
+			EnableReclaimedMemorySafeZoneGate:  &enabled,
+			ReclaimedMemoryUsageRatioThreshold: &threshold,
+		}
+
+		copied := in.DeepCopy()
+		require.NotSame(t, in.EnableReclaimedMemorySafeZoneGate, copied.EnableReclaimedMemorySafeZoneGate)
+		require.NotSame(t, in.ReclaimedMemoryUsageRatioThreshold, copied.ReclaimedMemoryUsageRatioThreshold)
+
+		*copied.EnableReclaimedMemorySafeZoneGate = false
+		*copied.ReclaimedMemoryUsageRatioThreshold = 0.75
+		require.True(t, *in.EnableReclaimedMemorySafeZoneGate)
+		require.Equal(t, 0.25, *in.ReclaimedMemoryUsageRatioThreshold)
+	})
+
+	t.Run("CRD schema exposes bool flag and 0..1 threshold", func(t *testing.T) {
+		data, err := os.ReadFile("../../../../config/crd/bases/config.katalyst.kubewharf.io_adminqosconfigurations.yaml")
+		require.NoError(t, err)
+
+		jsonData, err := yaml.YAMLToJSON(data)
+		require.NoError(t, err)
+
+		var crd struct {
+			Spec struct {
+				Versions []struct {
+					Schema struct {
+						OpenAPIV3Schema adminQoSSchema `json:"openAPIV3Schema"`
+					} `json:"schema"`
+				} `json:"versions"`
+			} `json:"spec"`
+		}
+		require.NoError(t, json.Unmarshal(jsonData, &crd))
+		require.NotEmpty(t, crd.Spec.Versions)
+
+		schema := crd.Spec.Versions[0].Schema.OpenAPIV3Schema
+		schema = adminQoSSchemaProperty(t, schema, "spec")
+		schema = adminQoSSchemaProperty(t, schema, "config")
+		schema = adminQoSSchemaProperty(t, schema, "evictionConfig")
+		schema = adminQoSSchemaProperty(t, schema, "memoryPressureEvictionConfig")
+
+		flag := adminQoSSchemaProperty(t, schema, "enableReclaimedMemorySafeZoneGate")
+		require.Equal(t, "boolean", flag.Type)
+		require.Empty(t, flag.Enum)
+
+		threshold := adminQoSSchemaProperty(t, schema, "reclaimedMemoryUsageRatioThreshold")
+		require.Equal(t, "number", threshold.Type)
+		require.NotNil(t, threshold.Minimum)
+		require.Equal(t, 0.0, *threshold.Minimum)
+		require.NotNil(t, threshold.Maximum)
+		require.Equal(t, 1.0, *threshold.Maximum)
+	})
+}
+
 type adminQoSSchema struct {
 	Properties map[string]adminQoSSchema `json:"properties"`
 	Type       string                    `json:"type"`
 	Enum       []string                  `json:"enum"`
+	Minimum    *float64                  `json:"minimum"`
+	Maximum    *float64                  `json:"maximum"`
 }
 
 func adminQoSSchemaProperty(t *testing.T, schema adminQoSSchema, name string) adminQoSSchema {

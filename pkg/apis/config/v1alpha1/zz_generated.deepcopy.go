@@ -2641,6 +2641,16 @@ func (in *MemoryPressureEvictionConfig) DeepCopyInto(out *MemoryPressureEviction
 		*out = new(v1.Duration)
 		**out = **in
 	}
+	if in.EnableReclaimedMemorySafeZoneGate != nil {
+		in, out := &in.EnableReclaimedMemorySafeZoneGate, &out.EnableReclaimedMemorySafeZoneGate
+		*out = new(bool)
+		**out = **in
+	}
+	if in.ReclaimedMemoryUsageRatioThreshold != nil {
+		in, out := &in.ReclaimedMemoryUsageRatioThreshold, &out.ReclaimedMemoryUsageRatioThreshold
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 
