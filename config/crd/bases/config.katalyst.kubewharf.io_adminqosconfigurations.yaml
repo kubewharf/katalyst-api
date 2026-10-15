@@ -197,10 +197,8 @@ spec:
                               disabled for the cool-down time
                             type: string
                           loadLowerBoundRatio:
-                            description: |-
-                              LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
-                              of the target cpuset pool is greater than the load lower bound repeatedly, the
-                              node taint will be triggered
+                            description: LoadLowerBoundRatio is the fallback soft
+                              load threshold ratio for CPU pools.
                             minimum: 0
                             type: number
                           loadMetricRingSize:
@@ -219,12 +217,18 @@ spec:
                             minimum: 0
                             type: number
                           loadUpperBoundRatio:
-                            description: |-
-                              LoadUpperBoundRatio is the upper bound ratio of cpuset pool load, if the load
-                              of the target cpuset pool is greater than the load upper bound repeatedly, the
-                              eviction will be triggered
+                            description: LoadUpperBoundRatio is the fallback hard
+                              load threshold ratio for CPU pools.
                             minimum: 1
                             type: number
+                          lowerBoundRatioMap:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              LowerBoundRatioMap maps translated pool name prefixes to positive finite ratios encoded as strings.
+                              The longest prefix wins; "default" applies to unmatched pools, then LoadLowerBoundRatio is used.
+                              Pool size times the ratio is the soft load threshold for node tainting.
+                            type: object
                           maxSuppressionToleranceRate:
                             description: |-
                               MaxSuppressionToleranceRate is the maximum cpu suppression tolerance rate that
@@ -365,6 +369,14 @@ spec:
                                   ThresholdMetPercentage is the percentage of time the NUMA's system CPU pressure
                                   must be above the threshold for an eviction to be triggered.
                                 type: number
+                            type: object
+                          upperBoundRatioMap:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              UpperBoundRatioMap maps translated pool name prefixes to positive finite ratios encoded as strings.
+                              The longest prefix wins; "default" applies to unmatched pools, then LoadUpperBoundRatio is used.
+                              Pool size times the ratio is the hard load threshold for eviction.
                             type: object
                         type: object
                       cpuSystemPressureEvictionConfig:

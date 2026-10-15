@@ -586,19 +586,27 @@ type CPUPressureEvictionConfig struct {
 	// +optional
 	EnableLoadEviction *bool `json:"enableLoadEviction,omitempty"`
 
-	// LoadUpperBoundRatio is the upper bound ratio of cpuset pool load, if the load
-	// of the target cpuset pool is greater than the load upper bound repeatedly, the
-	// eviction will be triggered
+	// LoadUpperBoundRatio is the fallback hard load threshold ratio for CPU pools.
 	// +kubebuilder:validation:Minimum=1
 	// +optional
 	LoadUpperBoundRatio *float64 `json:"loadUpperBoundRatio,omitempty"`
 
-	// LoadLowerBoundRatio is the lower bound ratio of cpuset pool load, if the load
-	// of the target cpuset pool is greater than the load lower bound repeatedly, the
-	// node taint will be triggered
+	// LoadLowerBoundRatio is the fallback soft load threshold ratio for CPU pools.
 	// +kubebuilder:validation:Minimum=0
 	// +optional
 	LoadLowerBoundRatio *float64 `json:"loadLowerBoundRatio,omitempty"`
+
+	// UpperBoundRatioMap maps translated pool name prefixes to positive finite ratios encoded as strings.
+	// The longest prefix wins; "default" applies to unmatched pools, then LoadUpperBoundRatio is used.
+	// Pool size times the ratio is the hard load threshold for eviction.
+	// +optional
+	UpperBoundRatioMap map[string]string `json:"upperBoundRatioMap,omitempty"`
+
+	// LowerBoundRatioMap maps translated pool name prefixes to positive finite ratios encoded as strings.
+	// The longest prefix wins; "default" applies to unmatched pools, then LoadLowerBoundRatio is used.
+	// Pool size times the ratio is the soft load threshold for node tainting.
+	// +optional
+	LowerBoundRatioMap map[string]string `json:"lowerBoundRatioMap,omitempty"`
 
 	// LoadThresholdMetPercentage is the percentage of the number of times the load
 	// over the upper bound to the total number of times the load is measured, if the
