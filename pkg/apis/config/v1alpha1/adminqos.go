@@ -154,6 +154,12 @@ type ReclaimedResourceConfig struct {
 	// MemoryHeadroomConfig is a configuration for memory headroom
 	// +optional
 	MemoryHeadroomConfig *MemoryHeadroomConfig `json:"memoryHeadroomConfig,omitempty"`
+
+	// ReclaimedConsumerToReclaimedResourcePercentage is a configuration for reclaimed consumer to a percentage of the total
+	// reclaimed resource, used for both headroom and provision.
+	// For example, {"generic": 40, "custom-consumer-1": 60}
+	// +optional
+	ReclaimedConsumerToReclaimedResourcePercentage *map[string]int `json:"reclaimedConsumerToReclaimedResourcePercentage,omitempty"`
 }
 
 type MemoryHeadroomConfig struct {
@@ -164,6 +170,12 @@ type MemoryHeadroomConfig struct {
 	// MemoryHeadroomPodRequestLimitAwareConfig is a config for pod request limit aware memory headroom policy
 	// +optional
 	PodRequestLimitAwareConfig *MemoryHeadroomPodRequestLimitAwareConfig `json:"podRequestLimitAwareConfig,omitempty"`
+
+	// ReclaimedMemoryMaxRatio is the ratio of the maximum amount of memory that can be reclaimed per numa at any time.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ReclaimedMemoryMaxRatio *float64 `json:"reclaimedMemoryMaxRatio,omitempty"`
 }
 
 type AdvisorConfig struct {
@@ -251,6 +263,12 @@ type ControlKnobConstraints struct {
 type CPUProvisionConfig struct {
 	RegionIndicators []RegionIndicators       `json:"regionIndicators,omitempty"`
 	Constraints      []ControlKnobConstraints `json:"constraints,omitempty"`
+
+	// ReclaimedCPUMaxRatio is the ratio of the maximum amount of CPUs that can be reclaimed at any time.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ReclaimedCPUMaxRatio *float64 `json:"reclaimedCPUMaxRatio,omitempty"`
 }
 
 type MemoryAdvisorConfig struct {
