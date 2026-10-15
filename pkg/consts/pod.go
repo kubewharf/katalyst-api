@@ -32,6 +32,7 @@ type ContainerCPUIdleRateConfig map[string]int64
 // const variables for pod annotations about vpa in-place resource update.
 const (
 	PodAnnotationInplaceUpdateResourcesKey = "pod.kubernetes.io/resizeResources"
+	PodAnnotationInplaceUpdateVolumesKey   = "pod.kubernetes.io/resizeVolumes"
 
 	PodAnnotationInplaceUpdateResizePolicyKey     = "pod.kubernetes.io/resizePolicy"
 	PodAnnotationInplaceUpdateResizePolicyRestart = "Restart"
