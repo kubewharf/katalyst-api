@@ -147,8 +147,124 @@ spec:
                     podName:
                       description: Name of the pod.
                       type: string
+                    volumeRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        volume.
+                      items:
+                        description: |-
+                          RecommendedVolumeResources is the recommendation of resources computed by
+                          autoscaler for a specific volume.
+                        properties:
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this volume
+                            properties:
+                              iops:
+                                description: Iops is the recommended number of I/O
+                                  operations per second for the volume.
+                                type: string
+                              readRatio:
+                                description: ReadRatio is the recommended proportion
+                                  of read operations among all I/O operations.
+                                type: string
+                              space:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: Space is the recommended storage capacity
+                                  for the volume.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this volume
+                            properties:
+                              iops:
+                                description: Iops is the recommended number of I/O
+                                  operations per second for the volume.
+                                type: string
+                              readRatio:
+                                description: ReadRatio is the recommended proportion
+                                  of read operations among all I/O operations.
+                                type: string
+                              space:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: Space is the recommended storage capacity
+                                  for the volume.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                            type: object
+                          volumeName:
+                            description: Name of the volume.
+                            type: string
+                        required:
+                        - volumeName
+                        type: object
+                      type: array
                   required:
                   - podName
+                  type: object
+                type: array
+              volumeRecommendations:
+                description: |-
+                  default volume resources recommended by the
+                  autoscaler for the controlled volumes.
+                  It will be overwritten by PodRecommendations
+                items:
+                  description: |-
+                    RecommendedVolumeResources is the recommendation of resources computed by
+                    autoscaler for a specific volume.
+                  properties:
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this volume
+                      properties:
+                        iops:
+                          description: Iops is the recommended number of I/O operations
+                            per second for the volume.
+                          type: string
+                        readRatio:
+                          description: ReadRatio is the recommended proportion of
+                            read operations among all I/O operations.
+                          type: string
+                        space:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: Space is the recommended storage capacity for
+                            the volume.
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this volume
+                      properties:
+                        iops:
+                          description: Iops is the recommended number of I/O operations
+                            per second for the volume.
+                          type: string
+                        readRatio:
+                          description: ReadRatio is the recommended proportion of
+                            read operations among all I/O operations.
+                          type: string
+                        space:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: Space is the recommended storage capacity for
+                            the volume.
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                      type: object
+                    volumeName:
+                      description: Name of the volume.
+                      type: string
+                  required:
+                  - volumeName
                   type: object
                 type: array
             type: object
@@ -292,8 +408,123 @@ spec:
                     podName:
                       description: Name of the pod.
                       type: string
+                    volumeRecommendations:
+                      description: Resources recommended by the autoscaler for each
+                        volume.
+                      items:
+                        description: |-
+                          RecommendedVolumeResources is the recommendation of resources computed by
+                          autoscaler for a specific volume.
+                        properties:
+                          limits:
+                            description: Limits indicates the recommendation resources
+                              for limits of this volume
+                            properties:
+                              iops:
+                                description: Iops is the recommended number of I/O
+                                  operations per second for the volume.
+                                type: string
+                              readRatio:
+                                description: ReadRatio is the recommended proportion
+                                  of read operations among all I/O operations.
+                                type: string
+                              space:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: Space is the recommended storage capacity
+                                  for the volume.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                            type: object
+                          requests:
+                            description: Requests indicates the recommendation resources
+                              for requests of this volume
+                            properties:
+                              iops:
+                                description: Iops is the recommended number of I/O
+                                  operations per second for the volume.
+                                type: string
+                              readRatio:
+                                description: ReadRatio is the recommended proportion
+                                  of read operations among all I/O operations.
+                                type: string
+                              space:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: Space is the recommended storage capacity
+                                  for the volume.
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                            type: object
+                          volumeName:
+                            description: Name of the volume.
+                            type: string
+                        required:
+                        - volumeName
+                        type: object
+                      type: array
                   required:
                   - podName
+                  type: object
+                type: array
+              volumeRecommendations:
+                description: |-
+                  default volume resources recommended by the
+                  autoscaler for the controlled volumes.
+                items:
+                  description: |-
+                    RecommendedVolumeResources is the recommendation of resources computed by
+                    autoscaler for a specific volume.
+                  properties:
+                    limits:
+                      description: Limits indicates the recommendation resources for
+                        limits of this volume
+                      properties:
+                        iops:
+                          description: Iops is the recommended number of I/O operations
+                            per second for the volume.
+                          type: string
+                        readRatio:
+                          description: ReadRatio is the recommended proportion of
+                            read operations among all I/O operations.
+                          type: string
+                        space:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: Space is the recommended storage capacity for
+                            the volume.
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                      type: object
+                    requests:
+                      description: Requests indicates the recommendation resources
+                        for requests of this volume
+                      properties:
+                        iops:
+                          description: Iops is the recommended number of I/O operations
+                            per second for the volume.
+                          type: string
+                        readRatio:
+                          description: ReadRatio is the recommended proportion of
+                            read operations among all I/O operations.
+                          type: string
+                        space:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: Space is the recommended storage capacity for
+                            the volume.
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                      type: object
+                    volumeName:
+                      description: Name of the volume.
+                      type: string
+                  required:
+                  - volumeName
                   type: object
                 type: array
             type: object
