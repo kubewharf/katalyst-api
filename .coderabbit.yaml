@@ -1,9 +1,10 @@
 language: "en-US"
 early_access: false
 tone_instructions: >-
-  Prioritize correctness, API compatibility, nil/error handling, and tests.
-  Write concise English text first, then equivalent Simplified Chinese. Do not
-  translate code, paths, APIs, markers, protobuf names, or error strings.
+  Prioritize correctness, API compatibility, nil/error, tests. Conservative on
+  data-integrity: only flag provable mismatches; field additions are
+  intentional. Write English, then Chinese. Don't translate code, paths, APIs,
+  or markers.
 
 reviews:
   profile: "chill"
@@ -11,14 +12,21 @@ reviews:
   high_level_summary: true
   high_level_summary_instructions: >-
     Summarize API surface changes, compatibility impact, code generation impact,
-    and expected downstream consumer updates. Call out when changes are docs-
-    only or generated-only. Write concise English text first, then equivalent 
-    Simplified Chinese. Do not translate code, paths, APIs, markers, protobuf 
-    names, or error strings.
+    and downstream consumer updates. katalyst-api is the schema source of
+    truth; flag changes needing a coordinated katalyst-core bump or
+    regeneration. Call out when changes are docs-only or generated-only. Write
+    concise English text first, then equivalent Simplified Chinese. Do not
+    translate code, paths, APIs, markers, protobuf names, or error strings.
   high_level_summary_in_walkthrough: false
   review_status: true
+  review_details: true
   collapse_walkthrough: true
   poem: false
+  sequence_diagrams: false
+  estimate_code_review_effort: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
   slop_detection:
     enabled: true
   auto_review:
@@ -43,6 +51,9 @@ reviews:
     - "!**/*.gif"
     - "!**/*.svg"
   path_instructions:
+    - path: "**"
+      instructions: |
+        Skip CI-enforced issues (gofmt, go mod tidy). Critical/Major only for concrete failures (data loss, panic, correctness bug, security vulnerability, privacy leak, credential exposure); style/speculation is Minor.
     - path: "go.mod"
       instructions: |
         Review dependency and toolchain changes for API compatibility, generator drift, and downstream consumer impact.
@@ -70,6 +81,12 @@ reviews:
     - path: "docs/**/*.md"
       instructions: |
         Check for technical accuracy, outdated API behavior, and missing notes about compatibility, generation, or downstream impact.
+    - path: "cmd/inlinecheck/**"
+      instructions: |
+        Flag changes that weaken the no-anonymous-inline-struct invariant.
+    - path: "hack/**"
+      instructions: |
+        Flag codegen changes that produce non-deterministic output or alter generated headers/boilerplate.
 
 knowledge_base:
   automatic_repository_linking: true
