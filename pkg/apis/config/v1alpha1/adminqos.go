@@ -956,11 +956,12 @@ type MemoryPressureEvictionConfig struct {
 	EnableReclaimedMemorySafeZoneGate *bool `json:"enableReclaimedMemorySafeZoneGate,omitempty"`
 
 	// ReclaimedMemoryUsageRatioThreshold is the NUMA memory safe-zone usage ratio
-	// for reclaimed workloads: a reclaimed pod whose memory usage on a NUMA node,
-	// relative to that node's available memory, stays below this ratio is excluded
-	// from eviction candidate selection by the safe-zone gate. It must be within
-	// [0, 1]. When omitted, the safe-zone gate does not constrain candidate
-	// selection and the previous behavior is preserved.
+	// for reclaimed workloads: reclaimed memory usage on a NUMA node divided by
+	// that node's total memory (MemTotalNuma). A reclaimed pod whose resulting
+	// ratio stays below this value is excluded from eviction candidate selection
+	// by the safe-zone gate. It must be within [0, 1]. When omitted, the safe-zone
+	// gate does not constrain candidate selection and the previous behavior is
+	// preserved.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1
 	// +optional
