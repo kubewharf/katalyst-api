@@ -86,6 +86,14 @@ spec:
               config:
                 description: Config is custom field for power management configuration
                 properties:
+                  capStepPercent:
+                    description: |-
+                      CapStepPercent indicates the percentage (1-100) of the power above budget to cut in each round of
+                      GPU power capping. For example, 2 means cutting 2% of the excess each round. Only GPU power management uses it.
+                    format: int32
+                    maximum: 100
+                    minimum: 1
+                    type: integer
                   disablePowerAdvisor:
                     description: DisablePowerAdvisor indicates whether to disable
                       power advisor.
@@ -93,6 +101,12 @@ spec:
                   disablePowerCapping:
                     description: DisablePowerCapping indicates whether to disable
                       power capping.
+                    type: boolean
+                  enableGPUPowerManagement:
+                    description: |-
+                      EnableGPUPowerManagement indicates whether to enable GPU power management on nodes with accelerators.
+                      The node tells which one of CPU and GPU power management may run: CPU on nodes without accelerators,
+                      GPU on the others. DisablePowerAdvisor, DisablePowerCapping and PowerReductionRatio apply to whichever runs.
                     type: boolean
                   powerReductionRatio:
                     description: |-

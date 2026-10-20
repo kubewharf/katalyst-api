@@ -2748,6 +2748,16 @@ func (in *PowerManagementConfig) DeepCopyInto(out *PowerManagementConfig) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.EnableGPUPowerManagement != nil {
+		in, out := &in.EnableGPUPowerManagement, &out.EnableGPUPowerManagement
+		*out = new(bool)
+		**out = **in
+	}
+	if in.CapStepPercent != nil {
+		in, out := &in.CapStepPercent, &out.CapStepPercent
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
