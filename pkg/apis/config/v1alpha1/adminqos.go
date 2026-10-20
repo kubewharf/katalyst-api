@@ -422,6 +422,9 @@ type MemoryPluginConfig struct {
 	// HostWatermarkConfig is the config for host vm watermark related sysctls
 	// +optional
 	HostWatermarkConfig *HostWatermarkConfig `json:"hostWatermarkConfig,omitempty"`
+	// NumaMemCompactConfig is the config for proactively compacting memory on idle NUMA nodes
+	// +optional
+	NumaMemCompactConfig *NumaMemCompactConfig `json:"numaMemCompactConfig,omitempty"`
 }
 
 type FragMemConfig struct {
@@ -497,6 +500,36 @@ const (
 	THPShmModeDeny       THPShmMode = "deny"
 	THPShmModeForce      THPShmMode = "force"
 )
+
+// NumaMemCompactConfig is the config for proactively compacting memory on idle NUMA nodes. It is a
+// separate feature from FragMemConfig (fragmentation-driven compaction and THP tuning): the two have
+// different goals and are allowed to take effect simultaneously.
+type NumaMemCompactConfig struct {
+	// EnableNumaMemCompact gates proactive compaction so that only NUMA nodes without online
+	// business (shared_cores/dedicated_cores) pods are compacted. The idle-NUMA path is
+	// edge-triggered: a NUMA node is compacted once right after its business pods leave.
+	// +optional
+	EnableNumaMemCompact *bool `json:"enableNumaMemCompact,omitempty"`
+	// EnablePeriodicNumaMemCompact enables readiness-based repeated compaction while a NUMA node
+	// stays idle. When false, each NUMA node is compacted only once per idle period. When unset, the
+	// agent uses its configured default, which is true unless changed by its startup flag.
+	// +optional
+	EnablePeriodicNumaMemCompact *bool `json:"enablePeriodicNumaMemCompact,omitempty"`
+	// NumaMemCompactIntervalSeconds is the minimum interval between two actual compactions while a
+	// NUMA node stays idle and EnablePeriodicNumaMemCompact is enabled. Once the interval elapses,
+	// THP-order unusable-index degradation is checked on each handler cycle and another compaction is
+	// triggered only when the configured threshold is exceeded. When unset, the agent uses its
+	// configured default.
+	// +kubebuilder:validation:Minimum=600
+	// +optional
+	NumaMemCompactIntervalSeconds *int64 `json:"numaMemCompactIntervalSeconds,omitempty"`
+	// THPUnusableIndexDegradedThreshold is the minimum increase from the post-compaction THP-order
+	// unusable-index baseline that triggers another compaction after the minimum interval elapses.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	THPUnusableIndexDegradedThreshold *float64 `json:"thpUnusableIndexDegradedThreshold,omitempty"`
+}
 
 type HostWatermarkConfig struct {
 	// EnableHostWatermark enables tuning host vm.* watermark sysctls
