@@ -18,6 +18,7 @@ GOPROXY := https://proxy.golang.org
 endif
 export GOPROXY
 GOPATH ?= $(shell go env GOPATH)
+export GOPATH
 
 # Directories
 TOOLS_DIR := hack/tools
