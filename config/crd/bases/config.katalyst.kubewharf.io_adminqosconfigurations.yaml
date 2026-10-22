@@ -196,6 +196,110 @@ spec:
                   evictionConfig:
                     description: EvictionConfig is a configuration for eviction
                     properties:
+                      beCPUPSIEvictionConfig:
+                        description: BECPUPSIEvictionConfig controls reclaimed cgroup
+                          CPU PSI eviction.
+                        properties:
+                          budgetWindowSeconds:
+                            description: BudgetWindowSeconds bounds the rolling proposal
+                              budget and must be at least CooldownSeconds.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                          cooldownSeconds:
+                            description: CooldownSeconds is the minimum interval between
+                              eviction proposals.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                          enable:
+                            description: Enable activates sampling and evaluation.
+                              It defaults to false.
+                            type: boolean
+                          enableEviction:
+                            description: EnableEviction allows soft eviction proposals
+                              and requires EnableTaint.
+                            type: boolean
+                          enableTaint:
+                            description: EnableTaint allows a reclaimed QoS NoSchedule
+                              condition after sustained pressure.
+                            type: boolean
+                          evictionDurationSeconds:
+                            description: EvictionDurationSeconds is the continuous
+                              eligible pressure dwell time; it must be at least TaintDurationSeconds.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                          evictionThreshold:
+                            description: EvictionThreshold is the full fraction that
+                              starts the eviction dwell timer; it must exceed TaintThreshold.
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          gracePeriodSeconds:
+                            description: GracePeriodSeconds is the requested Pod termination
+                              grace period for a soft eviction.
+                            format: int64
+                            maximum: 86400
+                            minimum: 0
+                            type: integer
+                          maxEvictionsPerWindow:
+                            description: MaxEvictionsPerWindow limits proposals, including
+                              retries, per agent instance within BudgetWindowSeconds.
+                            format: int64
+                            minimum: 1
+                            type: integer
+                          maxSampleGapSeconds:
+                            description: MaxSampleGapSeconds resets history after
+                              a collection gap; it must not exceed WindowSeconds.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                          minOutsideUsageRatio:
+                            description: MinOutsideUsageRatio is the minimum estimated
+                              usage outside BE on its effective CPUs required for
+                              eviction.
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          minRecoveryIdleRatio:
+                            description: MinRecoveryIdleRatio is the minimum spare
+                              CPU fraction required for recovery.
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          recoveryThreshold:
+                            description: RecoveryThreshold is the full fraction below
+                              which spare CPU can permit recovery; it must be below
+                              TaintThreshold.
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          taintDurationSeconds:
+                            description: TaintDurationSeconds is the continuous pressure
+                              dwell time after window warmup.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                          taintThreshold:
+                            description: TaintThreshold is the CPU PSI full fraction
+                              that starts the taint dwell timer.
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                          windowSeconds:
+                            description: WindowSeconds is the minimum observation
+                              window for delta(full.total) / elapsed time.
+                            format: int64
+                            maximum: 86400
+                            minimum: 1
+                            type: integer
+                        type: object
                       cpuPressureEvictionConfig:
                         description: CPUPressureEvictionConfig is the config for cpu
                           pressure eviction

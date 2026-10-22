@@ -638,6 +638,10 @@ type HostWatermarkConfig struct {
 }
 
 type EvictionConfig struct {
+	// BECPUPSIEvictionConfig controls reclaimed cgroup CPU PSI eviction.
+	// +optional
+	BECPUPSIEvictionConfig *BECPUPSIEvictionConfig `json:"beCPUPSIEvictionConfig,omitempty"`
+
 	// DryRun is the list of eviction plugins to dryRun
 	// '*' means "all dry-run by default"
 	// 'foo' means "dry-run 'foo'"
@@ -1401,4 +1405,82 @@ type CPUBurstConfig struct {
 	// +kubebuilder:validation:Maximum=100
 	// +optional
 	DefaultCPUBurstPercent *int64 `json:"defaultCPUBurstPercent,omitempty"`
+}
+
+// BECPUPSIEvictionConfig controls CPU starvation of reclaimed cgroups.
+// Thresholds are fractions; all durations are seconds. Omitted fields retain agent defaults.
+type BECPUPSIEvictionConfig struct {
+	// Enable activates sampling and evaluation. It defaults to false.
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
+	// EnableTaint allows a reclaimed QoS NoSchedule condition after sustained pressure.
+	// +optional
+	EnableTaint *bool `json:"enableTaint,omitempty"`
+	// EnableEviction allows soft eviction proposals and requires EnableTaint.
+	// +optional
+	EnableEviction *bool `json:"enableEviction,omitempty"`
+	// WindowSeconds is the minimum observation window for delta(full.total) / elapsed time.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	WindowSeconds *int64 `json:"windowSeconds,omitempty"`
+	// TaintThreshold is the CPU PSI full fraction that starts the taint dwell timer.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	TaintThreshold *float64 `json:"taintThreshold,omitempty"`
+	// EvictionThreshold is the full fraction that starts the eviction dwell timer; it must exceed TaintThreshold.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	EvictionThreshold *float64 `json:"evictionThreshold,omitempty"`
+	// RecoveryThreshold is the full fraction below which spare CPU can permit recovery; it must be below TaintThreshold.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	RecoveryThreshold *float64 `json:"recoveryThreshold,omitempty"`
+	// TaintDurationSeconds is the continuous pressure dwell time after window warmup.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	TaintDurationSeconds *int64 `json:"taintDurationSeconds,omitempty"`
+	// EvictionDurationSeconds is the continuous eligible pressure dwell time; it must be at least TaintDurationSeconds.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	EvictionDurationSeconds *int64 `json:"evictionDurationSeconds,omitempty"`
+	// CooldownSeconds is the minimum interval between eviction proposals.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	CooldownSeconds *int64 `json:"cooldownSeconds,omitempty"`
+	// BudgetWindowSeconds bounds the rolling proposal budget and must be at least CooldownSeconds.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	BudgetWindowSeconds *int64 `json:"budgetWindowSeconds,omitempty"`
+	// MaxEvictionsPerWindow limits proposals, including retries, per agent instance within BudgetWindowSeconds.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	MaxEvictionsPerWindow *int64 `json:"maxEvictionsPerWindow,omitempty"`
+	// MaxSampleGapSeconds resets history after a collection gap; it must not exceed WindowSeconds.
+	// +optional
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=86400
+	MaxSampleGapSeconds *int64 `json:"maxSampleGapSeconds,omitempty"`
+	// MinOutsideUsageRatio is the minimum estimated usage outside BE on its effective CPUs required for eviction.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	MinOutsideUsageRatio *float64 `json:"minOutsideUsageRatio,omitempty"`
+	// MinRecoveryIdleRatio is the minimum spare CPU fraction required for recovery.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	MinRecoveryIdleRatio *float64 `json:"minRecoveryIdleRatio,omitempty"`
+	// GracePeriodSeconds is the requested Pod termination grace period for a soft eviction.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=86400
+	GracePeriodSeconds *int64 `json:"gracePeriodSeconds,omitempty"`
 }
