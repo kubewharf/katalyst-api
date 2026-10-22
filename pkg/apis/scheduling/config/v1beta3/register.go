@@ -17,14 +17,14 @@ package v1beta3
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	schedschemev1beta3 "k8s.io/kube-scheduler/config/v1beta3"
+	schedulerconfigv1 "k8s.io/kube-scheduler/config/v1"
 )
 
 // SchemeGroupVersion is group version used to register these objects
-var SchemeGroupVersion = schema.GroupVersion{Group: schedschemev1beta3.GroupName, Version: "v1beta3"}
+var SchemeGroupVersion = schema.GroupVersion{Group: schedulerconfigv1.GroupName, Version: "v1beta3"}
 
 var (
-	localSchemeBuilder = &schedschemev1beta3.SchemeBuilder
+	localSchemeBuilder = &schedulerconfigv1.SchemeBuilder
 	// AddToScheme is a global function that registers this API group & version to a scheme
 	AddToScheme = localSchemeBuilder.AddToScheme
 )
