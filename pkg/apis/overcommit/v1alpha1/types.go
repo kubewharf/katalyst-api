@@ -32,11 +32,47 @@ type NodeOvercommitConfigSpec struct {
 	// cpu,memory are supported.
 	// +optional
 	ResourceOvercommitRatio map[v1.ResourceName]string `json:"resourceOvercommitRatio,omitempty"`
+
+	// TimeBounds supports dynamically adjusting ResourceOvercommitRatio
+	// +optional
+	TimeBounds []TimeBound `json:"timeBounds,omitempty"`
+
+	// If CronConsistency is true, controller will ensure ResourceOvercommitRatio is consistent with the configuration of the TimeBound that should have been executed last time
+	CronConsistency bool `json:"CronConsistency"`
+
+	// controller is not going to schedule anything below now - StartingDeadlineSeconds
+	StartingDeadlineSeconds *int64 `json:"StartingDeadlineSeconds,omitempty"`
 }
 
 type NodeOvercommitConfigStatus struct {
 	// NodeList which the nodeOvercommitConfig rules matched
 	MatchedNodeList []string `json:"matchedNodeList,omitempty"`
+
+	// LastScheduleTime recorded the time when the cronTab was triggered last time
+	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
+}
+
+type TimeBound struct {
+	// TimeBound is valid between Start and End
+	// +optional
+	Start *metav1.Time `json:"start,omitempty"`
+
+	// +optional
+	End *metav1.Time `json:"end,omitempty"`
+
+	// +optional
+	Bounds []Bound `json:"bounds,omitempty"`
+}
+
+type Bound struct {
+	// CronTab support standardSpec, requires 5 entries
+	// representing: minute, hour, day of month, month and day of week
+	CronTab string `json:"cronTab"`
+
+	// Node overcommit ratio will be set as ResourceOvercommitRatio when CronTab is triggered
+	// cpu,memory are supported.
+	// +optional
+	ResourceOvercommitRatio map[v1.ResourceName]string `json:"resourceOvercommitRatio,omitempty"`
 }
 
 // +genclient
