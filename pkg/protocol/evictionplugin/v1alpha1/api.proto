@@ -55,6 +55,21 @@ message Condition {
     repeated string effects = 2;
     string condition_name = 3;
     bool met_condition = 4;
+    repeated TopologyZoneTaint zone_taints = 5;
+}
+
+// The path identifies a topology zone from the root of CNR.status.topologyZone.
+message TopologyZoneRef {
+    string type = 1;
+    string name = 2;
+}
+
+message TopologyZoneTaint {
+    repeated TopologyZoneRef path = 1;
+    string condition_name = 2;
+    string qos_level = 3;
+    string effect = 4;
+    bool met_condition = 5;
 }
 
 message GetThresholdMetRequest {
