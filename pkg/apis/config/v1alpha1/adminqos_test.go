@@ -302,6 +302,38 @@ func TestReclaimedMemorySafeZoneGateConfig(t *testing.T) {
 	})
 }
 
+func TestReclaimedConsumerToReclaimedResourcePercentageRoundTrip(t *testing.T) {
+	t.Run("JSON round trip and independent deepcopy", func(t *testing.T) {
+		in := &ReclaimedResourceConfig{
+			ReclaimedConsumerToReclaimedResourcePercentage: &map[string]int{
+				"batch":  80,
+				"online": 20,
+			},
+		}
+
+		data, err := json.Marshal(in)
+		require.NoError(t, err)
+		require.JSONEq(t, `{"reclaimedConsumerToReclaimedResourcePercentage":{"batch":80,"online":20}}`, string(data))
+
+		out := &ReclaimedResourceConfig{}
+		require.NoError(t, json.Unmarshal(data, out))
+		require.NotNil(t, out.ReclaimedConsumerToReclaimedResourcePercentage)
+		require.Equal(t, 80, (*out.ReclaimedConsumerToReclaimedResourcePercentage)["batch"])
+		require.Equal(t, 20, (*out.ReclaimedConsumerToReclaimedResourcePercentage)["online"])
+
+		copied := in.DeepCopy()
+		require.NotSame(t, in.ReclaimedConsumerToReclaimedResourcePercentage, copied.ReclaimedConsumerToReclaimedResourcePercentage)
+		(*copied.ReclaimedConsumerToReclaimedResourcePercentage)["batch"] = 1
+		require.Equal(t, 80, (*in.ReclaimedConsumerToReclaimedResourcePercentage)["batch"])
+	})
+
+	t.Run("optional omission", func(t *testing.T) {
+		data, err := json.Marshal(&ReclaimedResourceConfig{})
+		require.NoError(t, err)
+		require.JSONEq(t, `{}`, string(data))
+	})
+}
+
 type adminQoSSchema struct {
 	Properties map[string]adminQoSSchema `json:"properties"`
 	Type       string                    `json:"type"`
