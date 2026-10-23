@@ -172,6 +172,41 @@ spec:
                   evictionConfig:
                     description: EvictionConfig is a configuration for eviction
                     properties:
+                      beMemorySuppressionEvictionConfig:
+                        description: BEMemorySuppressionEvictionConfig configures
+                          eviction caused by reclaimed cgroup memory limits.
+                        properties:
+                          enable:
+                            description: Enable enables memory suppression eviction
+                              for reclaimed cgroups.
+                            type: boolean
+                          highEventDeltaThreshold:
+                            description: |-
+                              HighEventDeltaThreshold is the memory.events.local high event threshold per ten seconds.
+                              The rate is normalized by the actual sample interval; zero disables this signal.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          maxEventDeltaThreshold:
+                            description: |-
+                              MaxEventDeltaThreshold is the memory.events.local max event threshold per ten seconds.
+                              The rate is normalized by the actual sample interval; zero disables this signal.
+                            format: int64
+                            minimum: 0
+                            type: integer
+                          observationWindow:
+                            description: ObservationWindow is the complete window
+                              used to evaluate sustained high or max pressure.
+                            type: string
+                          thresholdMetPercentage:
+                            description: |-
+                              ThresholdMetPercentage is the minimum fraction of the observation window under high or max pressure.
+                              The latest sample interval must also meet an event threshold.
+                            exclusiveMinimum: true
+                            maximum: 1
+                            minimum: 0
+                            type: number
+                        type: object
                       cpuPressureEvictionConfig:
                         description: CPUPressureEvictionConfig is the config for cpu
                           pressure eviction
