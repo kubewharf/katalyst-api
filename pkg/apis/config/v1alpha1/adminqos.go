@@ -674,6 +674,40 @@ type EvictionConfig struct {
 	// NetworkEvictionConfig is the config for network eviction
 	// +optional
 	NetworkEvictionConfig *NetworkEvictionConfig `json:"networkEvictionConfig,omitempty"`
+
+	// BEMemorySuppressionEvictionConfig configures eviction caused by reclaimed cgroup memory limits.
+	// +optional
+	BEMemorySuppressionEvictionConfig *BEMemorySuppressionEvictionConfig `json:"beMemorySuppressionEvictionConfig,omitempty"`
+}
+
+type BEMemorySuppressionEvictionConfig struct {
+	// Enable enables memory suppression eviction for reclaimed cgroups.
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
+
+	// HighEventDeltaThreshold is the memory.events.local high event threshold per ten seconds.
+	// The rate is normalized by the actual sample interval; zero disables this signal.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	HighEventDeltaThreshold *uint64 `json:"highEventDeltaThreshold,omitempty"`
+
+	// MaxEventDeltaThreshold is the memory.events.local max event threshold per ten seconds.
+	// The rate is normalized by the actual sample interval; zero disables this signal.
+	// +kubebuilder:validation:Minimum=0
+	// +optional
+	MaxEventDeltaThreshold *uint64 `json:"maxEventDeltaThreshold,omitempty"`
+
+	// ObservationWindow is the complete window used to evaluate sustained high or max pressure.
+	// +optional
+	ObservationWindow *metav1.Duration `json:"observationWindow,omitempty"`
+
+	// ThresholdMetPercentage is the minimum fraction of the observation window under high or max pressure.
+	// The latest sample interval must also meet an event threshold.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:ExclusiveMinimum=true
+	// +kubebuilder:validation:Maximum=1
+	// +optional
+	ThresholdMetPercentage *float64 `json:"thresholdMetPercentage,omitempty"`
 }
 
 type ReclaimedResourcesEvictionConfig struct {
