@@ -1417,6 +1417,42 @@ spec:
                             description: UtilBasedConfig is a config for utilization
                               based cpu headroom policy
                             properties:
+                              adaptiveConfig:
+                                description: AdaptiveConfig selects the estimator
+                                  with an adaptive reclaimed core utilization target.
+                                properties:
+                                  enable:
+                                    description: Enable selects the adaptive utilization-based
+                                      estimator.
+                                    type: boolean
+                                  reclaimedCoreUtilizationTolerance:
+                                    description: |-
+                                      ReclaimedCoreUtilizationTolerance is the allowed utilization increase above the adaptive target.
+                                      Headroom is held constant when utilization is within [target, target + tolerance].
+                                      It must be smaller than 1 - TargetReclaimedCoreUtilizationUpperBound.
+                                    exclusiveMaximum: true
+                                    maximum: 1
+                                    minimum: 0
+                                    type: number
+                                  targetReclaimedCoreUtilizationLowerBound:
+                                    description: |-
+                                      TargetReclaimedCoreUtilizationLowerBound is the lower bound of the adaptive reclaimed core utilization target.
+                                      It must be smaller than TargetReclaimedCoreUtilizationUpperBound.
+                                    exclusiveMaximum: true
+                                    exclusiveMinimum: true
+                                    maximum: 1
+                                    minimum: 0
+                                    type: number
+                                  targetReclaimedCoreUtilizationUpperBound:
+                                    description: TargetReclaimedCoreUtilizationUpperBound
+                                      is the upper bound of the adaptive reclaimed
+                                      core utilization target.
+                                    exclusiveMaximum: true
+                                    exclusiveMinimum: true
+                                    maximum: 1
+                                    minimum: 0
+                                    type: number
+                                type: object
                               enable:
                                 description: Enable is a flag to enable utilization
                                   based cpu headroom policy

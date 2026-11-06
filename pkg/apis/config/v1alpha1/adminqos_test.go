@@ -302,12 +302,136 @@ func TestReclaimedMemorySafeZoneGateConfig(t *testing.T) {
 	})
 }
 
+func TestCPUHeadroomAdaptiveUtilBasedConfigRoundTrip(t *testing.T) {
+	t.Parallel()
+
+	for _, tt := range []struct {
+		name string
+		data string
+	}{
+		{name: "legacy config", data: `{"enable":true,"targetReclaimedCoreUtilization":0.6}`},
+		{name: "empty adaptive config", data: `{"adaptiveConfig":{}}`},
+		{name: "enabled with omitted parameters", data: `{"adaptiveConfig":{"enable":true}}`},
+		{name: "explicit false and zero", data: `{"adaptiveConfig":{"enable":false,"reclaimedCoreUtilizationTolerance":0}}`},
+		{
+			name: "custom parameters",
+			data: `{"adaptiveConfig":{"enable":true,"targetReclaimedCoreUtilizationLowerBound":0.7,"targetReclaimedCoreUtilizationUpperBound":0.93,"reclaimedCoreUtilizationTolerance":0.02}}`,
+		},
+	} {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			var config CPUHeadroomUtilBasedConfig
+			require.NoError(t, json.Unmarshal([]byte(tt.data), &config))
+
+			data, err := json.Marshal(config.DeepCopy())
+			require.NoError(t, err)
+			require.JSONEq(t, tt.data, string(data))
+		})
+	}
+}
+
+func TestAdminQoSConfigAdaptiveCPUHeadroomDeepCopy(t *testing.T) {
+	t.Parallel()
+
+	const input = `{
+		"reclaimedResourceConfig": {
+			"cpuHeadroomConfig": {
+				"utilBasedConfig": {
+					"enable": true,
+					"adaptiveConfig": {
+						"enable": true,
+						"targetReclaimedCoreUtilizationLowerBound": 0.6,
+						"targetReclaimedCoreUtilizationUpperBound": 0.9,
+						"reclaimedCoreUtilizationTolerance": 0.05
+					}
+				}
+			}
+		}
+	}`
+	var config AdminQoSConfig
+	require.NoError(t, json.Unmarshal([]byte(input), &config))
+
+	copied := config.DeepCopy()
+	original := config.ReclaimedResourceConfig.CPUHeadroomConfig.UtilBasedConfig.AdaptiveConfig
+	adaptive := copied.ReclaimedResourceConfig.CPUHeadroomConfig.UtilBasedConfig.AdaptiveConfig
+	require.NotSame(t, original, adaptive)
+	require.NotSame(t, original.Enable, adaptive.Enable)
+	require.NotSame(t, original.TargetReclaimedCoreUtilizationLowerBound, adaptive.TargetReclaimedCoreUtilizationLowerBound)
+	require.NotSame(t, original.TargetReclaimedCoreUtilizationUpperBound, adaptive.TargetReclaimedCoreUtilizationUpperBound)
+	require.NotSame(t, original.ReclaimedCoreUtilizationTolerance, adaptive.ReclaimedCoreUtilizationTolerance)
+
+	*adaptive.Enable = false
+	*adaptive.TargetReclaimedCoreUtilizationLowerBound = 0.7
+	*adaptive.TargetReclaimedCoreUtilizationUpperBound = 0.95
+	*adaptive.ReclaimedCoreUtilizationTolerance = 0
+
+	data, err := json.Marshal(config)
+	require.NoError(t, err)
+	require.JSONEq(t, input, string(data))
+	require.Nil(t, (*CPUHeadroomAdaptiveUtilBasedConfig)(nil).DeepCopy())
+}
+
+func TestCPUHeadroomAdaptiveUtilBasedConfigSchema(t *testing.T) {
+	t.Parallel()
+
+	data, err := os.ReadFile("../../../../config/crd/bases/config.katalyst.kubewharf.io_adminqosconfigurations.yaml")
+	require.NoError(t, err)
+
+	jsonData, err := yaml.YAMLToJSON(data)
+	require.NoError(t, err)
+
+	var crd struct {
+		Spec struct {
+			Versions []struct {
+				Schema struct {
+					OpenAPIV3Schema adminQoSSchema `json:"openAPIV3Schema"`
+				} `json:"schema"`
+			} `json:"versions"`
+		} `json:"spec"`
+	}
+	require.NoError(t, json.Unmarshal(jsonData, &crd))
+	require.NotEmpty(t, crd.Spec.Versions)
+
+	schema := crd.Spec.Versions[0].Schema.OpenAPIV3Schema
+	for _, name := range []string{"spec", "config", "reclaimedResourceConfig", "cpuHeadroomConfig", "utilBasedConfig"} {
+		schema = adminQoSSchemaProperty(t, schema, name)
+	}
+	require.NotContains(t, schema.Required, "adaptiveConfig")
+	adaptive := adminQoSSchemaProperty(t, schema, "adaptiveConfig")
+	require.Equal(t, "object", adaptive.Type)
+	require.Empty(t, adaptive.Required)
+	require.Nil(t, adaptive.Default)
+	require.Len(t, adaptive.Properties, 4)
+
+	enable := adminQoSSchemaProperty(t, adaptive, "enable")
+	require.Equal(t, "boolean", enable.Type)
+	require.Nil(t, enable.Default)
+
+	for _, name := range []string{"targetReclaimedCoreUtilizationLowerBound", "targetReclaimedCoreUtilizationUpperBound", "reclaimedCoreUtilizationTolerance"} {
+		field := adminQoSSchemaProperty(t, adaptive, name)
+		require.Equal(t, "number", field.Type)
+		require.NotNil(t, field.Minimum)
+		require.Equal(t, 0.0, *field.Minimum)
+		require.NotNil(t, field.Maximum)
+		require.Equal(t, 1.0, *field.Maximum)
+		require.Equal(t, name != "reclaimedCoreUtilizationTolerance", field.ExclusiveMinimum)
+		require.True(t, field.ExclusiveMaximum)
+		require.Nil(t, field.Default)
+	}
+}
+
 type adminQoSSchema struct {
-	Properties map[string]adminQoSSchema `json:"properties"`
-	Type       string                    `json:"type"`
-	Enum       []string                  `json:"enum"`
-	Minimum    *float64                  `json:"minimum"`
-	Maximum    *float64                  `json:"maximum"`
+	Properties       map[string]adminQoSSchema `json:"properties"`
+	Type             string                    `json:"type"`
+	Enum             []string                  `json:"enum"`
+	Minimum          *float64                  `json:"minimum"`
+	Maximum          *float64                  `json:"maximum"`
+	ExclusiveMinimum bool                      `json:"exclusiveMinimum"`
+	ExclusiveMaximum bool                      `json:"exclusiveMaximum"`
+	Required         []string                  `json:"required"`
+	Default          *json.RawMessage          `json:"default"`
 }
 
 func adminQoSSchemaProperty(t *testing.T, schema adminQoSSchema, name string) adminQoSSchema {
