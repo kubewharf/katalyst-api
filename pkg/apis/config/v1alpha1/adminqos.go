@@ -782,6 +782,10 @@ type CPUPressureEvictionConfig struct {
 	// +optional
 	EnableSuppressionEviction *bool `json:"enableSuppressionEviction,omitempty"`
 
+	// SuppressionPSIThresholds overrides the startup thresholds for cgroup v2 CPU suppression.
+	// +optional
+	SuppressionPSIThresholds *SuppressionPSIThresholds `json:"suppressionPSIThresholds,omitempty"`
+
 	// MaxSuppressionToleranceRate is the maximum cpu suppression tolerance rate that
 	// can be set by the pod, if the cpu suppression tolerance rate of the pod is greater
 	// than the maximum cpu suppression tolerance rate, the cpu suppression tolerance rate
@@ -810,6 +814,27 @@ type CPUPressureEvictionConfig struct {
 	// SuppressionUsageCPUPressureEvictionConfig holds configurations for CPU suppression usage eviction.
 	// +optional
 	SuppressionUsageCPUPressureEvictionConfig *SuppressionUsageCPUPressureEvictionConfig `json:"suppressionUsageCPUPressureEvictionConfig,omitempty"`
+}
+
+// SuppressionPSIThresholds overrides the cgroup v2 CPU PSI full pressure percentages
+// over a 10-second window. Omitted values use the agent's startup thresholds.
+// The effective Low must be less than Medium, and Medium less than High.
+type SuppressionPSIThresholds struct {
+	// Low is the pressure at or below which NUMA pressure reporting stops.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	Low *float64 `json:"low,omitempty"`
+	// Medium is the pressure at or above which RNB groups request a NUMA taint.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	Medium *float64 `json:"medium,omitempty"`
+	// High is the pressure at or above which a group can nominate a Pod for eviction.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	High *float64 `json:"high,omitempty"`
 }
 
 // NumaCPUPressureEvictionConfig holds the configurations for NUMA-level CPU pressure eviction.
