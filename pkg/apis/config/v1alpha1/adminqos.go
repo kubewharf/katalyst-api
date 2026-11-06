@@ -411,6 +411,44 @@ type CPUHeadroomUtilBasedConfig struct {
 	// +kubebuilder:validation:Maximum=1
 	// +optional
 	NonReclaimUtilizationLow *float64 `json:"nonReclaimUtilizationLow,omitempty"`
+
+	// AdaptiveConfig selects the estimator with an adaptive reclaimed core utilization target.
+	// +optional
+	AdaptiveConfig *CPUHeadroomAdaptiveUtilBasedConfig `json:"adaptiveConfig,omitempty"`
+}
+
+// CPUHeadroomAdaptiveUtilBasedConfig configures CPU headroom estimation with an adaptive utilization target.
+// Reclaimed core utilization is reclaimed CPU usage divided by the supplied CPU cores.
+type CPUHeadroomAdaptiveUtilBasedConfig struct {
+	// Enable selects the adaptive utilization-based estimator.
+	// +optional
+	Enable *bool `json:"enable,omitempty"`
+
+	// TargetReclaimedCoreUtilizationLowerBound is the lower bound of the adaptive reclaimed core utilization target.
+	// It must be smaller than TargetReclaimedCoreUtilizationUpperBound.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:ExclusiveMinimum=true
+	// +kubebuilder:validation:Maximum=1
+	// +kubebuilder:validation:ExclusiveMaximum=true
+	// +optional
+	TargetReclaimedCoreUtilizationLowerBound *float64 `json:"targetReclaimedCoreUtilizationLowerBound,omitempty"`
+
+	// TargetReclaimedCoreUtilizationUpperBound is the upper bound of the adaptive reclaimed core utilization target.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:ExclusiveMinimum=true
+	// +kubebuilder:validation:Maximum=1
+	// +kubebuilder:validation:ExclusiveMaximum=true
+	// +optional
+	TargetReclaimedCoreUtilizationUpperBound *float64 `json:"targetReclaimedCoreUtilizationUpperBound,omitempty"`
+
+	// ReclaimedCoreUtilizationTolerance is the allowed utilization increase above the adaptive target.
+	// Headroom is held constant when utilization is within [target, target + tolerance].
+	// It must be smaller than 1 - TargetReclaimedCoreUtilizationUpperBound.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1
+	// +kubebuilder:validation:ExclusiveMaximum=true
+	// +optional
+	ReclaimedCoreUtilizationTolerance *float64 `json:"reclaimedCoreUtilizationTolerance,omitempty"`
 }
 
 type QRMPluginConfig struct {
