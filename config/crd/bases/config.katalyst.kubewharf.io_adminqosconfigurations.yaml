@@ -429,6 +429,29 @@ spec:
                                   must be above the threshold for an eviction to be triggered.
                                 type: number
                             type: object
+                          suppressionPSIThresholds:
+                            description: SuppressionPSIThresholds overrides the startup
+                              thresholds for cgroup v2 CPU suppression.
+                            properties:
+                              high:
+                                description: High is the pressure at or above which
+                                  a group can nominate a Pod for eviction.
+                                maximum: 100
+                                minimum: 0
+                                type: number
+                              low:
+                                description: Low is the pressure at or below which
+                                  NUMA pressure reporting stops.
+                                maximum: 100
+                                minimum: 0
+                                type: number
+                              medium:
+                                description: Medium is the pressure at or above which
+                                  RNB groups request a NUMA taint.
+                                maximum: 100
+                                minimum: 0
+                                type: number
+                            type: object
                           suppressionUsageCPUPressureEvictionConfig:
                             description: SuppressionUsageCPUPressureEvictionConfig
                               holds configurations for CPU suppression usage eviction.
