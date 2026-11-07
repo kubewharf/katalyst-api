@@ -20,6 +20,21 @@ const (
 	// PodAnnotationSPDNameKey is used to maintain corresponding spdName in pod
 	// annotation to make metaServer to target its spd more conveniently.
 	PodAnnotationSPDNameKey = "spd.katalyst.kubewharf.io/name"
+
+	// PodAnnotationDefaultSPDNameKey is used to maintain corresponding default spdName in pod
+	// annotation to make metaServer to target its default spd more conveniently.
+	PodAnnotationDefaultSPDNameKey = "spd.katalyst.kubewharf.io/defaultName"
+)
+
+// const variables for spd labels.
+const (
+	// SPDLabelDefaultClusterSPDKey indicates that the SPD is a cluster-default SPD,
+	// which can be used as a fallback when the workload-specific SPD is not found.
+	SPDLabelDefaultClusterSPDKey   = "spd.katalyst.kubewharf.io/defaultClusterSPD"
+	SPDLabelDefaultClusterSPDValue = "true"
+
+	// DefaultClusterSPDNamespace is the namespace where cluster-default SPDs are expected to be created.
+	DefaultClusterSPDNamespace = "default"
 )
 
 // const variables for workload annotations about spd.
