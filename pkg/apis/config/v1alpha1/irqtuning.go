@@ -109,6 +109,12 @@ type IRQTuningConfig struct {
 	// +optional
 	RPSExcludeIRQCoresThreshold *RPSExcludeIRQCoresThreshold `json:"rpsExcludeIRQCoresThreshold,omitempty"`
 
+	// EnableLowThroughputClassification enables separate tuning of low throughput NICs.
+	// When false, all managed NICs use the normal throughput path.
+	// If unset, the agent's startup setting applies, which defaults to true.
+	// +optional
+	EnableLowThroughputClassification *bool `json:"enableLowThroughputClassification,omitempty"`
+
 	// NormalThroughputNics describes static configured normal throughput Nics.
 	// +optional
 	NormalThroughputNics []string `json:"normalThroughputNics,omitempty"`

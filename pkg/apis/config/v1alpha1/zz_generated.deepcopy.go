@@ -1987,6 +1987,11 @@ func (in *IRQTuningConfig) DeepCopyInto(out *IRQTuningConfig) {
 		*out = new(RPSExcludeIRQCoresThreshold)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EnableLowThroughputClassification != nil {
+		in, out := &in.EnableLowThroughputClassification, &out.EnableLowThroughputClassification
+		*out = new(bool)
+		**out = **in
+	}
 	if in.NormalThroughputNics != nil {
 		in, out := &in.NormalThroughputNics, &out.NormalThroughputNics
 		*out = make([]string, len(*in))
