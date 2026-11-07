@@ -204,6 +204,12 @@ spec:
                   disableXPS:
                     description: DisableXPS indicates whether to disable the XPS function.
                     type: boolean
+                  enableLowThroughputClassification:
+                    description: |-
+                      EnableLowThroughputClassification enables separate tuning of low throughput NICs.
+                      When false, all managed NICs use the normal throughput path.
+                      If unset, the agent's startup setting applies, which defaults to true.
+                    type: boolean
                   enableRPS:
                     description: |-
                       EnableRPS indicates whether to enable the RPS function.
