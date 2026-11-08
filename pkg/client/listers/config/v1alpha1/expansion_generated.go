@@ -30,6 +30,10 @@ type KatalystCustomConfigListerExpansion interface{}
 // KatalystCustomConfigNamespaceLister.
 type KatalystCustomConfigNamespaceListerExpansion interface{}
 
+// PrefetcherTuningListerExpansion allows custom methods to be added to
+// PrefetcherTuningLister.
+type PrefetcherTuningListerExpansion interface{}
+
 // StrategyGroupListerExpansion allows custom methods to be added to
 // StrategyGroupLister.
 type StrategyGroupListerExpansion interface{}
