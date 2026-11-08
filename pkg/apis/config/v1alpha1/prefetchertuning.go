@@ -51,6 +51,10 @@ type PrefetcherTuningSpec struct {
 }
 
 type PrefetcherTuningConfig struct {
+	// EnableTuner enables tuning on selected nodes. If omitted or false, nodes restore their managed MSRs.
+	// +optional
+	EnableTuner bool `json:"enableTuner,omitempty"`
+
 	// Rules is the complete ruleset for a node. An empty list revokes all rules.
 	// +listType=map
 	// +listMapKey=psm

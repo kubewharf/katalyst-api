@@ -41,6 +41,10 @@ spec:
             properties:
               config:
                 properties:
+                  enableTuner:
+                    description: EnableTuner enables tuning on selected nodes. If
+                      omitted or false, nodes restore their managed MSRs.
+                    type: boolean
                   rules:
                     description: Rules is the complete ruleset for a node. An empty
                       list revokes all rules.
