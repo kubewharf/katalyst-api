@@ -80,4 +80,17 @@ type PowerManagementConfig struct {
 	// +kubebuilder:validation:Maximum=100
 	// +optional
 	PowerReductionRatio *int32 `json:"powerReductionRatio,omitempty"`
+
+	// EnableGPUPowerManagement indicates whether to enable GPU power management on nodes with accelerators.
+	// The node tells which one of CPU and GPU power management may run: CPU on nodes without accelerators,
+	// GPU on the others. DisablePowerAdvisor, DisablePowerCapping and PowerReductionRatio apply to whichever runs.
+	// +optional
+	EnableGPUPowerManagement *bool `json:"enableGPUPowerManagement,omitempty"`
+
+	// CapStepPercent indicates the percentage (1-100) of the power above budget to cut in each round of
+	// GPU power capping. For example, 2 means cutting 2% of the excess each round. Only GPU power management uses it.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=100
+	// +optional
+	CapStepPercent *int32 `json:"capStepPercent,omitempty"`
 }
