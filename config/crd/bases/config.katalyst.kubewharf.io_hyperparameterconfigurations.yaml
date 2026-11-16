@@ -1,0 +1,177 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
+  name: hyperparameterconfigurations.config.katalyst.kubewharf.io
+spec:
+  group: config.katalyst.kubewharf.io
+  names:
+    kind: HyperParameterConfiguration
+    listKind: HyperParameterConfigurationList
+    plural: hyperparameterconfigurations
+    shortNames:
+    - hpc
+    singular: hyperparameterconfiguration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    - jsonPath: .spec.nodeLabelSelector
+      name: SELECTOR
+      type: string
+    - jsonPath: .spec.priority
+      name: PRIORITY
+      type: string
+    - jsonPath: .spec.ephemeralSelector.nodeNames
+      name: NODES
+      type: string
+    - jsonPath: .spec.ephemeralSelector.lastDuration
+      name: DURATION
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].status
+      name: VALID
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].reason
+      name: REASON
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Valid")].message
+      name: MESSAGE
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: HyperParameterConfiguration is the Schema for the configuration
+          API used by Katalyst policies
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: HyperParameterConfigurationSpec defines the desired state
+              of HyperParameterConfiguration
+            properties:
+              config:
+                properties:
+                  borweinProvisionConfig:
+                    description: BorweinProvisionConfig is configuration related to
+                      Borwein provision policy
+                    properties:
+                      borweinProvisionParams:
+                        description: BorweinProvisionParams is the list of parameter
+                          set for Borwein provision policy
+                        items:
+                          properties:
+                            indicatorTargetOffsetMax:
+                              type: number
+                            indicatorTargetOffsetMin:
+                              type: number
+                            indicatorTargetRampDownStep:
+                              type: number
+                            indicatorTargetRampUpStep:
+                              type: number
+                            modelAbnormalRatioThreshold:
+                              type: number
+                            paramID:
+                              type: integer
+                            paramVersion:
+                              type: integer
+                          type: object
+                        type: array
+                    type: object
+                type: object
+              ephemeralSelector:
+                description: EphemeralSelector is a selector for temporary use only
+                properties:
+                  lastDuration:
+                    description: define the duration this configuration will last
+                      from creationTimestamp. must and only set when NodeNames already
+                      set
+                    type: string
+                  nodeNames:
+                    description: Specific nodes' name the configurations will be effected.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              nodeLabelSelector:
+                description: NodeLabelSelector select nodes to apply these configurations,
+                  the priority and node label selector must be matched according to
+                  KatalystCustomConfig.spec.nodeLabelSelectorAllowedKeyList, otherwise
+                  it will not be synced.
+                type: string
+              priority:
+                description: Priority is used by one node matched by NodeLabelSelector
+                  of more than one configuration, and the higher priority will be
+                  considered. The priority only be supported when NodeLabelSelector
+                  set
+                format: int32
+                type: integer
+              revisionHistoryLimit:
+                default: 3
+                description: RevisionHistoryLimit is the maximum number of revisions
+                  that will be maintained in the resource's revision history. The
+                  revision history consists of all revisions not represented by a
+                  currently applied Spec version. The default value is 3.
+                format: int64
+                type: integer
+            type: object
+          status:
+            properties:
+              collisionCount:
+                description: Count of hash collisions for this cr. The kcc controller
+                  uses this field as a collision avoidance mechanism when it needs
+                  to create the name for the newest ControllerRevision.
+                format: int32
+                type: integer
+              conditions:
+                description: Represents the latest available observations of a config's
+                  current state.
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transit from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human-readable explanation containing
+                        details about the transition
+                      type: string
+                    reason:
+                      description: reason is the reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of config condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              observedGeneration:
+                description: The most recent generation observed by the kcc controller.
+                format: int64
+                type: integer
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
