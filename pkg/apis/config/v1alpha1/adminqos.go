@@ -211,6 +211,8 @@ const (
 	QoSRegionTypeIsolation QoSRegionType = "isolation"
 	// QoSRegionEmptyNUMA for NUMAs without real workloads
 	QoSRegionEmptyNUMA QoSRegionType = "empty-numa"
+	// QoSRegionTypePartialEmptyNUMA covers CPUs available for reclaim outside online allocations on a partially occupied NUMA node.
+	QoSRegionTypePartialEmptyNUMA QoSRegionType = "partial-empty-numa"
 
 	// QoSRegionTypeDedicatedNumaExclusive for each dedicated core with numa binding
 	// and numa exclusive container
