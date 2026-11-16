@@ -67,9 +67,9 @@ type PrefetcherTuningRule struct {
 	// PSM matches the full value of a Pod's psm label.
 	// +kubebuilder:validation:MinLength=1
 	PSM string `json:"psm"`
-	// +kubebuilder:validation:Enum=amd
+	// +kubebuilder:validation:Enum=amd;intel
 	CPUVendor string `json:"cpuVendor"`
-	// +kubebuilder:validation:Enum=genoa
+	// +kubebuilder:validation:Enum=genoa;milan;turin;icelake;spr;gnr;emr
 	CPUGeneration string `json:"cpuGeneration"`
 	// Disable lists the prefetchers to turn off. An empty list enables all managed prefetchers.
 	// +listType=set

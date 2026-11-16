@@ -53,10 +53,17 @@ spec:
                         cpuGeneration:
                           enum:
                           - genoa
+                          - milan
+                          - turin
+                          - icelake
+                          - spr
+                          - gnr
+                          - emr
                           type: string
                         cpuVendor:
                           enum:
                           - amd
+                          - intel
                           type: string
                         disable:
                           description: Disable lists the prefetchers to turn off.
