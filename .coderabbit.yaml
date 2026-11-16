@@ -1,9 +1,10 @@
 language: "en-US"
 early_access: false
 tone_instructions: >-
-  Prioritize correctness, API compatibility, nil/error handling, and tests.
-  Write concise English text first, then equivalent Simplified Chinese. Do not
-  translate code, paths, APIs, markers, protobuf names, or error strings.
+  Prioritize correctness, API compatibility, nil/error, tests. Conservative on
+  data-integrity: only flag provable mismatches; field additions are
+  intentional. Write English, then Chinese. Don't translate code, paths, APIs,
+  or markers.
 
 reviews:
   profile: "chill"
@@ -11,14 +12,21 @@ reviews:
   high_level_summary: true
   high_level_summary_instructions: >-
     Summarize API surface changes, compatibility impact, code generation impact,
-    and expected downstream consumer updates. Call out when changes are docs-
-    only or generated-only. Write concise English text first, then equivalent 
-    Simplified Chinese. Do not translate code, paths, APIs, markers, protobuf 
-    names, or error strings.
+    and downstream consumer updates. katalyst-api is the schema source of
+    truth; flag changes needing a coordinated katalyst-core bump or
+    regeneration. Call out when changes are docs-only or generated-only. Write
+    concise English text first, then equivalent Simplified Chinese. Do not
+    translate code, paths, APIs, markers, protobuf names, or error strings.
   high_level_summary_in_walkthrough: false
   review_status: true
+  review_details: true
   collapse_walkthrough: true
   poem: false
+  sequence_diagrams: false
+  estimate_code_review_effort: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
   slop_detection:
     enabled: true
   auto_review:
@@ -31,18 +39,14 @@ reviews:
       - "WIP"
       - "DRAFT"
       - "DO NOT MERGE"
-  path_filters:
-    - "!**/*.pb.go"
-    - "!**/zz_generated_*.go"
-    - "!pkg/client/**"
-    - "!config/crd/bases/**"
-    - "!docs/imgs/**"
-    - "!**/*.png"
-    - "!**/*.jpg"
-    - "!**/*.jpeg"
-    - "!**/*.gif"
-    - "!**/*.svg"
+  # path_filters intentionally omitted: rely on CodeRabbit defaults, including *.pb.go, and keep repository sources broadly reviewable.
   path_instructions:
+    - path: "**"
+      instructions: |
+        Skip CI-enforced go mod tidy issues. CI's gofmt diff check stages only pkg, so formatting problems in Go files outside pkg are still reviewable. Critical/Major only for concrete failures (data loss, panic, correctness bug, security vulnerability, privacy leak, credential exposure); style/speculation is Minor.
+    - path: "{AGENTS.md,ai/**/*.md}"
+      instructions: |
+        Review agent guidance against the current Makefile, CI workflow, repository layout, and source-of-truth ownership. Flag commands or invariants that are stale, broader than enforcement, or inconsistent with more local guidance.
     - path: "go.mod"
       instructions: |
         Review dependency and toolchain changes for API compatibility, generator drift, and downstream consumer impact.
@@ -54,7 +58,7 @@ reviews:
     - path: "pkg/apis/**"
       instructions: |
         Review for backward-compatible API evolution only.
-        Flag removed or renamed exported fields, json tag changes, new required behavior in existing versions, incorrect kubebuilder markers, and inline anonymous structs.
+        Flag removed or renamed exported fields, json tag changes, new required behavior in existing versions, incorrect kubebuilder markers, and anonymous struct literals used as field types. Embedded named types are allowed.
     - path: "pkg/protocol/**/*.proto"
       instructions: |
         Review for append-only protobuf compatibility.
@@ -70,6 +74,15 @@ reviews:
     - path: "docs/**/*.md"
       instructions: |
         Check for technical accuracy, outdated API behavior, and missing notes about compatibility, generation, or downstream impact.
+    - path: "cmd/inlinecheck/**"
+      instructions: |
+        Flag changes that weaken JSON-tag validation for registered API struct types. The checker recursively visits discovered struct types and checks for non-empty JSON tag names only on exported, non-embedded fields that resolve to structs after at most one pointer, slice, array, or map unwrap. Scalar fields and deeper container nesting are skipped; do not claim coverage for them. This checker does not enforce the separate ban on anonymous struct literals.
+    - path: "{**/zz_generated*.go,pkg/client/**,config/crd/bases/**}"
+      instructions: |
+        Review generated-output changes for consistency with their source schemas and generator scope. Flag generated-only manual drift, missing companion source changes, or incomplete output refreshes; avoid style comments on generator-owned formatting.
+    - path: "hack/**"
+      instructions: |
+        Flag codegen changes that produce non-deterministic output or alter generated headers/boilerplate.
 
 knowledge_base:
   automatic_repository_linking: true
