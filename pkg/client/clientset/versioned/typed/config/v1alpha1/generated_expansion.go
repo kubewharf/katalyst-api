@@ -22,6 +22,8 @@ type CustomNodeConfigExpansion interface{}
 
 type KatalystCustomConfigExpansion interface{}
 
+type PrefetcherTuningExpansion interface{}
+
 type StrategyGroupExpansion interface{}
 
 type StrategyGroupConfigurationExpansion interface{}

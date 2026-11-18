@@ -78,6 +78,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().CustomNodeConfigs().Informer()}, nil
 	case configv1alpha1.SchemeGroupVersion.WithResource("katalystcustomconfigs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().KatalystCustomConfigs().Informer()}, nil
+	case configv1alpha1.SchemeGroupVersion.WithResource("prefetchertunings"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().PrefetcherTunings().Informer()}, nil
 	case configv1alpha1.SchemeGroupVersion.WithResource("strategygroups"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Config().V1alpha1().StrategyGroups().Informer()}, nil
 	case configv1alpha1.SchemeGroupVersion.WithResource("strategygroupconfigurations"):

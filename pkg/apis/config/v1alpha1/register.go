@@ -49,6 +49,7 @@ const (
 	ResourceNameStrategyGroupConfigurations   = "strategygroupconfigurations"
 	ResourceNameStrategyGroups                = "strategygroups"
 	ResourceNameIRQTuningConfigurations       = "irqtuningconfigurations"
+	ResourceNamePrefetcherTunings             = "prefetchertunings"
 	ResourceNameMemoryBandwidthConfigurations = "memorybandwidthconfigurations"
 	ResourceNamePowerManagementConfigurations = "powermanagementconfigurations"
 )
@@ -94,6 +95,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StrategyGroupList{},
 		&IRQTuningConfiguration{},
 		&IRQTuningConfigurationList{},
+		&PrefetcherTuning{},
+		&PrefetcherTuningList{},
 		&MemoryBandwidthConfiguration{},
 		&MemoryBandwidthConfigurationList{},
 		&PowerManagementConfiguration{},

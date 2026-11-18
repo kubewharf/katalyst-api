@@ -30,6 +30,7 @@ type ConfigV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CustomNodeConfigsGetter
 	KatalystCustomConfigsGetter
+	PrefetcherTuningsGetter
 	StrategyGroupsGetter
 	StrategyGroupConfigurationsGetter
 }
@@ -45,6 +46,10 @@ func (c *ConfigV1alpha1Client) CustomNodeConfigs() CustomNodeConfigInterface {
 
 func (c *ConfigV1alpha1Client) KatalystCustomConfigs(namespace string) KatalystCustomConfigInterface {
 	return newKatalystCustomConfigs(c, namespace)
+}
+
+func (c *ConfigV1alpha1Client) PrefetcherTunings() PrefetcherTuningInterface {
+	return newPrefetcherTunings(c)
 }
 
 func (c *ConfigV1alpha1Client) StrategyGroups() StrategyGroupInterface {

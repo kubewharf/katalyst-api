@@ -28,6 +28,8 @@ type Interface interface {
 	CustomNodeConfigs() CustomNodeConfigInformer
 	// KatalystCustomConfigs returns a KatalystCustomConfigInformer.
 	KatalystCustomConfigs() KatalystCustomConfigInformer
+	// PrefetcherTunings returns a PrefetcherTuningInformer.
+	PrefetcherTunings() PrefetcherTuningInformer
 	// StrategyGroups returns a StrategyGroupInformer.
 	StrategyGroups() StrategyGroupInformer
 	// StrategyGroupConfigurations returns a StrategyGroupConfigurationInformer.
@@ -53,6 +55,11 @@ func (v *version) CustomNodeConfigs() CustomNodeConfigInformer {
 // KatalystCustomConfigs returns a KatalystCustomConfigInformer.
 func (v *version) KatalystCustomConfigs() KatalystCustomConfigInformer {
 	return &katalystCustomConfigInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PrefetcherTunings returns a PrefetcherTuningInformer.
+func (v *version) PrefetcherTunings() PrefetcherTuningInformer {
+	return &prefetcherTuningInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // StrategyGroups returns a StrategyGroupInformer.
