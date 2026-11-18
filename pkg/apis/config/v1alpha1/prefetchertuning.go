@@ -58,8 +58,7 @@ type PrefetcherTuningConfig struct {
 	// Rules is the complete ruleset for a node. An empty list revokes all rules.
 	// +listType=map
 	// +listMapKey=psm
-	// +listMapKey=cpuVendor
-	// +listMapKey=cpuGeneration
+	// +listMapKey=cpu_codename
 	Rules []PrefetcherTuningRule `json:"rules"`
 }
 
@@ -67,10 +66,9 @@ type PrefetcherTuningRule struct {
 	// PSM matches the full value of a Pod's psm label.
 	// +kubebuilder:validation:MinLength=1
 	PSM string `json:"psm"`
-	// +kubebuilder:validation:Enum=amd;intel
-	CPUVendor string `json:"cpuVendor"`
-	// +kubebuilder:validation:Enum=genoa;milan;turin;icelake;spr;gnr;emr
-	CPUGeneration string `json:"cpuGeneration"`
+	// CPUCodeName matches the cpu_codename reported by Malachite.
+	// +kubebuilder:validation:Enum=AMD_K19Zen3;AMD_K19Zen4;AMD_K1AZen5;Intel_IceLake;Intel_SapphireRapids;Intel_GraniteRapids;Intel_EmeraldRapids
+	CPUCodeName string `json:"cpu_codename"`
 	// Disable lists the prefetchers to turn off. An empty list enables all managed prefetchers.
 	// +listType=set
 	Disable []Prefetcher `json:"disable"`

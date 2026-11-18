@@ -50,20 +50,17 @@ spec:
                       list revokes all rules.
                     items:
                       properties:
-                        cpuGeneration:
+                        cpu_codename:
+                          description: CPUCodeName matches the cpu_codename reported
+                            by Malachite.
                           enum:
-                          - genoa
-                          - milan
-                          - turin
-                          - icelake
-                          - spr
-                          - gnr
-                          - emr
-                          type: string
-                        cpuVendor:
-                          enum:
-                          - amd
-                          - intel
+                          - AMD_K19Zen3
+                          - AMD_K19Zen4
+                          - AMD_K1AZen5
+                          - Intel_IceLake
+                          - Intel_SapphireRapids
+                          - Intel_GraniteRapids
+                          - Intel_EmeraldRapids
                           type: string
                         disable:
                           description: Disable lists the prefetchers to turn off.
@@ -85,16 +82,14 @@ spec:
                           minLength: 1
                           type: string
                       required:
-                      - cpuGeneration
-                      - cpuVendor
+                      - cpu_codename
                       - disable
                       - psm
                       type: object
                     type: array
                     x-kubernetes-list-map-keys:
                     - psm
-                    - cpuVendor
-                    - cpuGeneration
+                    - cpu_codename
                     x-kubernetes-list-type: map
                 required:
                 - rules
