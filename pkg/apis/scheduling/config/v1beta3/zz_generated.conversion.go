@@ -28,7 +28,7 @@ import (
 	consts "github.com/kubewharf/katalyst-api/pkg/consts"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
-	configv1beta3 "k8s.io/kube-scheduler/config/v1beta3"
+	configv1 "k8s.io/kube-scheduler/config/v1"
 	apisconfig "k8s.io/kubernetes/pkg/scheduler/apis/config"
 )
 
@@ -118,8 +118,8 @@ func Convert_v1beta3_QoSAwareNodeResourcesBalancedAllocationArgs_To_config_QoSAw
 }
 
 func autoConvert_config_QoSAwareNodeResourcesBalancedAllocationArgs_To_v1beta3_QoSAwareNodeResourcesBalancedAllocationArgs(in *config.QoSAwareNodeResourcesBalancedAllocationArgs, out *QoSAwareNodeResourcesBalancedAllocationArgs, s conversion.Scope) error {
-	out.Resources = *(*[]configv1beta3.ResourceSpec)(unsafe.Pointer(&in.Resources))
-	out.ReclaimedResources = *(*[]configv1beta3.ResourceSpec)(unsafe.Pointer(&in.ReclaimedResources))
+	out.Resources = *(*[]configv1.ResourceSpec)(unsafe.Pointer(&in.Resources))
+	out.ReclaimedResources = *(*[]configv1.ResourceSpec)(unsafe.Pointer(&in.ReclaimedResources))
 	return nil
 }
 
@@ -163,11 +163,11 @@ func Convert_v1beta3_ScoringStrategy_To_config_ScoringStrategy(in *ScoringStrate
 }
 
 func autoConvert_config_ScoringStrategy_To_v1beta3_ScoringStrategy(in *config.ScoringStrategy, out *ScoringStrategy, s conversion.Scope) error {
-	out.Type = configv1beta3.ScoringStrategyType(in.Type)
-	out.Resources = *(*[]configv1beta3.ResourceSpec)(unsafe.Pointer(&in.Resources))
-	out.ReclaimedResources = *(*[]configv1beta3.ResourceSpec)(unsafe.Pointer(&in.ReclaimedResources))
-	out.RequestedToCapacityRatio = (*configv1beta3.RequestedToCapacityRatioParam)(unsafe.Pointer(in.RequestedToCapacityRatio))
-	out.ReclaimedRequestedToCapacityRatio = (*configv1beta3.RequestedToCapacityRatioParam)(unsafe.Pointer(in.ReclaimedRequestedToCapacityRatio))
+	out.Type = configv1.ScoringStrategyType(in.Type)
+	out.Resources = *(*[]configv1.ResourceSpec)(unsafe.Pointer(&in.Resources))
+	out.ReclaimedResources = *(*[]configv1.ResourceSpec)(unsafe.Pointer(&in.ReclaimedResources))
+	out.RequestedToCapacityRatio = (*configv1.RequestedToCapacityRatioParam)(unsafe.Pointer(in.RequestedToCapacityRatio))
+	out.ReclaimedRequestedToCapacityRatio = (*configv1.RequestedToCapacityRatioParam)(unsafe.Pointer(in.ReclaimedRequestedToCapacityRatio))
 	return nil
 }
 

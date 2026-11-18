@@ -18,17 +18,17 @@ import (
 	"fmt"
 
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/kube-scheduler/config/v1beta3"
+	schedulerconfigv1 "k8s.io/kube-scheduler/config/v1"
 
 	"github.com/kubewharf/katalyst-api/pkg/consts"
 )
 
-var defaultResourceSpec = []v1beta3.ResourceSpec{
+var defaultResourceSpec = []schedulerconfigv1.ResourceSpec{
 	{Name: string(v1.ResourceCPU), Weight: 1},
 	{Name: string(v1.ResourceMemory), Weight: 1},
 }
 
-var defaultReclaimedResourceSpec = []v1beta3.ResourceSpec{
+var defaultReclaimedResourceSpec = []schedulerconfigv1.ResourceSpec{
 	{Name: fmt.Sprintf("%s", consts.ReclaimedResourceMilliCPU), Weight: 1},
 	{Name: fmt.Sprintf("%s", consts.ReclaimedResourceMemory), Weight: 1},
 }
@@ -39,7 +39,7 @@ var defaultAlignedResourceSpec = []string{v1.ResourceCPU.String(), v1.ResourceMe
 func SetDefaults_QoSAwareNodeResourcesFitArgs(obj *QoSAwareNodeResourcesFitArgs) {
 	if obj.ScoringStrategy == nil {
 		obj.ScoringStrategy = &ScoringStrategy{
-			Type:               v1beta3.LeastAllocated,
+			Type:               schedulerconfigv1.LeastAllocated,
 			Resources:          defaultResourceSpec,
 			ReclaimedResources: defaultReclaimedResourceSpec,
 		}
@@ -91,7 +91,7 @@ func SetDefaults_NodeResourceTopologyArgs(obj *NodeResourceTopologyArgs) {
 
 	if obj.ScoringStrategy == nil {
 		obj.ScoringStrategy = &ScoringStrategy{
-			Type:      v1beta3.LeastAllocated,
+			Type:      schedulerconfigv1.LeastAllocated,
 			Resources: defaultResourceSpec,
 		}
 	}
