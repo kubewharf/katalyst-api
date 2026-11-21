@@ -1457,6 +1457,11 @@ func (in *FragMemConfig) DeepCopyInto(out *FragMemConfig) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.THPDefragPolicy != nil {
+		in, out := &in.THPDefragPolicy, &out.THPDefragPolicy
+		*out = new(THPDefragPolicy)
+		**out = **in
+	}
 	if in.THPStaticEnableConfig != nil {
 		in, out := &in.THPStaticEnableConfig, &out.THPStaticEnableConfig
 		*out = new(THPStaticEnableConfig)

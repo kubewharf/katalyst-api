@@ -1264,6 +1264,20 @@ spec:
 
                                   Default: "madvise".
                                 type: string
+                              thpDefragPolicy:
+                                description: |-
+                                  THPDefragPolicy is the host THP defragmentation policy.
+                                  It applies when EnableFragMem is true, independently of THPStaticEnableConfig.Enable
+                                  and THPDefaultConfig. When unset, the agent uses its startup flag value,
+                                  which defaults to empty. If neither is configured, the host's current
+                                  defrag policy is left unchanged.
+                                enum:
+                                - always
+                                - defer
+                                - defer+madvise
+                                - madvise
+                                - never
+                                type: string
                               thpHighOrderScoreThreshold:
                                 description: |-
                                   THPHighOrderScoreThreshold sets the threshold of highOrderScore for THP tuning.

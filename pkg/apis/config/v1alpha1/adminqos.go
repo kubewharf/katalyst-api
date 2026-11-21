@@ -563,6 +563,13 @@ type FragMemConfig struct {
 	// Default: "madvise".
 	// +optional
 	THPDefaultConfig *string `json:"thpDefaultConfig,omitempty"`
+	// THPDefragPolicy is the host THP defragmentation policy.
+	// It applies when EnableFragMem is true, independently of THPStaticEnableConfig.Enable
+	// and THPDefaultConfig. When unset, the agent uses its startup flag value,
+	// which defaults to empty. If neither is configured, the host's current
+	// defrag policy is left unchanged.
+	// +optional
+	THPDefragPolicy *THPDefragPolicy `json:"thpDefragPolicy,omitempty"`
 	// THPStaticEnableConfig defines the host THP settings used by static THP mode.
 	// When Enable is true, the host THP mode is statically enforced with the configured values.
 	// When unset or disabled, the existing fragmentation-based THP tuning behavior is kept.
@@ -599,6 +606,18 @@ type THPStaticEnableConfig struct {
 	// +optional
 	THPShm *THPShmMode `json:"thpShm,omitempty"`
 }
+
+// THPDefragPolicy is the host THP defragmentation policy.
+// +kubebuilder:validation:Enum=always;defer;defer+madvise;madvise;never
+type THPDefragPolicy string
+
+const (
+	THPDefragPolicyAlways       THPDefragPolicy = "always"
+	THPDefragPolicyDefer        THPDefragPolicy = "defer"
+	THPDefragPolicyDeferMadvise THPDefragPolicy = "defer+madvise"
+	THPDefragPolicyMadvise      THPDefragPolicy = "madvise"
+	THPDefragPolicyNever        THPDefragPolicy = "never"
+)
 
 // THPMode is the host THP mode.
 // +kubebuilder:validation:Enum=always;madvise;never
