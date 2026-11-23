@@ -1331,6 +1331,16 @@ spec:
                                     - force
                                     type: string
                                 type: object
+                              vmCompactionProactiveness:
+                                description: |-
+                                  VMCompactionProactiveness sets vm.compaction_proactiveness in [0, 100],
+                                  independently of EnableFragMem. Zero disables proactive kernel compaction.
+                                  When unset, the agent uses its startup flag value. If neither is configured,
+                                  the host value is left unchanged. The actual value is always reported as a metric.
+                                format: int64
+                                maximum: 100
+                                minimum: 0
+                                type: integer
                             type: object
                           hostWatermarkConfig:
                             description: HostWatermarkConfig is the config for host

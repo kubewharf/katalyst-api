@@ -1447,6 +1447,11 @@ func (in *FragMemConfig) DeepCopyInto(out *FragMemConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.VMCompactionProactiveness != nil {
+		in, out := &in.VMCompactionProactiveness, &out.VMCompactionProactiveness
+		*out = new(int64)
+		**out = **in
+	}
 	if in.MemFragScoreAsync != nil {
 		in, out := &in.MemFragScoreAsync, &out.MemFragScoreAsync
 		*out = new(int64)

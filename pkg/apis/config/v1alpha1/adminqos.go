@@ -553,6 +553,14 @@ type FragMemConfig struct {
 	// EnableFragMem enables memory compaction related features
 	// +optional
 	EnableFragMem *bool `json:"enableFragMem,omitempty"`
+	// VMCompactionProactiveness sets vm.compaction_proactiveness in [0, 100],
+	// independently of EnableFragMem. Zero disables proactive kernel compaction.
+	// When unset, the agent uses its startup flag value. If neither is configured,
+	// the host value is left unchanged. The actual value is always reported as a metric.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=100
+	VMCompactionProactiveness *int64 `json:"vmCompactionProactiveness,omitempty"`
 	// MemFragScoreAsync sets the threshold of frag score for async memory compaction.
 	// The async compaction behavior will be triggered while exceeding this score.
 	// +optional
