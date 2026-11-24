@@ -165,6 +165,13 @@ spec:
                                 of inactive file memory
                               format: int64
                               type: integer
+                            swapFreeThresholdRatio:
+                              description: |-
+                                SwapFreeThresholdRatio is the minimum free swap ratio (0~1) required to
+                                continue TMO reclaim when swap is enabled.
+                                If MemSwapFree / MemSwapTotal is less than or equal to this threshold,
+                                TMO reclaim will be skipped for the current cycle.
+                              type: number
                           type: object
                       required:
                       - cgroupPath
@@ -316,6 +323,13 @@ spec:
                                 of inactive file memory
                               format: int64
                               type: integer
+                            swapFreeThresholdRatio:
+                              description: |-
+                                SwapFreeThresholdRatio is the minimum free swap ratio (0~1) required to
+                                continue TMO reclaim when swap is enabled.
+                                If MemSwapFree / MemSwapTotal is less than or equal to this threshold,
+                                TMO reclaim will be skipped for the current cycle.
+                              type: number
                           type: object
                         poolName:
                           description: PoolName is a resource pool name, e.g. system,
@@ -404,6 +418,13 @@ spec:
                                 of inactive file memory
                               format: int64
                               type: integer
+                            swapFreeThresholdRatio:
+                              description: |-
+                                SwapFreeThresholdRatio is the minimum free swap ratio (0~1) required to
+                                continue TMO reclaim when swap is enabled.
+                                If MemSwapFree / MemSwapTotal is less than or equal to this threshold,
+                                TMO reclaim will be skipped for the current cycle.
+                              type: number
                           type: object
                         qosLevel:
                           description: QoSLevel is either of reclaimed_cores, shared_cores,
