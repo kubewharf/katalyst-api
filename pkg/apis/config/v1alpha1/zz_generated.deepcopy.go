@@ -4165,6 +4165,11 @@ func (in *TMOConfigDetail) DeepCopyInto(out *TMOConfigDetail) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.SwapFreeThresholdRatio != nil {
+		in, out := &in.SwapFreeThresholdRatio, &out.SwapFreeThresholdRatio
+		*out = new(float64)
+		**out = **in
+	}
 	if in.ReservedInactiveFile != nil {
 		in, out := &in.ReservedInactiveFile, &out.ReservedInactiveFile
 		*out = new(uint64)
