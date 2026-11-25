@@ -104,12 +104,15 @@ type customResourceDefinition struct {
 }
 
 type jsonSchema struct {
+	Default                interface{}           `json:"default"`
+	XKubernetesListMapKeys []string              `json:"x-kubernetes-list-map-keys"`
 	Properties             map[string]jsonSchema `json:"properties"`
 	AdditionalProperties   *jsonSchema           `json:"additionalProperties"`
 	AnyOf                  []jsonSchema          `json:"anyOf"`
 	Enum                   []string              `json:"enum"`
 	Items                  *jsonSchema           `json:"items"`
 	MinItems               *int                  `json:"minItems"`
+	MinLength              *int                  `json:"minLength"`
 	Required               []string              `json:"required"`
 	Type                   string                `json:"type"`
 	UniqueItems            *bool                 `json:"uniqueItems"`

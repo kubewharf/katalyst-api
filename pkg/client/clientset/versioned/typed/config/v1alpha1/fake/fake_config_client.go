@@ -36,6 +36,10 @@ func (c *FakeConfigV1alpha1) KatalystCustomConfigs(namespace string) v1alpha1.Ka
 	return &FakeKatalystCustomConfigs{c, namespace}
 }
 
+func (c *FakeConfigV1alpha1) PrefetcherTunings() v1alpha1.PrefetcherTuningInterface {
+	return &FakePrefetcherTunings{c}
+}
+
 func (c *FakeConfigV1alpha1) StrategyGroups() v1alpha1.StrategyGroupInterface {
 	return &FakeStrategyGroups{c}
 }
