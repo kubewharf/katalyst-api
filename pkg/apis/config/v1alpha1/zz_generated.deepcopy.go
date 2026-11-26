@@ -1447,6 +1447,11 @@ func (in *FragMemConfig) DeepCopyInto(out *FragMemConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.VMCompactionProactiveness != nil {
+		in, out := &in.VMCompactionProactiveness, &out.VMCompactionProactiveness
+		*out = new(int64)
+		**out = **in
+	}
 	if in.MemFragScoreAsync != nil {
 		in, out := &in.MemFragScoreAsync, &out.MemFragScoreAsync
 		*out = new(int64)
@@ -1455,6 +1460,11 @@ func (in *FragMemConfig) DeepCopyInto(out *FragMemConfig) {
 	if in.THPDefaultConfig != nil {
 		in, out := &in.THPDefaultConfig, &out.THPDefaultConfig
 		*out = new(string)
+		**out = **in
+	}
+	if in.THPDefragPolicy != nil {
+		in, out := &in.THPDefragPolicy, &out.THPDefragPolicy
+		*out = new(THPDefragPolicy)
 		**out = **in
 	}
 	if in.THPStaticEnableConfig != nil {

@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 
@@ -420,6 +421,136 @@ func TestCPUHeadroomAdaptiveUtilBasedConfigSchema(t *testing.T) {
 		require.True(t, field.ExclusiveMaximum)
 		require.Nil(t, field.Default)
 	}
+}
+
+func TestFragMemConfigTHPDefragPolicy(t *testing.T) {
+	t.Run("JSON round trip without static THP configuration", func(t *testing.T) {
+		enabled := true
+		policy := THPDefragPolicyDeferMadvise
+		in := &FragMemConfig{EnableFragMem: &enabled, THPDefragPolicy: &policy}
+
+		data, err := json.Marshal(in)
+		require.NoError(t, err)
+		require.JSONEq(t, `{"enableFragMem":true,"thpDefragPolicy":"defer+madvise"}`, string(data))
+
+		out := &FragMemConfig{}
+		require.NoError(t, json.Unmarshal(data, out))
+		require.Equal(t, in, out)
+		require.Nil(t, out.THPStaticEnableConfig)
+		require.Nil(t, out.THPDefaultConfig)
+
+		legacy := &FragMemConfig{}
+		require.NoError(t, json.Unmarshal([]byte(`{"enableFragMem":true}`), legacy))
+		require.Nil(t, legacy.THPDefragPolicy)
+		data, err = json.Marshal(legacy)
+		require.NoError(t, err)
+		require.JSONEq(t, `{"enableFragMem":true}`, string(data))
+		require.Nil(t, legacy.DeepCopy().THPDefragPolicy)
+	})
+
+	t.Run("deep copy owns an independent policy pointer", func(t *testing.T) {
+		policy := THPDefragPolicyDefer
+		in := &FragMemConfig{THPDefragPolicy: &policy}
+
+		copied := in.DeepCopy()
+		require.NotNil(t, copied.THPDefragPolicy)
+		require.NotSame(t, in.THPDefragPolicy, copied.THPDefragPolicy)
+		require.Equal(t, policy, *copied.THPDefragPolicy)
+
+		*copied.THPDefragPolicy = THPDefragPolicyNever
+		require.Equal(t, THPDefragPolicyDefer, *in.THPDefragPolicy)
+	})
+
+	t.Run("CRD schema exposes an optional policy enum without a default", func(t *testing.T) {
+		data, err := os.ReadFile("../../../../config/crd/bases/config.katalyst.kubewharf.io_adminqosconfigurations.yaml")
+		require.NoError(t, err)
+
+		jsonData, err := yaml.YAMLToJSON(data)
+		require.NoError(t, err)
+
+		var crd struct {
+			Spec struct {
+				Versions []struct {
+					Schema struct {
+						OpenAPIV3Schema adminQoSSchema `json:"openAPIV3Schema"`
+					} `json:"schema"`
+				} `json:"versions"`
+			} `json:"spec"`
+		}
+		require.NoError(t, json.Unmarshal(jsonData, &crd))
+		require.NotEmpty(t, crd.Spec.Versions)
+
+		schema := crd.Spec.Versions[0].Schema.OpenAPIV3Schema
+		for _, name := range []string{"spec", "config", "qrmPluginConfig", "memoryPluginConfig", "fragMemConfig"} {
+			schema = adminQoSSchemaProperty(t, schema, name)
+		}
+		policy := adminQoSSchemaProperty(t, schema, "thpDefragPolicy")
+		require.Equal(t, "string", policy.Type)
+		require.Equal(t, []string{"always", "defer", "defer+madvise", "madvise", "never"}, policy.Enum)
+		// API-server defaulting must not override the agent's startup flag.
+		require.Nil(t, policy.Default)
+		require.NotContains(t, schema.Required, "thpDefragPolicy")
+	})
+}
+
+func TestFragMemConfigVMCompactionProactiveness(t *testing.T) {
+	t.Run("optional omission", func(t *testing.T) {
+		var config FragMemConfig
+		require.NoError(t, json.Unmarshal([]byte(`{}`), &config))
+		require.Nil(t, config.VMCompactionProactiveness)
+		require.Nil(t, config.DeepCopy().VMCompactionProactiveness)
+		data, err := json.Marshal(&config)
+		require.NoError(t, err)
+		require.JSONEq(t, `{}`, string(data))
+	})
+
+	for _, value := range []int64{0, 20, 100} {
+		t.Run(fmt.Sprintf("round trip and deep copy %d", value), func(t *testing.T) {
+			in := &FragMemConfig{VMCompactionProactiveness: &value}
+			data, err := json.Marshal(in)
+			require.NoError(t, err)
+			require.JSONEq(t, fmt.Sprintf(`{"vmCompactionProactiveness":%d}`, value), string(data))
+			var out FragMemConfig
+			require.NoError(t, json.Unmarshal(data, &out))
+			require.Equal(t, in, &out)
+
+			copied := in.DeepCopy()
+			require.NotSame(t, in.VMCompactionProactiveness, copied.VMCompactionProactiveness)
+			require.Equal(t, value, *copied.VMCompactionProactiveness)
+			*copied.VMCompactionProactiveness = 50
+			require.Equal(t, value, *in.VMCompactionProactiveness)
+		})
+	}
+
+	t.Run("CRD schema bounds without a default", func(t *testing.T) {
+		data, err := os.ReadFile("../../../../config/crd/bases/config.katalyst.kubewharf.io_adminqosconfigurations.yaml")
+		require.NoError(t, err)
+		var crd struct {
+			Spec struct {
+				Versions []struct {
+					Schema struct {
+						OpenAPIV3Schema adminQoSSchema `json:"openAPIV3Schema"`
+					} `json:"schema"`
+				} `json:"versions"`
+			} `json:"spec"`
+		}
+		require.NoError(t, yaml.Unmarshal(data, &crd))
+		require.NotEmpty(t, crd.Spec.Versions)
+		schema := crd.Spec.Versions[0].Schema.OpenAPIV3Schema
+		for _, name := range []string{"spec", "config", "qrmPluginConfig", "memoryPluginConfig", "fragMemConfig"} {
+			schema = adminQoSSchemaProperty(t, schema, name)
+		}
+		field := adminQoSSchemaProperty(t, schema, "vmCompactionProactiveness")
+		require.Equal(t, "integer", field.Type)
+		require.NotNil(t, field.Minimum)
+		require.NotNil(t, field.Maximum)
+		require.Equal(t, float64(0), *field.Minimum)
+		require.Equal(t, float64(100), *field.Maximum)
+		require.False(t, field.ExclusiveMinimum)
+		require.False(t, field.ExclusiveMaximum)
+		require.Nil(t, field.Default)
+		require.NotContains(t, schema.Required, "vmCompactionProactiveness")
+	})
 }
 
 type adminQoSSchema struct {
