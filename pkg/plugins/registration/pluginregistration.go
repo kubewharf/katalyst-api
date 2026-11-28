@@ -39,6 +39,8 @@ type AgentPluginHandler interface {
 }
 
 type RegistrationHandler struct {
+	watcherapi.UnimplementedRegistrationServer
+
 	pluginType        string
 	pluginName        string
 	supportedVersions []string
